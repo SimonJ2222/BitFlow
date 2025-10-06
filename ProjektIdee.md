@@ -2,7 +2,8 @@
 Florian Blum, Moritz Czekalski, Mohid Syed, Simon Just  
 
 # Projektidee
-Wir wollen in unserem Projekt elektronische Schaltungen/ Gatter simulieren. Das Projektidee ist angelehnt an LogicSim.  
+Unsere Projektidee ist es, eine Software zu entwickeln, mit der elektronische Schaltungen und logische Gatter simuliert werden können. Die Idee ist angelehnt an der bekannten Anwendung Logi(c)Sim.
+Projektziele umfassen unter anderem die Simulation grundlegender logischer Gatter, die Erstellung von Schaltungen über eine Benutzeroberfläche und die Visualisierung der Signale innerhalb der Schaltung.
 
 # Tech-Stack
 IDE: VS Code  
