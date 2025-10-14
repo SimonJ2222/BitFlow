@@ -88,6 +88,7 @@ TODO
 ## 3. Specific Requirements
 
 ### 3.1 Functionality
+#### 3.3.1 _functional use case 1_
 TODO
 
 ### 3.2 Usability
