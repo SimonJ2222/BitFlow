@@ -67,18 +67,23 @@ TODO
 The technology we use is:
 
 Backend:
+TODO
 
 Frontend:
+TODO
 
 IDE:
+TODO
 
 Project Management:
 -YouTrack
 -GitHub
 
 Deployment:
+TODO
 
 Testing:
+TODO
 
 ## 3. Specific Requirements
 
