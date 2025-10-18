@@ -61,7 +61,9 @@ TODO
 TODO
 
 ### 2.2 Use Case Diagram
-TODO
+<img width="2485" height="2201" alt="UseCaseDiagramm_BitFlow" src="https://github.com/user-attachments/assets/269ddcd9-3644-4cd8-bb01-49bc7893ac28" />
+
+
 
 ### 2.3 Technology Stack
 The technology we use is:
