@@ -128,7 +128,7 @@ Testing:
 ## 3. Specific Requirements
 
 ### 3.1 Functionality
-#### 3.3.1 UC-01 – Dark Mode einstellen
+#### 3.1.1 UC-01 – Dark Mode einstellen
 - **Akteure:** Benutzer  
 - **Ziel:** Benutzer möchte das Erscheinungsbild der Webanwendung anpassen, um die Nutzung in dunkler Umgebung zu erleichtern.  
 - **Voraussetzungen:** Benutzer ist eingeloggt oder nutzt die Anwendung im Gastmodus.  
@@ -144,7 +144,7 @@ Testing:
 - **Akzeptanzkriterien:** Farbwechsel erfolgt flüssig; Einstellung bleibt beim nächsten Start erhalten.
 
 
-#### 3.3.2 UC-02 – Änderungen rückgängig machen
+#### 3.1.2 UC-02 – Änderungen rückgängig machen
 - **Akteure:** Benutzer  
 - **Ziel:** Benutzer möchte versehentliche Aktionen im Schaltplan rückgängig machen.  
 - **Voraussetzungen:** Es existiert mindestens eine Aktion im Verlauf.  
@@ -160,7 +160,7 @@ Testing:
 - **Akzeptanzkriterien:** Alle Aktionen (z. B. Baustein verschieben, Leitung löschen) lassen sich rückgängig machen.
 
 
-#### 3.3.3 UC-03 – Projektdatei löschen
+#### 3.1.3 UC-03 – Projektdatei löschen
 - **Akteure:** Benutzer  
 - **Ziel:** Ein bestehendes Projekt soll dauerhaft entfernt werden.  
 - **Voraussetzungen:** Benutzer ist eingeloggt und hat Schreibrechte auf das Projekt.  
@@ -176,7 +176,7 @@ Testing:
 - **Akzeptanzkriterien:** Gelöschte Datei taucht nicht mehr im Projektmanager auf.
 
 
-#### 3.3.4 UC-04 – Schaltung zu Baustein zusammenfassen
+#### 3.1.4 UC-04 – Schaltung zu Baustein zusammenfassen
 - **Akteure:** Benutzer  
 - **Ziel:** Eine bestehende Schaltung soll als wiederverwendbarer Baustein gespeichert werden.  
 - **Voraussetzungen:** Schaltung ist vollständig und fehlerfrei.  
@@ -192,7 +192,7 @@ Testing:
 - **Akzeptanzkriterien:** Baustein kann im nächsten Projekt per Drag & Drop verwendet werden.
 
 
-#### 3.3.5 UC-05 – Schaltung exportieren
+#### 3.1.5 UC-05 – Schaltung exportieren
 - **Akteure:** Benutzer  
 - **Ziel:** Schaltung in externes Format (z. B. JSON, XML, VHDL) exportieren.  
 - **Voraussetzungen:** Projekt geöffnet.  
@@ -207,7 +207,7 @@ Testing:
 - **Akzeptanzkriterien:** Exportierte Datei enthält vollständige Netzliste und Bausteindefinitionen.
 
 
-#### 3.3.6 UC-06 – Gesamte Schaltung löschen
+#### 3.1.6 UC-06 – Gesamte Schaltung löschen
 - **Akteure:** Benutzer  
 - **Ziel:** Der Benutzer möchte das aktuelle Canvas vollständig leeren.  
 - **Voraussetzungen:** Schaltung ist geladen.  
@@ -222,7 +222,7 @@ Testing:
 - **Akzeptanzkriterien:** Kein Element verbleibt sichtbar.
 
 
-#### 3.3.7 UC-07 – Signalverläufe visualisieren
+#### 3.1.7 UC-07 – Signalverläufe visualisieren
 - **Akteure:** Benutzer  
 - **Ziel:** Benutzer möchte die zeitlichen Signaländerungen im Diagramm sehen.  
 - **Voraussetzungen:** Simulation wurde ausgeführt.  
@@ -237,7 +237,7 @@ Testing:
 - **Akzeptanzkriterien:** Werteänderungen stimmen mit Simulation überein.
 
 
-#### 3.3.8 UC-08 – Schaltung importieren
+#### 3.1.8 UC-08 – Schaltung importieren
 - **Akteure:** Benutzer  
 - **Ziel:** Bestehende Schaltung aus Datei laden.  
 - **Voraussetzungen:** Datei vorhanden, gültiges Format.  
@@ -252,7 +252,7 @@ Testing:
 - **Akzeptanzkriterien:** Alle Bausteine korrekt platziert.
 
 
-#### 3.3.9 UC-09 – Benutzerdefinierte Logikbausteine erstellen
+#### 3.1.9 UC-09 – Benutzerdefinierte Logikbausteine erstellen
 - **Akteure:** Benutzer  
 - **Ziel:** Eigene Bausteine mit individuellem Verhalten definieren.  
 - **Voraussetzungen:** Benutzer hat Schreibrechte in Bibliothek.  
@@ -267,7 +267,7 @@ Testing:
 - **Akzeptanzkriterien:** Baustein erscheint in Bibliothek und funktioniert korrekt.
 
 
-#### 3.3.10 UC-10 – Logikbausteine per Drag & Drop positionieren
+#### 3.1.10 UC-10 – Logikbausteine per Drag & Drop positionieren
 - **Akteure:** Benutzer  
 - **Ziel:** Bausteine intuitiv auf dem Canvas platzieren.  
 - **Voraussetzungen:** Schaltung geöffnet.  
@@ -282,7 +282,7 @@ Testing:
 - **Akzeptanzkriterien:** Drag & Drop funktioniert flüssig.
 
 
-#### 3.3.11 UC-11 – Bausteine verbinden
+#### 3.1.11 UC-11 – Bausteine verbinden
 - **Akteure:** Benutzer  
 - **Ziel:** Bausteine logisch miteinander verbinden.  
 - **Voraussetzungen:** Zwei oder mehr Bausteine auf Canvas.  
@@ -298,7 +298,7 @@ Testing:
 - **Akzeptanzkriterien:** Verbindung korrekt in Simulation berücksichtigt.
 
 
-#### 3.3.12 UC-12 – Baustein löschen
+#### 3.1.12 UC-12 – Baustein löschen
 - **Akteure:** Benutzer  
 - **Ziel:** Baustein aus Schaltung entfernen.  
 - **Voraussetzungen:** Baustein ausgewählt.  
@@ -310,7 +310,7 @@ Testing:
 - **Akzeptanzkriterien:** Keine unverbundenen Leitungen verbleiben.
 
 
-#### 3.3.13 UC-13 – Simulation in Echtzeit starten
+#### 3.1.13 UC-13 – Simulation in Echtzeit starten
 - **Akteure:** Benutzer  
 - **Ziel:** Verhalten der Schaltung prüfen.  
 - **Voraussetzungen:** Vollständige, fehlerfreie Schaltung.  
@@ -325,7 +325,7 @@ Testing:
 - **Akzeptanzkriterien:** Echtzeitsimulation reagiert korrekt auf Eingaben.
 
 
-#### 3.3.14 UC-14 – Schaltung speichern
+#### 3.1.14 UC-14 – Schaltung speichern
 - **Akteure:** Benutzer  
 - **Ziel:** Aktuelle Arbeit sichern.  
 - **Voraussetzungen:** Schaltung geöffnet.  
@@ -337,7 +337,7 @@ Testing:
 - **Akzeptanzkriterien:** Datei im Projektmanager sichtbar.
 
 
-#### 3.3.15 UC-15 – Schaltung laden
+#### 3.1.15 UC-15 – Schaltung laden
 - **Akteure:** Benutzer  
 - **Ziel:** Frühere Schaltung öffnen.  
 - **Auslöser:** Klick auf „Laden“.  
@@ -349,7 +349,7 @@ Testing:
 - **Akzeptanzkriterien:** Vollständiger Zustand geladen.
 
 
-#### 3.3.16 UC-16 – Nutzer verwalten
+#### 3.1.16 UC-16 – Nutzer verwalten
 - **Akteure:** Administrator  
 - **Ziel:** Benutzerkonten prüfen, sperren oder bearbeiten.  
 - **Voraussetzungen:** Administrator ist eingeloggt.  
@@ -362,7 +362,7 @@ Testing:
 - **Akzeptanzkriterien:** Änderungen sofort wirksam.
 
 
-#### 3.3.17 UC-17 – Systemeinstellungen bearbeiten
+#### 3.1.17 UC-17 – Systemeinstellungen bearbeiten
 - **Akteure:** Administrator  
 - **Ziel:** Globale Systemeinstellungen anpassen.  
 - **Voraussetzungen:** Administratorzugriff.  
@@ -375,7 +375,7 @@ Testing:
 - **Akzeptanzkriterien:** Änderungen korrekt übernommen.
 
 
-#### 3.3.18 UC-18 – Registrieren
+#### 3.1.18 UC-18 – Registrieren
 - **Akteure:** Benutzer  
 - **Ziel:** Neues Konto anlegen.  
 - **Auslöser:** Klick auf „Registrieren“.  
@@ -389,7 +389,7 @@ Testing:
 - **Akzeptanzkriterien:** Benutzer kann sich anschließend anmelden.
 
 
-#### 3.3.19 UC-19 – Anmelden
+#### 3.1.19 UC-19 – Anmelden
 - **Akteure:** Benutzer  
 - **Ziel:** Zugriff auf persönliche Projekte.  
 - **Auslöser:** Klick auf „Login“.  
@@ -403,7 +403,7 @@ Testing:
 - **Akzeptanzkriterien:** Zugang nur bei korrekten Daten.
 
 
-#### 3.3.20 UC-20 – Abmelden
+#### 3.1.20 UC-20 – Abmelden
 - **Akteure:** Benutzer  
 - **Ziel:** Sitzung sicher beenden.  
 - **Auslöser:** Klick auf „Logout“.  
@@ -414,7 +414,7 @@ Testing:
 - **Akzeptanzkriterien:** Kein Zugriff mehr auf geschützte Bereiche.
 
 
-#### 3.3.21 UC-21 – Nutzeraccount löschen
+#### 3.1.21 UC-21 – Nutzeraccount löschen
 - **Akteure:** Administrator oder Benutzer (selbst).  
 - **Ziel:** Konto entfernen.  
 - **Voraussetzungen:** Authentifiziert.  
@@ -427,7 +427,7 @@ Testing:
 - **Akzeptanzkriterien:** Kein Login mehr möglich.
 
 
-#### 3.3.22 UC-22 – Passwort zurücksetzen
+#### 3.1.22 UC-22 – Passwort zurücksetzen
 - **Akteure:** Benutzer  
 - **Ziel:** Passwort wiederherstellen.  
 - **Auslöser:** Klick auf „Passwort vergessen“.  
