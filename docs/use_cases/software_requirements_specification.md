@@ -94,7 +94,8 @@ Ziel der Anwendung ist es, das Verständnis digitaler Logik und Schaltungstechni
 Studierende, Lehrkräfte und Technikinteressierte sollen Logikgatter, Schaltungen und Signale intuitiv und visuell erkunden können.
 
 ### 2.2 Use Case Diagram
-<img width="2485" height="2201" alt="UseCaseDiagramm_BitFlow" src="https://github.com/user-attachments/assets/269ddcd9-3644-4cd8-bb01-49bc7893ac28" />
+<img width="2686" height="3451" alt="UseCaseDiagramm_BitFlow" src="https://github.com/user-attachments/assets/039a5b8d-69ab-4674-ba08-8f26e407d0d1" />
+
 
 ### 2.3 Technology Stack
 The technology we use is:
