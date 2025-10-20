@@ -150,20 +150,20 @@ sequenceDiagram
     participant System as Einstellungen-Modul
     participant Storage as Browser- oder Benutzer-Storage
 
-    Benutzer ->> UI: Öffnet Einstellungsmenü
+    Benutzer ->>+ UI: Öffnet Einstellungsmenü
     UI ->> Benutzer: Zeigt Optionen (z. B. Darstellung)
     Benutzer ->> UI: Wählt "Darstellung → Dark Mode"
-    UI ->> System: Änderung übermitteln (Dark Mode = aktiviert)
+    UI ->>+ System: Änderung übermitteln (Dark Mode = aktiviert)
 
     alt LocalStorage verfügbar
-        System ->> Storage: Einstellung speichern
-        Storage -->> System: Bestätigung Speicherung
+        System ->>+ Storage: Einstellung speichern
+        Storage -->>- System: Bestätigung Speicherung
     else LocalStorage deaktiviert
         System ->> UI: Hinweis „Einstellung wird nur temporär gespeichert“
     end
 
-    System ->> UI: UI-Theme aktualisieren
-    UI -->> Benutzer: Oberfläche wechselt zu dunkler Farbpalette
+    System ->>- UI: UI-Theme aktualisieren
+    UI -->>- Benutzer: Oberfläche wechselt zu dunkler Farbpalette
 ```
 
 
