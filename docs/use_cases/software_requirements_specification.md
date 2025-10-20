@@ -151,8 +151,8 @@ sequenceDiagram
     participant Storage as Browser- oder Benutzer-Storage
 
     Benutzer ->>+ UI: Öffnet Einstellungsmenü
-    UI ->> Benutzer: Zeigt Optionen (z. B. Darstellung)
-    Benutzer ->> UI: Wählt "Darstellung → Dark Mode"
+    UI ->>- Benutzer: Zeigt Optionen (z. B. Darstellung)
+    Benutzer ->>+ UI: Wählt "Darstellung → Dark Mode"
     UI ->>+ System: Änderung übermitteln (Dark Mode = aktiviert)
 
     alt LocalStorage verfügbar
@@ -188,15 +188,15 @@ sequenceDiagram
 	participant Canvas as Schaltplan-Canvas
 	participant System as Undo-Manager
 
-	Benutzer ->> Canvas: Führt Aktion aus (z. B. Baustein verschieben)
-	Canvas ->> System: Aktion im Undo-Stack speichern
+	Benutzer ->>+ Canvas: Führt Aktion aus (z. B. Baustein verschieben)
+	Canvas ->>+ System: Aktion im Undo-Stack speichern
 	Benutzer ->> Canvas: "Rückgängig" (Ctrl+Z) auslösen
 	alt Undo-Verlauf vorhanden
 		Canvas ->> System: Letzten Zustand anfordern
-		System -->> Canvas: Vorherigen Zustand zurückgeben
+		System -->>- Canvas: Vorherigen Zustand zurückgeben
 		Canvas -->> Benutzer: Zeigt vorherigen Schaltplanzustand
 	else Kein Undo-Verlauf vorhanden
-		Canvas -->> Benutzer: Meldung „Keine Änderungen rückgängig zu machen“
+		Canvas -->>- Benutzer: Meldung „Keine Änderungen rückgängig zu machen“
 	end
 ```
 
@@ -222,14 +222,14 @@ sequenceDiagram
     participant UI as Projektmanager
     participant Storage as Cloud/LocalStorage
 
-    Benutzer ->> UI: Wählt Projekt und klickt „Löschen“
+    Benutzer ->>+ UI: Wählt Projekt und klickt „Löschen“
     UI ->> Benutzer: Zeigt Sicherheitsabfrage
     alt Benutzer bestätigt Löschung
-        UI ->> Storage: Projektdatei entfernen
-        Storage -->> UI: Löschung erfolgreich
+        UI ->>+ Storage: Projektdatei entfernen
+        Storage -->>- UI: Löschung erfolgreich
         UI -->> Benutzer: Projektliste aktualisieren
     else Benutzer bricht ab
-        UI -->> Benutzer: Aktion verworfen
+        UI -->>- Benutzer: Aktion verworfen
     end
 
 ```
@@ -256,16 +256,17 @@ sequenceDiagram
     participant Editor as Schaltungseditor
     participant System as Bausteinverwaltung
 
-    Benutzer ->> Editor: Klick auf „Als Baustein speichern“
+    Benutzer ->>+ Editor: Klick auf „Als Baustein speichern“
     Editor ->> Benutzer: Auswahl der Schaltungsteile anfordern
     Benutzer ->> Editor: Markiert relevante Schaltung
-    Editor ->> System: Öffnet Dialog „Neuer Logikbaustein“
+    Editor ->>+ System: Öffnet Dialog „Neuer Logikbaustein“
+    deactivate Editor
     Benutzer ->> System: Gibt Name, Symbol, Beschreibung ein
     alt Schaltung fehlerfrei
         System ->> System: Metadatei erstellen und speichern
         System -->> Benutzer: Neuer Baustein in Bibliothek sichtbar
     else Unverbundene Pins vorhanden
-        System -->> Benutzer: Warnung + Korrekturmöglichkeit
+        System -->>- Benutzer: Warnung + Korrekturmöglichkeit
     end
 
 ```
@@ -292,11 +293,14 @@ sequenceDiagram
     participant Exporter as Exportmodul
     participant DateiSystem as Lokales Dateisystem
 
-    Benutzer ->> Editor: Klick auf „Exportieren“
+    Benutzer ->>+ Editor: Klick auf „Exportieren“
     Editor ->> Benutzer: Auswahl des Exportformats anzeigen
-    Benutzer ->> Exporter: Wählt Format (z. B. JSON, XML, VHDL)
+    Benutzer ->>+ Exporter: Wählt Format (z. B. JSON, XML, VHDL)
     Exporter ->> Editor: Netzliste generieren
-    Exporter ->> DateiSystem: Datei schreiben
+    deactivate Editor
+    Exporter ->>+ DateiSystem: Datei schreiben
+    deactivate Exporter
+    deactivate DateiSystem
     alt Export erfolgreich
         DateiSystem -->> Benutzer: Download verfügbar
     else Exportfehler
@@ -326,14 +330,14 @@ sequenceDiagram
     participant Editor as Schaltungseditor
     participant System as Schaltungssystem
 
-    Benutzer ->> Editor: Klick auf „Alles löschen“
+    Benutzer ->>+ Editor: Klick auf „Alles löschen“
     Editor ->> Benutzer: Bestätigungsdialog anzeigen
     alt Benutzer bestätigt
-        Editor ->> System: Lösche alle Bausteine und Leitungen
-        System -->> Editor: Canvas geleert
+        Editor ->>+ System: Lösche alle Bausteine und Leitungen
+        System -->>- Editor: Canvas geleert
         Editor -->> Benutzer: Leeres Arbeitsfeld anzeigen
     else Benutzer bricht ab
-        Editor -->> Benutzer: Keine Änderung vorgenommen
+        Editor -->>- Benutzer: Keine Änderung vorgenommen
     end
 
 ```
@@ -360,16 +364,18 @@ sequenceDiagram
     participant Simulation as Simulationsmodul
     participant Viewer as Signal-Viewer
 
-    Benutzer ->> UI: Klick auf „Signalverlauf anzeigen“
-    UI ->> Simulation: Prüft, ob Simulation aktiv ist
+    Benutzer ->>+ UI: Klick auf „Signalverlauf anzeigen“
+    UI ->>+ Simulation: Prüft, ob Simulation aktiv ist
     Simulation -->> UI: Bestätigung
-    UI ->> Viewer: Öffnet Signal-Viewer
+    UI ->>+ Viewer: Öffnet Signal-Viewer
+    deactivate UI
     Benutzer ->> Viewer: Wählt Knoten/Leitung
     alt Signal vorhanden
         Simulation ->> Viewer: Sendet Signalverlauf (Zeit/Wert)
+        deactivate Simulation
         Viewer -->> Benutzer: Zeigt Echtzeit-Wellenform
     else Kein Signal gewählt
-        Viewer -->> Benutzer: Meldung „Bitte Leitung auswählen“
+        Viewer -->>- Benutzer: Meldung „Bitte Leitung auswählen“
     end
 
 ```
@@ -396,16 +402,16 @@ sequenceDiagram
     participant DateiSystem as Lokales Dateisystem
     participant System as Bausteinverwaltung
 
-    Benutzer ->> UI: Klick auf „Importieren“
-    UI ->> DateiSystem: Öffnet Dateiauswahldialog
+    Benutzer ->>+ UI: Klick auf „Importieren“
+    UI ->>+ DateiSystem: Öffnet Dateiauswahldialog
     Benutzer ->> DateiSystem: Wählt Datei
-    DateiSystem -->> UI: Übergibt Schaltungsdaten
-    UI ->> System: Validiert und lädt Schaltung
+    DateiSystem -->>- UI: Übergibt Schaltungsdaten
+    UI ->>+ System: Validiert und lädt Schaltung
     alt Datei gültig
         System -->> UI: Schaltung erfolgreich geladen
-        UI -->> Benutzer: Schaltung im Canvas anzeigen
+        UI -->>- Benutzer: Schaltung im Canvas anzeigen
     else Datei fehlerhaft
-        System -->> Benutzer: Fehlerdialog „Ungültiges Format“
+        System -->>- Benutzer: Fehlerdialog „Ungültiges Format“
     end
 
 ```
@@ -428,19 +434,20 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     actor Benutzer
-    participant System as Baustein-Editor
+    participant Editor as Baustein-Editor
     participant Compiler as Logik-Compiler
     participant Bibliothek as Bausteinbibliothek
 
-    Benutzer ->> System: Menü „Neuer Baustein“ auswählen
-    System ->> Benutzer: Öffnet Editor (Pins, Symbol, Logik)
-    Benutzer ->> System: Definiert Bausteineigenschaften
-    System ->> Compiler: Logik kompilieren
+    Benutzer ->>+ Editor: Menü „Neuer Baustein“ auswählen
+    Editor ->> Benutzer: Öffnet Editor (Pins, Symbol, Logik)
+    Benutzer ->> Editor: Definiert Bausteineigenschaften
+    Editor ->>+ Compiler: Logik kompilieren
+    deactivate Editor
     alt Kompilierung erfolgreich
-        Compiler ->> Bibliothek: Baustein speichern
-        Bibliothek -->> Benutzer: Neuer Baustein erscheint in Liste
+        Compiler ->>+ Bibliothek: Baustein speichern
+        Bibliothek -->>- Benutzer: Neuer Baustein erscheint in Liste
     else Kompilierungsfehler
-        Compiler -->> Benutzer: Fehlermeldung anzeigen
+        Compiler -->>- Benutzer: Fehlermeldung anzeigen
     end
 
 ```
@@ -466,14 +473,15 @@ sequenceDiagram
     participant Bibliothek as Bausteinbibliothek
     participant Canvas as Schaltplan-Canvas
 
-    Benutzer ->> Bibliothek: Wählt Baustein aus
-    Benutzer ->> Canvas: Zieht Baustein per Drag & Drop
+    Benutzer ->>+ Bibliothek: Wählt Baustein aus
+    deactivate Bibliothek
+    Benutzer ->>+ Canvas: Zieht Baustein per Drag & Drop
     Canvas ->> Canvas: Position berechnen
     alt Kein Objektkollision
         Canvas -->> Benutzer: Baustein platziert
     else Kollision erkannt
         Canvas ->> Canvas: Automatisch verschieben
-        Canvas -->> Benutzer: Baustein repositioniert
+        Canvas -->>- Benutzer: Baustein repositioniert
     end
 
 ```
@@ -500,15 +508,15 @@ sequenceDiagram
     participant Canvas as Schaltplan-Canvas
     participant System as Validierungsmodul
 
-    Benutzer ->> Canvas: Klick auf Ausgangspin
-    Canvas ->> Benutzer: Zeigt Gummiband-Leitung
-    Benutzer ->> Canvas: Verbindung mit Zielpin herstellen
-    Canvas ->> System: Verbindung prüfen
+    Benutzer ->>+ Canvas: Klick auf Ausgangspin
+    Canvas ->>- Benutzer: Zeigt Gummiband-Leitung
+    Benutzer ->>+ Canvas: Verbindung mit Zielpin herstellen
+    Canvas ->>+ System: Verbindung prüfen
     alt Verbindung gültig
         System -->> Canvas: Verbindung bestätigen
-        Canvas -->> Benutzer: Leitung anzeigen
+        Canvas -->>- Benutzer: Leitung anzeigen
     else Verbindung ungültig
-        System -->> Benutzer: Rote Leitung + Fehlermeldung
+        System -->>- Benutzer: Rote Leitung + Fehlermeldung
     end
 
 ```
@@ -531,10 +539,10 @@ sequenceDiagram
     participant Canvas as Schaltplan-Canvas
     participant System as Bausteinverwaltung
 
-    Benutzer ->> Canvas: Wählt Baustein und drückt Entf
-    Canvas ->> System: Baustein und zugehörige Leitungen löschen
-    System -->> Canvas: Aktualisierte Schaltung
-    Canvas -->> Benutzer: Schaltung ohne Baustein anzeigen
+    Benutzer ->>+ Canvas: Wählt Baustein und drückt Entf
+    Canvas ->>+ System: Baustein und zugehörige Leitungen löschen
+    System -->>- Canvas: Aktualisierte Schaltung
+    Canvas -->>- Benutzer: Schaltung ohne Baustein anzeigen
 
 ```
 
@@ -559,14 +567,14 @@ sequenceDiagram
     participant System as Simulationsmodul
     participant Canvas as Schaltplan-Canvas
 
-    Benutzer ->> System: Klick auf „Simulieren“
-    System ->> Canvas: Netzliste prüfen
+    Benutzer ->>+ System: Klick auf „Simulieren“
+    System ->>+ Canvas: Netzliste prüfen
     alt Netzliste fehlerfrei
         System ->> System: Startet WebAssembly-Simulation
         System ->> Canvas: Aktualisiert LEDs/Signale in Echtzeit
-        Canvas -->> Benutzer: Live-Simulation sichtbar
+        Canvas -->>- Benutzer: Live-Simulation sichtbar
     else Fehlerhafte Netzliste
-        System -->> Benutzer: Fehlermeldung anzeigen
+        System -->>- Benutzer: Fehlermeldung anzeigen
     end
 
 ```
@@ -589,11 +597,11 @@ sequenceDiagram
     participant System as Speicherverwaltung
     participant Cloud as Cloud/LocalStorage
 
-    Benutzer ->> System: Klick auf „Speichern“ oder Ctrl+S
-    System ->> Cloud: Schaltung speichern
-    Cloud -->> System: Speichern erfolgreich
+    Benutzer ->>+ System: Klick auf „Speichern“ oder Ctrl+S
+    System ->>+ Cloud: Schaltung speichern
+    Cloud -->>- System: Speichern erfolgreich
     System ->> System: Versionsnummer erhöhen
-    System -->> Benutzer: Meldung „Schaltung gespeichert“
+    System -->>- Benutzer: Meldung „Schaltung gespeichert“
 
 ```
 
@@ -616,14 +624,15 @@ sequenceDiagram
     participant Cloud as Cloud/LocalStorage
     participant Canvas as Schaltplan-Canvas
 
-    Benutzer ->> System: Klick auf „Laden“
-    System ->> Cloud: Projektliste abrufen
-    Cloud -->> System: Liste verfügbarer Schaltungen
+    Benutzer ->>+ System: Klick auf „Laden“
+    System ->>+ Cloud: Projektliste abrufen
+    Cloud -->>- System: Liste verfügbarer Schaltungen
     Benutzer ->> System: Wählt Projekt
-    System ->> Cloud: Schaltung laden
-    Cloud -->> System: Schaltungsdaten
-    System ->> Canvas: Schaltung darstellen
-    Canvas -->> Benutzer: Geladene Schaltung sichtbar
+    System ->>+ Cloud: Schaltung laden
+    Cloud -->>- System: Schaltungsdaten
+    System ->>+ Canvas: Schaltung darstellen
+    deactivate System
+    Canvas -->>- Benutzer: Geladene Schaltung sichtbar
 
 ```
 
@@ -646,14 +655,14 @@ sequenceDiagram
     participant System as Administrationsmodul
     participant DB as Benutzerdatenbank
 
-    Administrator ->> System: Menü „Nutzer verwalten“ öffnen
-    System ->> DB: Benutzerliste abrufen
-    DB -->> System: Liste zurückgeben
+    Administrator ->>+ System: Menü „Nutzer verwalten“ öffnen
+    System ->>+ DB: Benutzerliste abrufen
+    DB -->>- System: Liste zurückgeben
     System -->> Administrator: Benutzerliste anzeigen
     Administrator ->> System: Ändert Status/Rechte oder löscht Nutzer
-    System ->> DB: Änderungen speichern
-    DB -->> System: Bestätigung
-    System -->> Administrator: Meldung „Änderungen erfolgreich“
+    System ->>+ DB: Änderungen speichern
+    DB -->>- System: Bestätigung
+    System -->>- Administrator: Meldung „Änderungen erfolgreich“
 
 ```
 
@@ -676,13 +685,13 @@ sequenceDiagram
     participant System as Systemeinstellungsmodul
     participant DB as Systemdatenbank
 
-    Administrator ->> System: Menü „Systemeinstellungen“ öffnen
-    System ->> DB: Aktuelle Einstellungen abrufen
-    DB -->> System: Daten anzeigen
+    Administrator ->>+ System: Menü „Systemeinstellungen“ öffnen
+    System ->>+ DB: Aktuelle Einstellungen abrufen
+    DB -->>- System: Daten anzeigen
     Administrator ->> System: Ändert Werte (z. B. Serverpfad)
-    System ->> DB: Neue Einstellungen speichern
-    DB -->> System: Bestätigung
-    System -->> Administrator: Meldung „Änderungen aktiv“
+    System ->>+ DB: Neue Einstellungen speichern
+    DB -->>- System: Bestätigung
+    System -->>- Administrator: Meldung „Änderungen aktiv“
 
 ```
 
@@ -707,16 +716,16 @@ sequenceDiagram
     participant System as Authentifizierungsservice
     participant DB as Benutzerdatenbank
 
-    Benutzer ->> UI: Klick auf „Registrieren“
-    UI ->> Benutzer: Formular anzeigen (E-Mail, Passwort, Name)
-    Benutzer ->> System: Formular absenden
-    System ->> DB: Prüft, ob E-Mail existiert
+    Benutzer ->>+ UI: Klick auf „Registrieren“
+    UI ->>- Benutzer: Formular anzeigen (E-Mail, Passwort, Name)
+    Benutzer ->>+ System: Formular absenden
+    System ->>+ DB: Prüft, ob E-Mail existiert
     alt E-Mail neu
         DB ->> DB: Konto erstellen
-        DB -->> System: Erfolgsmeldung
+        DB -->>- System: Erfolgsmeldung
         System -->> Benutzer: Registrierung erfolgreich
     else E-Mail existiert
-        System -->> Benutzer: Fehlermeldung anzeigen
+        System -->>- Benutzer: Fehlermeldung anzeigen
     end
 
 ```
@@ -741,14 +750,14 @@ sequenceDiagram
     participant System as Authentifizierungsservice
     participant DB as Benutzerdatenbank
 
-    Benutzer ->> System: Klick auf „Login“ + Eingabe von Daten
-    System ->> DB: Prüft Zugangsdaten
+    Benutzer ->>+ System: Klick auf „Login“ + Eingabe von Daten
+    System ->>+ DB: Prüft Zugangsdaten
     alt Daten korrekt
         DB -->> System: Benutzer verifiziert
         System -->> Benutzer: Zugriff gewährt
     else Passwort falsch
-        DB -->> System: Fehler
-        System -->> Benutzer: Fehlermeldung anzeigen
+        DB -->>- System: Fehler
+        System -->>- Benutzer: Fehlermeldung anzeigen
     end
 
 ```
@@ -770,9 +779,10 @@ sequenceDiagram
     participant System as Sitzungsverwaltung
     participant Browser as Client-Session
 
-    Benutzer ->> System: Klick auf „Logout“
-    System ->> Browser: Session-Cookies löschen
-    System -->> Benutzer: Weiterleitung zur Startseite
+    Benutzer ->> +System: Klick auf „Logout“
+    System ->>+ Browser: Session-Cookies löschen
+    deactivate Browser
+    System -->>- Benutzer: Weiterleitung zur Startseite
 
 ```
 
@@ -795,14 +805,14 @@ sequenceDiagram
     participant System as Kontoverwaltung
     participant DB as Benutzerdatenbank
 
-    Benutzer ->> System: Klick auf „Account löschen“
+    Benutzer ->>+ System: Klick auf „Account löschen“
     System ->> Benutzer: Sicherheitsabfrage anzeigen
     alt Benutzer bestätigt
-        System ->> DB: Benutzerdaten löschen/anonymisieren
-        DB -->> System: Bestätigung
+        System ->>+ DB: Benutzerdaten löschen/anonymisieren
+        DB -->>- System: Bestätigung
         System -->> Benutzer: Konto entfernt, Logout
     else Benutzer bricht ab
-        System -->> Benutzer: Aktion verworfen
+        System -->>- Benutzer: Aktion verworfen
     end
 
 ```
@@ -826,19 +836,20 @@ sequenceDiagram
     participant Mail as E-Mail-Service
     participant DB as Benutzerdatenbank
 
-    Benutzer ->> System: Klick auf „Passwort vergessen“
-    System ->> Benutzer: E-Mail-Adresse eingeben
-    Benutzer ->> System: Adresse absenden
-    System ->> DB: Prüft Benutzerkonto
+    Benutzer ->>+ System: Klick auf „Passwort vergessen“
+    System ->>+ Benutzer: E-Mail-Adresse eingeben
+    Benutzer ->>- System: Adresse absenden
+    System ->>+ DB: Prüft Benutzerkonto
     alt Konto vorhanden
-        System ->> Mail: Sende Passwort-Link
-        Mail -->> Benutzer: E-Mail mit Reset-Link
-        Benutzer ->> System: Öffnet Link und setzt neues Passwort
+        System ->>+ Mail: Sende Passwort-Link
+        Mail -->>+ Benutzer: E-Mail mit Reset-Link
+        deactivate Mail
+        Benutzer ->>- System: Öffnet Link und setzt neues Passwort
         System ->> DB: Passwort aktualisieren
-        DB -->> System: Bestätigung
+        DB -->>- System: Bestätigung
         System -->> Benutzer: Neues Passwort aktiv
     else Konto nicht gefunden
-        System -->> Benutzer: Fehlermeldung anzeigen
+        System -->>- Benutzer: Fehlermeldung anzeigen
     end
 
 ```
