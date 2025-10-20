@@ -1,0 +1,7 @@
+sequenceDiagram
+    participant Benutzer
+    participant Applikation
+    Benutzer->>+Applikation: Einstellungsmenü öffnen
+    Benutzer->>Applikation: Farbmodus auswählen
+    Applikation->>Applikation: Auswahl im Localstorage speichern
+    Applikation->>-Benutzer: Farbmodus anzeigen
