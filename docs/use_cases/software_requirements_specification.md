@@ -138,6 +138,8 @@ Testing:
 	2. Benutzer wählt „Darstellung → Dark Mode“.
 	3. System speichert die Einstellung lokal (im Browser-Storage oder Benutzerprofil).
 	4. UI wechselt sofort zur dunklen Farbpalette.
+- **Sequence Diagram**
+![Sequence Diagram Dark Mode](https://github.com/SimonJ2222/BitFlow/blob/main/docs/sequence_diagrams/dark_mode.png)
 - **Alternativabläufe:**  
 	- 3a. Wenn Browser LocalStorage deaktiviert: Einstellung wird nur temporär gespeichert.
 - **Nachbedingungen:** Oberfläche wird dauerhaft im gewählten Modus angezeigt.  
