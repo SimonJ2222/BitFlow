@@ -160,6 +160,24 @@ Testing:
 	- 2a. Kein Undo-Verlauf vorhanden → System zeigt Hinweis „Keine Änderungen rückgängig zu machen“.  
 - **Nachbedingungen:** Letzte Änderung ist rückgängig gemacht.  
 - **Akzeptanzkriterien:** Alle Aktionen (z. B. Baustein verschieben, Leitung löschen) lassen sich rückgängig machen.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+	actor Benutzer
+	participant Canvas as Schaltplan-Canvas
+	participant System as Undo-Manager
+
+	Benutzer ->> Canvas: Führt Aktion aus (z. B. Baustein verschieben)
+	Canvas ->> System: Aktion im Undo-Stack speichern
+	Benutzer ->> Canvas: "Rückgängig" (Ctrl+Z) auslösen
+	alt Undo-Verlauf vorhanden
+		Canvas ->> System: Letzten Zustand anfordern
+		System -->> Canvas: Vorherigen Zustand zurückgeben
+		Canvas -->> Benutzer: Zeigt vorherigen Schaltplanzustand
+	else Kein Undo-Verlauf vorhanden
+		Canvas -->> Benutzer: Meldung „Keine Änderungen rückgängig zu machen“
+	end
+```
 
 
 #### 3.1.3 UC-03 – Projektdatei löschen
@@ -176,6 +194,24 @@ Testing:
 	- 2a. Benutzer bricht ab → Aktion wird verworfen.  
 - **Nachbedingungen:** Projektdatei ist gelöscht.  
 - **Akzeptanzkriterien:** Gelöschte Datei taucht nicht mehr im Projektmanager auf.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant UI as Projektmanager
+    participant Storage as Cloud/LocalStorage
+
+    Benutzer ->> UI: Wählt Projekt und klickt „Löschen“
+    UI ->> Benutzer: Zeigt Sicherheitsabfrage
+    alt Benutzer bestätigt Löschung
+        UI ->> Storage: Projektdatei entfernen
+        Storage -->> UI: Löschung erfolgreich
+        UI -->> Benutzer: Projektliste aktualisieren
+    else Benutzer bricht ab
+        UI -->> Benutzer: Aktion verworfen
+    end
+
+```
 
 
 #### 3.1.4 UC-04 – Schaltung zu Baustein zusammenfassen
@@ -192,6 +228,26 @@ Testing:
 	- 1a. Schaltung enthält unverbundene Pins → Warnung und Möglichkeit zur Korrektur.  
 - **Nachbedingungen:** Neuer Baustein steht in der Bibliothek zur Verfügung.  
 - **Akzeptanzkriterien:** Baustein kann im nächsten Projekt per Drag & Drop verwendet werden.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant Editor as Schaltungseditor
+    participant System as Bausteinverwaltung
+
+    Benutzer ->> Editor: Klick auf „Als Baustein speichern“
+    Editor ->> Benutzer: Auswahl der Schaltungsteile anfordern
+    Benutzer ->> Editor: Markiert relevante Schaltung
+    Editor ->> System: Öffnet Dialog „Neuer Logikbaustein“
+    Benutzer ->> System: Gibt Name, Symbol, Beschreibung ein
+    alt Schaltung fehlerfrei
+        System ->> System: Metadatei erstellen und speichern
+        System -->> Benutzer: Neuer Baustein in Bibliothek sichtbar
+    else Unverbundene Pins vorhanden
+        System -->> Benutzer: Warnung + Korrekturmöglichkeit
+    end
+
+```
 
 
 #### 3.1.5 UC-05 – Schaltung exportieren
@@ -207,6 +263,26 @@ Testing:
 	- 2a. Export fehlschlägt → System zeigt Fehlerdialog mit Log.  
 - **Nachbedingungen:** Datei ist im Zielverzeichnis gespeichert.  
 - **Akzeptanzkriterien:** Exportierte Datei enthält vollständige Netzliste und Bausteindefinitionen.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant Editor as Schaltungseditor
+    participant Exporter as Exportmodul
+    participant DateiSystem as Lokales Dateisystem
+
+    Benutzer ->> Editor: Klick auf „Exportieren“
+    Editor ->> Benutzer: Auswahl des Exportformats anzeigen
+    Benutzer ->> Exporter: Wählt Format (z. B. JSON, XML, VHDL)
+    Exporter ->> Editor: Netzliste generieren
+    Exporter ->> DateiSystem: Datei schreiben
+    alt Export erfolgreich
+        DateiSystem -->> Benutzer: Download verfügbar
+    else Exportfehler
+        Exporter -->> Benutzer: Fehlerdialog + Log anzeigen
+    end
+
+```
 
 
 #### 3.1.6 UC-06 – Gesamte Schaltung löschen
@@ -222,6 +298,24 @@ Testing:
 	- 2a. Benutzer bricht ab → keine Änderung.  
 - **Nachbedingungen:** Canvas ist leer.  
 - **Akzeptanzkriterien:** Kein Element verbleibt sichtbar.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant Editor as Schaltungseditor
+    participant System as Schaltungssystem
+
+    Benutzer ->> Editor: Klick auf „Alles löschen“
+    Editor ->> Benutzer: Bestätigungsdialog anzeigen
+    alt Benutzer bestätigt
+        Editor ->> System: Lösche alle Bausteine und Leitungen
+        System -->> Editor: Canvas geleert
+        Editor -->> Benutzer: Leeres Arbeitsfeld anzeigen
+    else Benutzer bricht ab
+        Editor -->> Benutzer: Keine Änderung vorgenommen
+    end
+
+```
 
 
 #### 3.1.7 UC-07 – Signalverläufe visualisieren
@@ -237,6 +331,27 @@ Testing:
 	- 2a. Kein Signal gewählt → Meldung „Bitte Leitung auswählen“.  
 - **Nachbedingungen:** Signaldiagramm ist sichtbar.  
 - **Akzeptanzkriterien:** Werteänderungen stimmen mit Simulation überein.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant UI as Schaltungseditor
+    participant Simulation as Simulationsmodul
+    participant Viewer as Signal-Viewer
+
+    Benutzer ->> UI: Klick auf „Signalverlauf anzeigen“
+    UI ->> Simulation: Prüft, ob Simulation aktiv ist
+    Simulation -->> UI: Bestätigung
+    UI ->> Viewer: Öffnet Signal-Viewer
+    Benutzer ->> Viewer: Wählt Knoten/Leitung
+    alt Signal vorhanden
+        Simulation ->> Viewer: Sendet Signalverlauf (Zeit/Wert)
+        Viewer -->> Benutzer: Zeigt Echtzeit-Wellenform
+    else Kein Signal gewählt
+        Viewer -->> Benutzer: Meldung „Bitte Leitung auswählen“
+    end
+
+```
 
 
 #### 3.1.8 UC-08 – Schaltung importieren
