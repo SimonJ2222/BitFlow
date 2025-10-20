@@ -138,12 +138,33 @@ Testing:
 	2. Benutzer wählt „Darstellung → Dark Mode“.
 	3. System speichert die Einstellung lokal (im Browser-Storage oder Benutzerprofil).
 	4. UI wechselt sofort zur dunklen Farbpalette.
-- **Sequence Diagram**
-![Sequence Diagram Dark Mode](https://github.com/SimonJ2222/BitFlow/blob/main/docs/sequence_diagrams/dark_mode.png)
 - **Alternativabläufe:**  
 	- 3a. Wenn Browser LocalStorage deaktiviert: Einstellung wird nur temporär gespeichert.
 - **Nachbedingungen:** Oberfläche wird dauerhaft im gewählten Modus angezeigt.  
 - **Akzeptanzkriterien:** Farbwechsel erfolgt flüssig; Einstellung bleibt beim nächsten Start erhalten.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant UI as Benutzeroberfläche
+    participant System as Einstellungen-Modul
+    participant Storage as Browser- oder Benutzer-Storage
+
+    Benutzer ->> UI: Öffnet Einstellungsmenü
+    UI ->> Benutzer: Zeigt Optionen (z. B. Darstellung)
+    Benutzer ->> UI: Wählt "Darstellung → Dark Mode"
+    UI ->> System: Änderung übermitteln (Dark Mode = aktiviert)
+
+    alt LocalStorage verfügbar
+        System ->> Storage: Einstellung speichern
+        Storage -->> System: Bestätigung Speicherung
+    else LocalStorage deaktiviert
+        System ->> UI: Hinweis „Einstellung wird nur temporär gespeichert“
+    end
+
+    System ->> UI: UI-Theme aktualisieren
+    UI -->> Benutzer: Oberfläche wechselt zu dunkler Farbpalette
+```
 
 
 #### 3.1.2 UC-02 – Änderungen rückgängig machen
@@ -367,6 +388,27 @@ sequenceDiagram
 	- 2a. Datei fehlerhaft → Fehlerdialog.  
 - **Nachbedingungen:** Schaltung ist geladen.  
 - **Akzeptanzkriterien:** Alle Bausteine korrekt platziert.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant UI as Schaltungseditor
+    participant DateiSystem as Lokales Dateisystem
+    participant System as Bausteinverwaltung
+
+    Benutzer ->> UI: Klick auf „Importieren“
+    UI ->> DateiSystem: Öffnet Dateiauswahldialog
+    Benutzer ->> DateiSystem: Wählt Datei
+    DateiSystem -->> UI: Übergibt Schaltungsdaten
+    UI ->> System: Validiert und lädt Schaltung
+    alt Datei gültig
+        System -->> UI: Schaltung erfolgreich geladen
+        UI -->> Benutzer: Schaltung im Canvas anzeigen
+    else Datei fehlerhaft
+        System -->> Benutzer: Fehlerdialog „Ungültiges Format“
+    end
+
+```
 
 
 #### 3.1.9 UC-09 – Benutzerdefinierte Logikbausteine erstellen
@@ -382,6 +424,26 @@ sequenceDiagram
 	- 3a. Kompilierungsfehler → Benutzer erhält Fehlermeldung.  
 - **Nachbedingungen:** Neuer Baustein steht zur Verwendung bereit.  
 - **Akzeptanzkriterien:** Baustein erscheint in Bibliothek und funktioniert korrekt.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant System as Baustein-Editor
+    participant Compiler as Logik-Compiler
+    participant Bibliothek as Bausteinbibliothek
+
+    Benutzer ->> System: Menü „Neuer Baustein“ auswählen
+    System ->> Benutzer: Öffnet Editor (Pins, Symbol, Logik)
+    Benutzer ->> System: Definiert Bausteineigenschaften
+    System ->> Compiler: Logik kompilieren
+    alt Kompilierung erfolgreich
+        Compiler ->> Bibliothek: Baustein speichern
+        Bibliothek -->> Benutzer: Neuer Baustein erscheint in Liste
+    else Kompilierungsfehler
+        Compiler -->> Benutzer: Fehlermeldung anzeigen
+    end
+
+```
 
 
 #### 3.1.10 UC-10 – Logikbausteine per Drag & Drop positionieren
@@ -397,6 +459,24 @@ sequenceDiagram
 	- 3a. Kollision mit bestehendem Objekt → automatische Verschiebung.  
 - **Nachbedingungen:** Baustein auf Canvas platziert.  
 - **Akzeptanzkriterien:** Drag & Drop funktioniert flüssig.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant Bibliothek as Bausteinbibliothek
+    participant Canvas as Schaltplan-Canvas
+
+    Benutzer ->> Bibliothek: Wählt Baustein aus
+    Benutzer ->> Canvas: Zieht Baustein per Drag & Drop
+    Canvas ->> Canvas: Position berechnen
+    alt Kein Objektkollision
+        Canvas -->> Benutzer: Baustein platziert
+    else Kollision erkannt
+        Canvas ->> Canvas: Automatisch verschieben
+        Canvas -->> Benutzer: Baustein repositioniert
+    end
+
+```
 
 
 #### 3.1.11 UC-11 – Bausteine verbinden
@@ -413,6 +493,25 @@ sequenceDiagram
 	- 4a. Ungültige Verbindung → rote Leitung, Fehlertext.  
 - **Nachbedingungen:** Signalleitung hergestellt.  
 - **Akzeptanzkriterien:** Verbindung korrekt in Simulation berücksichtigt.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant Canvas as Schaltplan-Canvas
+    participant System as Validierungsmodul
+
+    Benutzer ->> Canvas: Klick auf Ausgangspin
+    Canvas ->> Benutzer: Zeigt Gummiband-Leitung
+    Benutzer ->> Canvas: Verbindung mit Zielpin herstellen
+    Canvas ->> System: Verbindung prüfen
+    alt Verbindung gültig
+        System -->> Canvas: Verbindung bestätigen
+        Canvas -->> Benutzer: Leitung anzeigen
+    else Verbindung ungültig
+        System -->> Benutzer: Rote Leitung + Fehlermeldung
+    end
+
+```
 
 
 #### 3.1.12 UC-12 – Baustein löschen
@@ -425,6 +524,19 @@ sequenceDiagram
 	2. Canvas aktualisiert.  
 - **Nachbedingungen:** Baustein nicht mehr vorhanden.  
 - **Akzeptanzkriterien:** Keine unverbundenen Leitungen verbleiben.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant Canvas as Schaltplan-Canvas
+    participant System as Bausteinverwaltung
+
+    Benutzer ->> Canvas: Wählt Baustein und drückt Entf
+    Canvas ->> System: Baustein und zugehörige Leitungen löschen
+    System -->> Canvas: Aktualisierte Schaltung
+    Canvas -->> Benutzer: Schaltung ohne Baustein anzeigen
+
+```
 
 
 #### 3.1.13 UC-13 – Simulation in Echtzeit starten
@@ -440,6 +552,24 @@ sequenceDiagram
 	- 2a. Fehlerhafte Netzliste → Abbruch mit Meldung.  
 - **Nachbedingungen:** Simulation beendet oder pausiert.  
 - **Akzeptanzkriterien:** Echtzeitsimulation reagiert korrekt auf Eingaben.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant System as Simulationsmodul
+    participant Canvas as Schaltplan-Canvas
+
+    Benutzer ->> System: Klick auf „Simulieren“
+    System ->> Canvas: Netzliste prüfen
+    alt Netzliste fehlerfrei
+        System ->> System: Startet WebAssembly-Simulation
+        System ->> Canvas: Aktualisiert LEDs/Signale in Echtzeit
+        Canvas -->> Benutzer: Live-Simulation sichtbar
+    else Fehlerhafte Netzliste
+        System -->> Benutzer: Fehlermeldung anzeigen
+    end
+
+```
 
 
 #### 3.1.14 UC-14 – Schaltung speichern
@@ -452,6 +582,20 @@ sequenceDiagram
 	2. Versionsnummer wird angehoben.  
 - **Nachbedingungen:** Schaltung gespeichert.  
 - **Akzeptanzkriterien:** Datei im Projektmanager sichtbar.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant System as Speicherverwaltung
+    participant Cloud as Cloud/LocalStorage
+
+    Benutzer ->> System: Klick auf „Speichern“ oder Ctrl+S
+    System ->> Cloud: Schaltung speichern
+    Cloud -->> System: Speichern erfolgreich
+    System ->> System: Versionsnummer erhöhen
+    System -->> Benutzer: Meldung „Schaltung gespeichert“
+
+```
 
 
 #### 3.1.15 UC-15 – Schaltung laden
@@ -464,6 +608,24 @@ sequenceDiagram
 	3. System lädt Schaltung ins Canvas.  
 - **Nachbedingungen:** Schaltung verfügbar.  
 - **Akzeptanzkriterien:** Vollständiger Zustand geladen.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant System as Projektmanager
+    participant Cloud as Cloud/LocalStorage
+    participant Canvas as Schaltplan-Canvas
+
+    Benutzer ->> System: Klick auf „Laden“
+    System ->> Cloud: Projektliste abrufen
+    Cloud -->> System: Liste verfügbarer Schaltungen
+    Benutzer ->> System: Wählt Projekt
+    System ->> Cloud: Schaltung laden
+    Cloud -->> System: Schaltungsdaten
+    System ->> Canvas: Schaltung darstellen
+    Canvas -->> Benutzer: Geladene Schaltung sichtbar
+
+```
 
 
 #### 3.1.16 UC-16 – Nutzer verwalten
@@ -477,6 +639,23 @@ sequenceDiagram
 	3. Änderungen werden gespeichert.  
 - **Nachbedingungen:** Nutzerdaten aktualisiert.  
 - **Akzeptanzkriterien:** Änderungen sofort wirksam.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Administrator
+    participant System as Administrationsmodul
+    participant DB as Benutzerdatenbank
+
+    Administrator ->> System: Menü „Nutzer verwalten“ öffnen
+    System ->> DB: Benutzerliste abrufen
+    DB -->> System: Liste zurückgeben
+    System -->> Administrator: Benutzerliste anzeigen
+    Administrator ->> System: Ändert Status/Rechte oder löscht Nutzer
+    System ->> DB: Änderungen speichern
+    DB -->> System: Bestätigung
+    System -->> Administrator: Meldung „Änderungen erfolgreich“
+
+```
 
 
 #### 3.1.17 UC-17 – Systemeinstellungen bearbeiten
@@ -490,6 +669,22 @@ sequenceDiagram
 	3. System speichert und lädt neu.  
 - **Nachbedingungen:** Neue Einstellungen aktiv.  
 - **Akzeptanzkriterien:** Änderungen korrekt übernommen.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Administrator
+    participant System as Systemeinstellungsmodul
+    participant DB as Systemdatenbank
+
+    Administrator ->> System: Menü „Systemeinstellungen“ öffnen
+    System ->> DB: Aktuelle Einstellungen abrufen
+    DB -->> System: Daten anzeigen
+    Administrator ->> System: Ändert Werte (z. B. Serverpfad)
+    System ->> DB: Neue Einstellungen speichern
+    DB -->> System: Bestätigung
+    System -->> Administrator: Meldung „Änderungen aktiv“
+
+```
 
 
 #### 3.1.18 UC-18 – Registrieren
@@ -504,6 +699,27 @@ sequenceDiagram
 	- 2a. E-Mail existiert → Fehlermeldung.  
 - **Nachbedingungen:** Neues Konto angelegt.  
 - **Akzeptanzkriterien:** Benutzer kann sich anschließend anmelden.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant UI as Registrierungsformular
+    participant System as Authentifizierungsservice
+    participant DB as Benutzerdatenbank
+
+    Benutzer ->> UI: Klick auf „Registrieren“
+    UI ->> Benutzer: Formular anzeigen (E-Mail, Passwort, Name)
+    Benutzer ->> System: Formular absenden
+    System ->> DB: Prüft, ob E-Mail existiert
+    alt E-Mail neu
+        DB ->> DB: Konto erstellen
+        DB -->> System: Erfolgsmeldung
+        System -->> Benutzer: Registrierung erfolgreich
+    else E-Mail existiert
+        System -->> Benutzer: Fehlermeldung anzeigen
+    end
+
+```
 
 
 #### 3.1.19 UC-19 – Anmelden
@@ -518,6 +734,24 @@ sequenceDiagram
 	- 2a. Passwort falsch → Fehlermeldung.  
 - **Nachbedingungen:** Benutzer eingeloggt.  
 - **Akzeptanzkriterien:** Zugang nur bei korrekten Daten.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant System as Authentifizierungsservice
+    participant DB as Benutzerdatenbank
+
+    Benutzer ->> System: Klick auf „Login“ + Eingabe von Daten
+    System ->> DB: Prüft Zugangsdaten
+    alt Daten korrekt
+        DB -->> System: Benutzer verifiziert
+        System -->> Benutzer: Zugriff gewährt
+    else Passwort falsch
+        DB -->> System: Fehler
+        System -->> Benutzer: Fehlermeldung anzeigen
+    end
+
+```
 
 
 #### 3.1.20 UC-20 – Abmelden
@@ -529,6 +763,18 @@ sequenceDiagram
 	2. Benutzer wird zur Startseite geleitet.  
 - **Nachbedingungen:** Sitzung beendet.  
 - **Akzeptanzkriterien:** Kein Zugriff mehr auf geschützte Bereiche.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant System as Sitzungsverwaltung
+    participant Browser as Client-Session
+
+    Benutzer ->> System: Klick auf „Logout“
+    System ->> Browser: Session-Cookies löschen
+    System -->> Benutzer: Weiterleitung zur Startseite
+
+```
 
 
 #### 3.1.21 UC-21 – Nutzeraccount löschen
@@ -542,6 +788,24 @@ sequenceDiagram
 	3. Daten werden gelöscht.  
 - **Nachbedingungen:** Konto entfernt, Daten anonymisiert.  
 - **Akzeptanzkriterien:** Kein Login mehr möglich.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant System as Kontoverwaltung
+    participant DB as Benutzerdatenbank
+
+    Benutzer ->> System: Klick auf „Account löschen“
+    System ->> Benutzer: Sicherheitsabfrage anzeigen
+    alt Benutzer bestätigt
+        System ->> DB: Benutzerdaten löschen/anonymisieren
+        DB -->> System: Bestätigung
+        System -->> Benutzer: Konto entfernt, Logout
+    else Benutzer bricht ab
+        System -->> Benutzer: Aktion verworfen
+    end
+
+```
 
 
 #### 3.1.22 UC-22 – Passwort zurücksetzen
@@ -554,6 +818,30 @@ sequenceDiagram
 	3. Benutzer setzt neues Passwort.  
 - **Nachbedingungen:** Neues Passwort gültig.  
 - **Akzeptanzkriterien:** Login mit neuem Passwort möglich.
+- **Sequenzdiagramm:**
+```mermaid
+sequenceDiagram
+    actor Benutzer
+    participant System as Authentifizierungsservice
+    participant Mail as E-Mail-Service
+    participant DB as Benutzerdatenbank
+
+    Benutzer ->> System: Klick auf „Passwort vergessen“
+    System ->> Benutzer: E-Mail-Adresse eingeben
+    Benutzer ->> System: Adresse absenden
+    System ->> DB: Prüft Benutzerkonto
+    alt Konto vorhanden
+        System ->> Mail: Sende Passwort-Link
+        Mail -->> Benutzer: E-Mail mit Reset-Link
+        Benutzer ->> System: Öffnet Link und setzt neues Passwort
+        System ->> DB: Passwort aktualisieren
+        DB -->> System: Bestätigung
+        System -->> Benutzer: Neues Passwort aktiv
+    else Konto nicht gefunden
+        System -->> Benutzer: Fehlermeldung anzeigen
+    end
+
+```
 
 
 ### 3.2 Usability
