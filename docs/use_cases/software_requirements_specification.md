@@ -82,7 +82,9 @@ Hilfetexte, Tooltips und Bestätigungsdialoge unterstützen die Bedienung.
 
 
 ### 1.5 Overview
-TODO
+Das nächste Kapitel stellt das Projekt vor und umfasst sowohl die zugrunde liegende Vision als auch das umfassende Use-Case-Diagramm.
+Darauf folgt eine detaillierte Beschreibung der Anforderungen, die sich auf Funktion, Usability und Gestaltungskriterien beziehen.
+Zum Abschluss enthält das Dokument ergänzende Informationen, die das Verständnis und die Umsetzung des Projekts unterstützen.
 
 ## 2. Overall Description
 
@@ -94,7 +96,131 @@ Ziel der Anwendung ist es, das Verständnis digitaler Logik und Schaltungstechni
 Studierende, Lehrkräfte und Technikinteressierte sollen Logikgatter, Schaltungen und Signale intuitiv und visuell erkunden können.
 
 ### 2.2 Use Case Diagram
-<img width="2686" height="3451" alt="UseCaseDiagramm_BitFlow" src="https://github.com/user-attachments/assets/039a5b8d-69ab-4674-ba08-8f26e407d0d1" />
+
+```mermaid
+%%{init: {"theme": "default", "flowchart": {"htmlLabels": true}}}%%
+graph LR
+
+%% --- Akteure ---
+Benutzer(("**Benutzer**"))
+Admin(("**Admin**"))
+
+%% --- Systemgrenze ---
+subgraph BitFlow["**Bit Flow – Gesamtsystem**"]
+    
+    %% --- Subsystem: Accounts ---
+    subgraph Accounts["**Accounts**"]
+        UC1([Registrieren])
+        UC2([Anmelden])
+        UC3([Abmelden])
+        UC13([Nutzeraccount löschen])
+        UC14([Passwort zurücksetzen])
+    end
+
+    %% --- Subsystem: Administration ---
+    subgraph Administration["**Administration**"]
+        UC11([Nutzer verwalten])
+        UC12([Systemeinstellungen bearbeiten])
+    end
+
+    %% --- Subsystem: User Interaction ---
+    subgraph UserInteraction["**Nutzerinteraktion**"]
+        UC4([Logikbausteine per Drag & Drop positionieren])
+        UC5([Bausteine verbinden])
+        UC6([Simulation in Echtzeit starten])
+        UC7([Benutzerdefinierte Logikbausteine erstellen])
+        UC8([Schaltung speichern])
+        UC9([Schaltung laden])
+        UC10([Signalverläufe visualisieren])
+        UC15([Dark Mode einstellen])
+        UC16([Änderungen rückgängig machen])
+        UC17([Baustein löschen])
+        UC18([Gesamte Schaltung löschen])
+        UC19([Projektdatei löschen])
+        UC20([Schaltung importieren])
+        UC21([Schaltung zu Baustein zusammenfassen])
+        UC22([Schaltung exportieren])
+    end
+end
+
+%% --- Beziehungen Benutzer (direkt zu allen Accounts) ---
+Benutzer --> UC1
+Benutzer --> UC2
+Benutzer --> UC3
+Benutzer --> UC13
+Benutzer --> UC14
+
+%% --- Weitere Benutzerbeziehungen ---
+Benutzer --> UC4
+Benutzer --> UC5
+Benutzer --> UC6
+Benutzer --> UC7
+Benutzer --> UC8
+Benutzer --> UC9
+Benutzer --> UC10
+Benutzer --> UC15
+Benutzer --> UC16
+Benutzer --> UC17
+Benutzer --> UC18
+Benutzer --> UC19
+Benutzer --> UC20
+Benutzer --> UC21
+Benutzer --> UC22
+
+%% --- Administrator nur über Nutzer verwalten / Administration ---
+Admin --> UC11
+Admin --> UC12
+
+%% --- Include: Admin erreicht alle Accounts über UC11 ---
+UC11 -.->|«include»| UC1
+UC11 -.->|«include»| UC2
+UC11 -.->|«include»| UC3
+UC11 -.->|«include»| UC13
+UC11 -.->|«include»| UC14
+
+%% --- Weitere Beziehungen zwischen Use Cases ---
+UC6 -.->|«include»| UC5
+UC7 -.->|«extend»| UC4
+UC10 -.->|«include»| UC6
+UC9 -.->|«extend»| UC8
+UC18 -.->|«include»| UC17
+UC21 -.->|«extend»| UC7
+UC20 -.->|«include»| UC9
+
+%% --- Farben und Rahmen ---
+style BitFlow fill:#f3f4f6,stroke:#000000,stroke-width:2px
+style Accounts fill:#dbeafe,stroke:#000000,stroke-width:2px
+style Administration fill:#dbeafe,stroke:#000000,stroke-width:2px
+style UserInteraction fill:#dbeafe,stroke:#000000,stroke-width:2px
+
+%% --- Akteure schwarz umranden ---
+style Benutzer stroke:#000000,stroke-width:2px
+style Admin stroke:#000000,stroke-width:2px
+
+%% --- Use Case Bausteine schwarz umranden ---
+style UC1 stroke:#000000,stroke-width:2px
+style UC2 stroke:#000000,stroke-width:2px
+style UC3 stroke:#000000,stroke-width:2px
+style UC4 stroke:#000000,stroke-width:2px
+style UC5 stroke:#000000,stroke-width:2px
+style UC6 stroke:#000000,stroke-width:2px
+style UC7 stroke:#000000,stroke-width:2px
+style UC8 stroke:#000000,stroke-width:2px
+style UC9 stroke:#000000,stroke-width:2px
+style UC10 stroke:#000000,stroke-width:2px
+style UC11 stroke:#000000,stroke-width:2px
+style UC12 stroke:#000000,stroke-width:2px
+style UC13 stroke:#000000,stroke-width:2px
+style UC14 stroke:#000000,stroke-width:2px
+style UC15 stroke:#000000,stroke-width:2px
+style UC16 stroke:#000000,stroke-width:2px
+style UC17 stroke:#000000,stroke-width:2px
+style UC18 stroke:#000000,stroke-width:2px
+style UC19 stroke:#000000,stroke-width:2px
+style UC20 stroke:#000000,stroke-width:2px
+style UC21 stroke:#000000,stroke-width:2px
+style UC22 stroke:#000000,stroke-width:2px
+```
 
 
 ### 2.3 Technology Stack
@@ -851,7 +977,6 @@ sequenceDiagram
     else Konto nicht gefunden
         System -->>- Benutzer: Fehlermeldung anzeigen
     end
-
 ```
 
 
@@ -890,16 +1015,22 @@ sequenceDiagram
 - **Browser-Support:** Ziel: aktuelle Chrome, Firefox, Edge.
 
 ### 3.7 On-line User Documentation and Help System Requirements
-TODO
+Da es sich um eine einfache Anwendung handelt, die von dem Entwicklerteam so intuitiv wie möglich gestaltet wird, ist keine Ausführliche Dokumentation notwendig.
+Falls gewünscht, wird ein Hilfe-Button in die Anwendung hinzugefügt, über welche man sich auf GitHub an das Entwicklerteam wenden kann.
 
 ### 3.8 Purchased Components
---
+Es ist nicht geplant Komponenten zu kaufen.
 
 ### 3.9 Interfaces
-TODO
+User Interfaces:
+- Grafische Benutzeroberfläche (GUI) mit Drag-and-Drop-Funktion für Logikbausteine.
+- Menüstruktur zum Laden, Speichern, Importieren und Exportieren von Projekten.
+- Schaltflächen zur Simulation, Rückgängig-Funktion und Visualisierung von Signalverläufen.
+- Einstellungsbereich für Dark Mode und Systemeinstellungen.
+- Fehlermeldungen und Statusanzeigen (z. B. „Simulation gestartet“, „Fehler in Schaltung“).
 
 ### 3.10 Licensing Requirements
-TODO
+Dieses Projekt wurde zu Lernzwecken entwickelt. Es wird ohne Gewährleistung oder Support bereitgestellt. Das Entwicklerteam übernimmt keine Verantwortung für eventuelle Fehler oder Schäden, die aus der Nutzung resultieren.
 
 ## 4. Supporting Information
 For any further information you can check out the Blog on out [GitHub Discussions Page](https://github.com/SimonJ2222/BitFlow/discussions). 
