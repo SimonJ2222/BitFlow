@@ -271,6 +271,23 @@ sequenceDiagram
     System ->>- UI: UI-Theme aktualisieren
     UI -->>- Benutzer: Oberfläche wechselt zu dunkler Farbpalette
 ```
+- **Aktivitätsdiagramm:**
+```mermaid
+%% ============================================================
+%% UC-01 – Dark Mode einstellen
+%% ============================================================
+flowchart TD
+    subgraph UC01["UC-01 – Dark Mode einstellen"]
+        A1([Start]) --> A2["Benutzer öffnet Einstellungsmenü"]
+        A2 --> A3["Benutzer wählt 'Darstellung → Dark Mode'"]
+        A3 --> A4["System speichert Einstellung lokal oder im Profil"]
+        A4 --> A5{"Browser LocalStorage aktiv?"}
+        A5 -->|Ja| A6["UI wechselt zur dunklen Farbpalette"]
+        A5 -->|Nein| A7["Einstellung nur temporär gespeichert"]
+        A6 --> A8([Ende])
+        A7 --> A8
+    end
+```
 
 
 #### 3.1.2 UC-02 – Änderungen rückgängig machen
