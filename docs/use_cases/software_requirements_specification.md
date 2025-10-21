@@ -222,7 +222,9 @@ Testing:
 ### 3.1 Functionality
 #### 3.1.1 UC-01 – Dark Mode einstellen
 - **Akteure:** Benutzer  
-- **Ziel:** Benutzer möchte das Erscheinungsbild der Webanwendung anpassen, um die Nutzung in dunkler Umgebung zu erleichtern.  
+- **Ziel:** Benutzer möchte das Erscheinungsbild der Webanwendung anpassen, um die Nutzung in dunkler Umgebung zu erleichtern.
+- **Mockup**
+![DarkMode MockUp](BitFlow/docs)
 - **Voraussetzungen:** Benutzer ist eingeloggt oder nutzt die Anwendung im Gastmodus.  
 - **Auslöser:** Benutzer klickt auf das Einstellungsmenü und aktiviert den Schalter „Dark Mode“.  
 - **Hauptablauf:**
@@ -261,7 +263,9 @@ sequenceDiagram
 
 #### 3.1.2 UC-02 – Änderungen rückgängig machen
 - **Akteure:** Benutzer  
-- **Ziel:** Benutzer möchte versehentliche Aktionen im Schaltplan rückgängig machen.  
+- **Ziel:** Benutzer möchte versehentliche Aktionen im Schaltplan rückgängig machen.
+- **Mockup**
+![Rückgängig MockUp](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20undo%20und%20redo.png) 
 - **Voraussetzungen:** Es existiert mindestens eine Aktion im Verlauf.  
 - **Auslöser:** Benutzer drückt `Ctrl+Z` oder klickt auf „Rückgängig“.  
 - **Hauptablauf:**
@@ -295,13 +299,15 @@ sequenceDiagram
 
 #### 3.1.3 UC-03 – Projektdatei löschen
 - **Akteure:** Benutzer  
-- **Ziel:** Ein bestehendes Projekt soll dauerhaft entfernt werden.  
+- **Ziel:** Ein bestehendes Projekt soll dauerhaft entfernt werden.
+- **Mockup**
+![Projektdatei löschen Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Startseite%20Projekt%20l%C3%B6schen.png)
 - **Voraussetzungen:** Benutzer ist eingeloggt und hat Schreibrechte auf das Projekt.  
 - **Auslöser:** Benutzer wählt im Projektmanager „Löschen“.  
 - **Hauptablauf:**
 	1. System zeigt Sicherheitsabfrage an.
 	2. Benutzer bestätigt Löschung.
-	3. System entfernt Projektdatei aus Cloud- oder LocalStorage.
+	3. System entfernt Projektdatei aus DB oder LocalStorage.
 	4. System aktualisiert Projektliste.  
 - **Alternativabläufe:**  
 	- 2a. Benutzer bricht ab → Aktion wird verworfen.  
@@ -312,7 +318,7 @@ sequenceDiagram
 sequenceDiagram
     actor Benutzer
     participant UI as Projektmanager
-    participant Storage as Cloud/LocalStorage
+    participant Storage as DB/LocalStorage
 
     Benutzer ->>+ UI: Wählt Projekt und klickt „Löschen“
     UI ->> Benutzer: Zeigt Sicherheitsabfrage
@@ -329,7 +335,9 @@ sequenceDiagram
 
 #### 3.1.4 UC-04 – Schaltung zu Baustein zusammenfassen
 - **Akteure:** Benutzer  
-- **Ziel:** Eine bestehende Schaltung soll als wiederverwendbarer Baustein gespeichert werden.  
+- **Ziel:** Eine bestehende Schaltung soll als wiederverwendbarer Baustein gespeichert werden.
+- **Mockup*
+![Schaltung zu Baustein Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20Baustein%20erstellen.png)
 - **Voraussetzungen:** Schaltung ist vollständig und fehlerfrei.  
 - **Auslöser:** Benutzer klickt auf „Als Baustein speichern“.  
 - **Hauptablauf:**
@@ -366,12 +374,14 @@ sequenceDiagram
 
 #### 3.1.5 UC-05 – Schaltung exportieren
 - **Akteure:** Benutzer  
-- **Ziel:** Schaltung in externes Format (z. B. JSON, XML, VHDL) exportieren.  
+- **Ziel:** Schaltung in externes Format (z. B. JSON, XML, VHDL) exportieren.
+- **Mockup**
+![Schaltung exportieren Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Startseite%20Projekt%20exportieren.png)
 - **Voraussetzungen:** Projekt geöffnet.  
 - **Auslöser:** Klick auf „Exportieren“.  
 - **Hauptablauf:**
-	1. Benutzer wählt Exportformat.
-	2. System generiert Datei und bietet Download an.
+    1. Benutzer klickt auf export 
+  	2. System generiert Datei und bietet Download an.
 	3. Benutzer speichert Datei lokal.  
 - **Alternativabläufe:**  
 	- 2a. Export fehlschlägt → System zeigt Fehlerdialog mit Log.  
@@ -404,9 +414,11 @@ sequenceDiagram
 
 #### 3.1.6 UC-06 – Gesamte Schaltung löschen
 - **Akteure:** Benutzer  
-- **Ziel:** Der Benutzer möchte das aktuelle Canvas vollständig leeren.  
+- **Ziel:** Der Benutzer möchte das aktuelle Canvas vollständig leeren.
+- **MockUp**
+![Schaltung löschen Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20leer.png)  
 - **Voraussetzungen:** Schaltung ist geladen.  
-- **Auslöser:** Klick auf „Alles löschen“.  
+- **Auslöser:** Klick auf „Alles löschen (das "Mülltonne"-Icon)“.  
 - **Hauptablauf:**
 	1. System fragt nach Bestätigung.
 	2. Benutzer bestätigt.
@@ -437,7 +449,10 @@ sequenceDiagram
 
 #### 3.1.7 UC-07 – Signalverläufe visualisieren
 - **Akteure:** Benutzer  
-- **Ziel:** Benutzer möchte die zeitlichen Signaländerungen im Diagramm sehen.  
+- **Ziel:** Benutzer möchte die zeitlichen Signaländerungen im Diagramm sehen.
+- **Mockup**
+![Simulation gestartet Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20Simulation%20gestartet.png)
+![Signalverläufe visualisiert Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20Signalverl%C3%A4ufe%20visualisieren.png)
 - **Voraussetzungen:** Simulation wurde ausgeführt.  
 - **Auslöser:** Klick auf „Signalverlauf anzeigen“.  
 - **Hauptablauf:**
@@ -475,13 +490,16 @@ sequenceDiagram
 
 #### 3.1.8 UC-08 – Schaltung importieren
 - **Akteure:** Benutzer  
-- **Ziel:** Bestehende Schaltung aus Datei laden.  
+- **Ziel:** Bestehende Schaltung aus Datei laden.
+- **Mockup**
+![Schaltung auswählen](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Startseite%20Projekte%20importieren.png)
+![Schaltung importieren Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Startseite%20mit%20einem%20Projekt%20Darkmode.png)
 - **Voraussetzungen:** Datei vorhanden, gültiges Format.  
 - **Auslöser:** Klick auf „Importieren“.  
 - **Hauptablauf:**
 	1. Benutzer wählt Datei.
 	2. System liest Datei ein und validiert Format.
-	3. Schaltung wird ins Canvas geladen.  
+	3. Schaltung wird auf der Startseite angezeigt.  
 - **Alternativabläufe:**  
 	- 2a. Datei fehlerhaft → Fehlerdialog.  
 - **Nachbedingungen:** Schaltung ist geladen.  
@@ -511,7 +529,9 @@ sequenceDiagram
 
 #### 3.1.9 UC-09 – Benutzerdefinierte Logikbausteine erstellen
 - **Akteure:** Benutzer  
-- **Ziel:** Eigene Bausteine mit individuellem Verhalten definieren.  
+- **Ziel:** Eigene Bausteine mit individuellem Verhalten definieren.
+- **Mockup**
+
 - **Voraussetzungen:** Benutzer hat Schreibrechte in Bibliothek.  
 - **Auslöser:** Menü „Neuer Baustein“.  
 - **Hauptablauf:**
@@ -547,15 +567,16 @@ sequenceDiagram
 
 #### 3.1.10 UC-10 – Logikbausteine per Drag & Drop positionieren
 - **Akteure:** Benutzer  
-- **Ziel:** Bausteine intuitiv auf dem Canvas platzieren.  
+- **Ziel:** Bausteine intuitiv auf dem Canvas platzieren.
+- **Mockup**
+![Drag and Drop Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20Bausteine%20platzieren.png)
 - **Voraussetzungen:** Schaltung geöffnet.  
 - **Auslöser:** Benutzer zieht Element aus Bibliothek.  
 - **Hauptablauf:**
 	1. Benutzer wählt Baustein.
 	2. Drag & Drop auf Canvas.
-	3. System platziert Baustein und registriert im Netlist-Model.  
-- **Alternativabläufe:**  
-	- 3a. Kollision mit bestehendem Objekt → automatische Verschiebung.  
+	3. System platziert Baustein.
+ 
 - **Nachbedingungen:** Baustein auf Canvas platziert.  
 - **Akzeptanzkriterien:** Drag & Drop funktioniert flüssig.
 - **Sequenzdiagramm:**
@@ -569,19 +590,16 @@ sequenceDiagram
     deactivate Bibliothek
     Benutzer ->>+ Canvas: Zieht Baustein per Drag & Drop
     Canvas ->> Canvas: Position berechnen
-    alt Kein Objektkollision
-        Canvas -->> Benutzer: Baustein platziert
-    else Kollision erkannt
-        Canvas ->> Canvas: Automatisch verschieben
-        Canvas -->>- Benutzer: Baustein repositioniert
-    end
+    Canvas -->>- Benutzer: Baustein platziert
 
 ```
 
 
 #### 3.1.11 UC-11 – Bausteine verbinden
 - **Akteure:** Benutzer  
-- **Ziel:** Bausteine logisch miteinander verbinden.  
+- **Ziel:** Bausteine logisch miteinander verbinden.
+- **Mockup**
+![Bausteine verbinden Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20Bausteine%20verbinden.png)
 - **Voraussetzungen:** Zwei oder mehr Bausteine auf Canvas.  
 - **Auslöser:** Klick und Ziehen von Pin zu Pin.  
 - **Hauptablauf:**
@@ -641,13 +659,14 @@ sequenceDiagram
 
 #### 3.1.13 UC-13 – Simulation in Echtzeit starten
 - **Akteure:** Benutzer  
-- **Ziel:** Verhalten der Schaltung prüfen.  
+- **Ziel:** Verhalten der Schaltung prüfen.
+- **Mockup**
+![Simulation starten](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20Simulation%20gestartet.png)
 - **Voraussetzungen:** Vollständige, fehlerfreie Schaltung.  
 - **Auslöser:** Klick auf „Simulieren“.  
 - **Hauptablauf:**
-	1. System prüft Netzliste.
-	2. Simulation startet in WebAssembly-Modul.
-	3. LEDs, Anzeigen und Signale aktualisieren sich live.  
+	1. System prüft Schaltung.
+	2. LEDs, Anzeigen und Signale aktualisieren sich live.  
 - **Alternativabläufe:**  
 	- 2a. Fehlerhafte Netzliste → Abbruch mit Meldung.  
 - **Nachbedingungen:** Simulation beendet oder pausiert.  
@@ -662,7 +681,7 @@ sequenceDiagram
     Benutzer ->>+ System: Klick auf „Simulieren“
     System ->>+ Canvas: Netzliste prüfen
     alt Netzliste fehlerfrei
-        System ->> System: Startet WebAssembly-Simulation
+        System ->> System: Startet Simulation
         System ->> Canvas: Aktualisiert LEDs/Signale in Echtzeit
         Canvas -->>- Benutzer: Live-Simulation sichtbar
     else Fehlerhafte Netzliste
@@ -674,11 +693,13 @@ sequenceDiagram
 
 #### 3.1.14 UC-14 – Schaltung speichern
 - **Akteure:** Benutzer  
-- **Ziel:** Aktuelle Arbeit sichern.  
+- **Ziel:** Aktuelle Arbeit sichern.
+- **Mockup**
+![Projekt speichern Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20speichern.png)
 - **Voraussetzungen:** Schaltung geöffnet.  
 - **Auslöser:** Klick auf „Speichern“ oder `Ctrl+S`.  
 - **Hauptablauf:**
-	1. System speichert Datei in Cloud oder lokal.
+	1. System speichert Datei in DB oder lokal.
 	2. Versionsnummer wird angehoben.  
 - **Nachbedingungen:** Schaltung gespeichert.  
 - **Akzeptanzkriterien:** Datei im Projektmanager sichtbar.
@@ -687,11 +708,11 @@ sequenceDiagram
 sequenceDiagram
     actor Benutzer
     participant System as Speicherverwaltung
-    participant Cloud as Cloud/LocalStorage
+    participant DB as DB/LocalStorage
 
     Benutzer ->>+ System: Klick auf „Speichern“ oder Ctrl+S
-    System ->>+ Cloud: Schaltung speichern
-    Cloud -->>- System: Speichern erfolgreich
+    System ->>+ DB: Schaltung speichern
+    DB -->>- System: Speichern erfolgreich
     System ->> System: Versionsnummer erhöhen
     System -->>- Benutzer: Meldung „Schaltung gespeichert“
 
@@ -700,7 +721,9 @@ sequenceDiagram
 
 #### 3.1.15 UC-15 – Schaltung laden
 - **Akteure:** Benutzer  
-- **Ziel:** Frühere Schaltung öffnen.  
+- **Ziel:** Frühere Schaltung öffnen.
+- **Mockup**
+![Schaltung laden Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Startseite%20mit%20vielen%20Projekten.png)
 - **Auslöser:** Klick auf „Laden“.  
 - **Hauptablauf:**
 	1. System zeigt Projektliste.
@@ -713,15 +736,15 @@ sequenceDiagram
 sequenceDiagram
     actor Benutzer
     participant System as Projektmanager
-    participant Cloud as Cloud/LocalStorage
+    participant DB as DB/LocalStorage
     participant Canvas as Schaltplan-Canvas
 
     Benutzer ->>+ System: Klick auf „Laden“
-    System ->>+ Cloud: Projektliste abrufen
-    Cloud -->>- System: Liste verfügbarer Schaltungen
+    System ->>+ DB: Projektliste abrufen
+    DB -->>- System: Liste verfügbarer Schaltungen
     Benutzer ->> System: Wählt Projekt
-    System ->>+ Cloud: Schaltung laden
-    Cloud -->>- System: Schaltungsdaten
+    System ->>+ DB: Schaltung laden
+    DB -->>- System: Schaltungsdaten
     System ->>+ Canvas: Schaltung darstellen
     deactivate System
     Canvas -->>- Benutzer: Geladene Schaltung sichtbar
@@ -731,7 +754,8 @@ sequenceDiagram
 
 #### 3.1.16 UC-16 – Nutzer verwalten
 - **Akteure:** Administrator  
-- **Ziel:** Benutzerkonten prüfen, sperren oder bearbeiten.  
+- **Ziel:** Benutzerkonten prüfen, löschen oder bearbeiten.
+-  
 - **Voraussetzungen:** Administrator ist eingeloggt.  
 - **Auslöser:** Menü „Administration → Nutzer verwalten“.  
 - **Hauptablauf:**
