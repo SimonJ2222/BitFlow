@@ -797,7 +797,7 @@ sequenceDiagram
 
 ```
 
-#### 3.1.16 UC-18 – Registrieren
+#### 3.1.16 UC-16 – Registrieren
 - **Akteure:** Benutzer  
 - **Ziel:** Neues Konto anlegen.
 - **Mockup**
@@ -837,7 +837,7 @@ sequenceDiagram
 ```
 
 
-#### 3.1.17 UC-19 – Anmelden
+#### 3.1.17 UC-17 – Anmelden
 - **Akteure:** Benutzer  
 - **Ziel:** Zugriff auf persönliche Projekte.
 - **Mockup**
@@ -873,7 +873,7 @@ sequenceDiagram
 ```
 
 
-#### 3.1.18 UC-20 – Abmelden
+#### 3.1.18 UC-18 – Abmelden
 - **Akteure:** Benutzer  
 - **Ziel:** Sitzung sicher beenden.
 - **Mockup**
@@ -899,7 +899,7 @@ sequenceDiagram
 ```
 
 
-#### 3.1.19 UC-21 – Nutzeraccount löschen
+#### 3.1.19 UC-19 – Nutzeraccount löschen
 - **Akteure:** Benutzer  
 - **Ziel:** Konto entfernen.
 - **Mockup**
@@ -932,7 +932,7 @@ sequenceDiagram
 ```
 
 
-#### 3.1.20 UC-22 – Passwort zurücksetzen
+#### 3.1.20 UC-20 – Passwort zurücksetzen
 - **Akteure:** Benutzer  
 - **Ziel:** Passwort wiederherstellen.
 - **Mockup**
