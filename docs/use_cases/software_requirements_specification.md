@@ -878,7 +878,7 @@ sequenceDiagram
 
 
 #### 3.1.19 UC-21 – Nutzeraccount löschen
-- **Akteure:** Administrator oder Benutzer (selbst).  
+- **Akteure:** Benutzer  
 - **Ziel:** Konto entfernen.
 - **Mockup**
 ![Profil löschen Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Profil%20bearbeiten%20und%20l%C3%B6schen.png)
