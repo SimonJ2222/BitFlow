@@ -389,7 +389,13 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	C1([Start]) --> C2["System zeigt Sicherheitsabfrage"]
+	C2 --> C3{"Benutzer bestätigt?"}
+	C3 -->|Ja| C4["System entfernt Projektdatei aus DB oder LocalStorage"]
+	C4 --> C5["System aktualisiert Projektliste"]
+	C3 -->|Nein| C6["Aktion wird verworfen"]
+	C4 --> C7([Ende])
+	C6 --> C7
 ```
 
 
@@ -432,7 +438,14 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	D1([Start]) --> D2["Benutzer markiert relevante Schaltungsteile"]
+	D2 --> D3["System öffnet Dialog 'Neuer Logikbaustein'"]
+	D3 --> D4["Benutzer vergibt Name, Symbol, Beschreibung"]
+	D4 --> D5{"Schaltung enthält unverbundene Pins?"}
+	D5 -->|Nein| D6["System erstellt Metadatei und speichert Baustein"]
+	D5 -->|Ja| D7["System zeigt Warnung und ermöglicht Korrektur"]
+	D6 --> D8([Ende])
+	D7 --> D8
 ```
 
 
@@ -476,7 +489,13 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	E1([Start]) --> E2["Benutzer klickt auf 'Exportieren'"]
+	E2 --> E3["System generiert Datei"]
+	E3 --> E4{"Export erfolgreich?"}
+	E4 -->|Ja| E5["System bietet Download an"]
+	E4 -->|Nein| E6["System zeigt Fehlerdialog mit Log"]
+	E5 --> E7([Ende])
+	E6 --> E7
 ```
 
 
@@ -515,7 +534,12 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	F1([Start]) --> F2["System fragt nach Bestätigung"]
+	F2 --> F3{"Benutzer bestätigt?"}
+	F3 -->|Ja| F4["System löscht alle Bausteine und Leitungen"]
+	F3 -->|Nein| F5["Keine Änderung"]
+	F4 --> F6([Ende])
+	F5 --> F6
 ```
 
 
@@ -560,7 +584,13 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	G1([Start]) --> G2["System öffnet Signalviewer"]
+	G2 --> G3["Benutzer wählt Knoten oder Leitungen"]
+	G3 --> G4{"Signal gewählt?"}
+	G4 -->|Ja| G5["System zeigt Wellenformen in Echtzeit oder Zeitachse"]
+	G4 -->|Nein| G6["System zeigt Meldung 'Bitte Leitung auswählen'"]
+	G5 --> G7([Ende])
+	G6 --> G7
 ```
 
 
@@ -603,7 +633,13 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	H1([Start]) --> H2["Benutzer wählt Datei"]
+	H2 --> H3["System liest Datei ein und validiert Format"]
+	H3 --> H4{"Datei gültig?"}
+	H4 -->|Ja| H5["Schaltung wird angezeigt"]
+	H4 -->|Nein| H6["System zeigt Fehlerdialog"]
+	H5 --> H7([Ende])
+	H6 --> H7
 ```
 
 
@@ -645,7 +681,14 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	I1([Start]) --> I2["System öffnet Baustein-Editor"]
+	I2 --> I3["Benutzer legt Pins, Symbole, Logik fest"]
+	I3 --> I4["System kompiliert und speichert Baustein"]
+	I4 --> I5{"Kompilierungsfehler?"}
+	I5 -->|Nein| I6["Baustein gespeichert und verfügbar"]
+	I5 -->|Ja| I7["Fehlermeldung anzeigen"]
+	I6 --> I8([Ende])
+	I7 --> I8
 ```
 
 
@@ -679,7 +722,10 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	J1([Start]) --> J2["Benutzer wählt Baustein"]
+	J2 --> J3["Drag & Drop auf Canvas"]
+	J3 --> J4["System platziert Baustein"]
+	J4 --> J5([Ende])
 ```
 
 
@@ -720,7 +766,14 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	K1([Start]) --> K2["Benutzer startet Verbindung am Ausgangspin"]
+	K2 --> K3["System zeigt Gummiband-Leitung"]
+	K3 --> K4["Benutzer verbindet mit Zielpin"]
+	K4 --> K5{"Verbindung gültig?"}
+	K5 -->|Ja| K6["System stellt Signalleitung her"]
+	K5 -->|Nein| K7["System zeigt rote Leitung + Fehlertext"]
+	K6 --> K8([Ende])
+	K7 --> K8
 ```
 
 
@@ -749,7 +802,9 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	L1([Start]) --> L2["System entfernt Baustein und zugehörige Leitungen"]
+	L2 --> L3["Canvas aktualisiert"]
+	L3 --> L4([Ende])
 ```
 
 
@@ -787,7 +842,12 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	M1([Start]) --> M2["System prüft Schaltung"]
+	M2 --> M3{"Fehlerfrei?"}
+	M3 -->|Ja| M4["Simulation startet, Signale aktualisieren sich live"]
+	M3 -->|Nein| M5["System zeigt Fehlermeldung und bricht ab"]
+	M4 --> M6([Ende])
+	M5 --> M6
 ```
 
 
@@ -819,7 +879,10 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	N1([Start]) --> N2["Benutzer klickt auf 'Speichern' oder Ctrl+S"]
+	N2 --> N3["System speichert Datei in DB oder lokal"]
+	N3 --> N4["Versionsnummer wird erhöht"]
+	N4 --> N5([Ende])
 ```
 
 
@@ -856,7 +919,10 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	O1([Start]) --> O2["System zeigt Projektliste"]
+	O2 --> O3["Benutzer wählt Projekt"]
+	O3 --> O4["System lädt Schaltung ins Canvas"]
+	O4 --> O5([Ende])
 ```
 
 #### 3.1.16 UC-16 – Registrieren
@@ -899,7 +965,13 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	P1([Start]) --> P2["Benutzer gibt E-Mail, Passwort, Name ein"]
+	P2 --> P3["System validiert Eingaben"]
+	P3 --> P4{"E-Mail existiert bereits?"}
+	P4 -->|Nein| P5["System erstellt Konto"]
+	P4 -->|Ja| P6["System zeigt Fehlermeldung"]
+	P5 --> P7([Ende])
+	P6 --> P7
 ```
 
 
@@ -939,7 +1011,13 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	Q1([Start]) --> Q2["Benutzer gibt Zugangsdaten ein"]
+	Q2 --> Q3["System prüft Authentifizierung"]
+	Q3 --> Q4{"Passwort korrekt?"}
+	Q4 -->|Ja| Q5["Zugriff gewährt"]
+	Q4 -->|Nein| Q6["Fehlermeldung anzeigen"]
+	Q5 --> Q7([Ende])
+	Q6 --> Q7
 ```
 
 
@@ -969,7 +1047,9 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	R1([Start]) --> R2["System löscht Session-Cookies"]
+	R2 --> R3["Benutzer wird zur Startseite geleitet"]
+	R3 --> R4([Ende])
 ```
 
 
@@ -1006,7 +1086,12 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	S1([Start]) --> S2["System fragt nach Bestätigung"]
+	S2 --> S3{"Benutzer bestätigt?"}
+	S3 -->|Ja| S4["System löscht und anonymisiert Daten"]
+	S3 -->|Nein| S5["Abbruch – keine Änderung"]
+	S4 --> S6([Ende])
+	S5 --> S6
 ```
 
 
@@ -1049,7 +1134,10 @@ sequenceDiagram
 - **Aktivitätsdiagramm:**
 ```mermaid
 flowchart LR
-
+	T1([Start]) --> T2["Benutzer gibt E-Mail-Adresse ein"]
+	T2 --> T3["System sendet Reset-Link"]
+	T3 --> T4["Benutzer setzt neues Passwort"]
+	T4 --> T5([Ende])
 ```
 
 
