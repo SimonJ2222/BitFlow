@@ -20,7 +20,7 @@
     - [Supportability](#35-supportability)
     - [Design Constraints](#36-design-constraints)
     - [Online User Documentation and Help System Requirements](#37-on-line-user-documentation-and-help-system-requirements)
-    - [Purchased Components](#purchased-components)
+    - [Purchased Components](#38-purchased-components)
     - [Interfaces](#39-interfaces)
     - [Licensing Requirements](#310-licensing-requirements)
     - [Legal, Copyright And Other Notices](#311-legal-copyright-and-other-notices)
