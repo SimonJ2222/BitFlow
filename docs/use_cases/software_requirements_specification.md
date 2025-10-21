@@ -255,8 +255,6 @@ Testing:
 #### 3.1.1 UC-01 – Dark Mode einstellen
 - **Akteure:** Benutzer  
 - **Ziel:** Benutzer möchte das Erscheinungsbild der Webanwendung anpassen, um die Nutzung in dunkler Umgebung zu erleichtern.
-- **Mockup**
-![DarkMode MockUp](BitFlow/docs)
 - **Voraussetzungen:** Benutzer ist eingeloggt oder nutzt die Anwendung im Gastmodus.  
 - **Auslöser:** Benutzer klickt auf das Einstellungsmenü und aktiviert den Schalter „Dark Mode“.  
 - **Hauptablauf:**
