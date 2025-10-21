@@ -98,12 +98,11 @@ Studierende, Lehrkräfte und Technikinteressierte sollen Logikgatter, Schaltunge
 ### 2.2 Use Case Diagram
 
 ```mermaid
-%%{init: {"flowchart": {"htmlLabels": true}}}%%
+%%{init: {"theme": "default", "flowchart": {"htmlLabels": true}}}%%
 graph LR
 
-%% --- Akteure ---
+%% --- Akteur ---
 Benutzer(("**Benutzer**"))
-Admin(("**Admin**"))
 
 %% --- Systemgrenze ---
 subgraph BitFlow["**Bit Flow – Gesamtsystem**"]
@@ -117,40 +116,34 @@ subgraph BitFlow["**Bit Flow – Gesamtsystem**"]
         UC14([Passwort zurücksetzen])
     end
 
-    %% --- Subsystem: Administration ---
-    subgraph Administration["**Administration**"]
-        UC11([Nutzer verwalten])
-        UC12([Systemeinstellungen <br> bearbeiten])
-    end
-
-    %% --- Subsystem: User Interaction ---
+    %% --- Subsystem: Nutzerinteraktion ---
     subgraph UserInteraction["**Nutzerinteraktion**"]
-        UC4([Logikbausteine per <br> Drag & Drop positionieren])
+        UC4([Logikbausteine per Drag & Drop positionieren])
         UC5([Bausteine verbinden])
         UC6([Simulation in Echtzeit starten])
-        UC7([Benutzerdefinierte <br> Logikbausteine erstellen])
+        UC7([Benutzerdefinierte Logikbausteine erstellen])
         UC8([Schaltung speichern])
         UC9([Schaltung laden])
         UC10([Signalverläufe visualisieren])
         UC15([Dark Mode einstellen])
-        UC16([Änderungen rückgängig <br> machen])
+        UC16([Änderungen rückgängig machen])
         UC17([Baustein löschen])
         UC18([Gesamte Schaltung löschen])
         UC19([Projektdatei löschen])
         UC20([Schaltung importieren])
-        UC21([Schaltung zu Baustein <br> zusammenfassen])
+        UC21([Schaltung zu Baustein zusammenfassen])
         UC22([Schaltung exportieren])
     end
 end
 
-%% --- Beziehungen Benutzer (direkt zu allen Accounts) ---
+%% --- Beziehungen Benutzer (Accounts) ---
 Benutzer --> UC1
 Benutzer --> UC2
 Benutzer --> UC3
 Benutzer --> UC13
 Benutzer --> UC14
 
-%% --- Weitere Benutzerbeziehungen ---
+%% --- Beziehungen Benutzer (Nutzerinteraktion) ---
 Benutzer --> UC4
 Benutzer --> UC5
 Benutzer --> UC6
@@ -167,18 +160,7 @@ Benutzer --> UC20
 Benutzer --> UC21
 Benutzer --> UC22
 
-%% --- Administrator nur über Nutzer verwalten / Administration ---
-Admin --> UC11
-Admin --> UC12
-
-%% --- Include: Admin erreicht alle Accounts über UC11 ---
-UC11 -.->|«include»| UC1
-UC11 -.->|«include»| UC2
-UC11 -.->|«include»| UC3
-UC11 -.->|«include»| UC13
-UC11 -.->|«include»| UC14
-
-%% --- Weitere Beziehungen zwischen Use Cases ---
+%% --- Beziehungen zwischen Use Cases ---
 UC6 -.->|«include»| UC5
 UC7 -.->|«extend»| UC4
 UC10 -.->|«include»| UC6
@@ -186,6 +168,36 @@ UC9 -.->|«extend»| UC8
 UC18 -.->|«include»| UC17
 UC21 -.->|«extend»| UC7
 UC20 -.->|«include»| UC9
+
+%% --- Farben und Rahmen ---
+style BitFlow fill:#f3f4f6,stroke:#000000,stroke-width:2px
+style Accounts fill:#dbeafe,stroke:#000000,stroke-width:2px
+style UserInteraction fill:#dbeafe,stroke:#000000,stroke-width:2px
+
+%% --- Akteur schwarz umranden ---
+style Benutzer stroke:#000000,stroke-width:2px
+
+%% --- Use Case Bausteine schwarz umranden ---
+style UC1 stroke:#000000,stroke-width:2px
+style UC2 stroke:#000000,stroke-width:2px
+style UC3 stroke:#000000,stroke-width:2px
+style UC4 stroke:#000000,stroke-width:2px
+style UC5 stroke:#000000,stroke-width:2px
+style UC6 stroke:#000000,stroke-width:2px
+style UC7 stroke:#000000,stroke-width:2px
+style UC8 stroke:#000000,stroke-width:2px
+style UC9 stroke:#000000,stroke-width:2px
+style UC10 stroke:#000000,stroke-width:2px
+style UC13 stroke:#000000,stroke-width:2px
+style UC14 stroke:#000000,stroke-width:2px
+style UC15 stroke:#000000,stroke-width:2px
+style UC16 stroke:#000000,stroke-width:2px
+style UC17 stroke:#000000,stroke-width:2px
+style UC18 stroke:#000000,stroke-width:2px
+style UC19 stroke:#000000,stroke-width:2px
+style UC20 stroke:#000000,stroke-width:2px
+style UC21 stroke:#000000,stroke-width:2px
+style UC22 stroke:#000000,stroke-width:2px
 
 ```
 
