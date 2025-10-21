@@ -255,6 +255,9 @@ Testing:
 #### 3.1.1 UC-01 – Dark Mode einstellen
 - **Akteure:** Benutzer  
 - **Ziel:** Benutzer möchte das Erscheinungsbild der Webanwendung anpassen, um die Nutzung in dunkler Umgebung zu erleichtern.
+- **Mockup**
+![Darkmode aus Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Startseite%20Darkmode%20einstellen%20weiss.png)
+![Darkmode an Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Startseite%20Darkmode%20aktivieren.png)
 - **Voraussetzungen:** Benutzer ist eingeloggt oder nutzt die Anwendung im Gastmodus.  
 - **Auslöser:** Benutzer klickt auf das Einstellungsmenü und aktiviert den Schalter „Dark Mode“.  
 - **Hauptablauf:**
@@ -402,6 +405,7 @@ flowchart LR
 - **Ziel:** Eine bestehende Schaltung soll als wiederverwendbarer Baustein gespeichert werden.
 - **Mockup*
 ![Schaltung zu Baustein Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20Baustein%20erstellen.png)
+![Schaltung zu Baustein Mockup 2](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20Benutzerdefinierte%20Bausteine.png)
 - **Voraussetzungen:** Schaltung ist vollständig und fehlerfrei.  
 - **Auslöser:** Benutzer klickt auf „Als Baustein speichern“.  
 - **Hauptablauf:**
@@ -645,7 +649,7 @@ flowchart LR
 - **Akteure:** Benutzer  
 - **Ziel:** Eigene Bausteine mit individuellem Verhalten definieren.
 - **Mockup**
-
+![Benutzerdefinierte Logikbausteine erstellen Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Projekt%20bearbeiten%20Benutzerdefinierte%20Bausteine.png)
 - **Voraussetzungen:** Benutzer hat Schreibrechte in Bibliothek.  
 - **Auslöser:** Menü „Neuer Baustein“.  
 - **Hauptablauf:**
