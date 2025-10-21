@@ -339,6 +339,18 @@ sequenceDiagram
 		Canvas -->>- Benutzer: Meldung „Keine Änderungen rückgängig zu machen“
 	end
 ```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
+	B1([Start]) --> B2["Benutzer führt Aktionen im Canvas aus"]
+	B2 --> B3["System speichert Aktion im Undo-Stack"]
+	B3 --> B4["Benutzer drückt Ctrl+Z oder klickt 'Rückgängig'"]
+	B4 --> B5{"Undo-Verlauf vorhanden?"}
+	B5 -->|Ja| B6["System stellt vorherigen Zustand wieder her"]
+	B5 -->|Nein| B7["System zeigt Hinweis 'Keine Änderungen rückgängig zu machen'"]
+	B6 --> B8([Ende])
+	B7 --> B8
+```
 
 
 #### 3.1.3 UC-03 – Projektdatei löschen
@@ -373,6 +385,10 @@ sequenceDiagram
     else Benutzer bricht ab
         UI -->>- Benutzer: Aktion verworfen
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -412,6 +428,10 @@ sequenceDiagram
     else Unverbundene Pins vorhanden
         System -->>- Benutzer: Warnung + Korrekturmöglichkeit
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -452,6 +472,10 @@ sequenceDiagram
     else Exportfehler
         Exporter -->> Benutzer: Fehlerdialog + Log anzeigen
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -487,6 +511,10 @@ sequenceDiagram
     else Benutzer bricht ab
         Editor -->>- Benutzer: Keine Änderung vorgenommen
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -528,6 +556,10 @@ sequenceDiagram
     else Kein Signal gewählt
         Viewer -->>- Benutzer: Meldung „Bitte Leitung auswählen“
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -567,6 +599,10 @@ sequenceDiagram
     else Datei fehlerhaft
         System -->>- Benutzer: Fehlerdialog „Ungültiges Format“
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -605,6 +641,10 @@ sequenceDiagram
     else Kompilierungsfehler
         Compiler -->>- Benutzer: Fehlermeldung anzeigen
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -635,6 +675,10 @@ sequenceDiagram
     Benutzer ->>+ Canvas: Zieht Baustein per Drag & Drop
     Canvas ->> Canvas: Position berechnen
     Canvas -->>- Benutzer: Baustein platziert
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -672,6 +716,10 @@ sequenceDiagram
     else Verbindung ungültig
         System -->>- Benutzer: Rote Leitung + Fehlermeldung
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -697,6 +745,10 @@ sequenceDiagram
     Canvas ->>+ System: Baustein und zugehörige Leitungen löschen
     System -->>- Canvas: Aktualisierte Schaltung
     Canvas -->>- Benutzer: Schaltung ohne Baustein anzeigen
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -731,6 +783,10 @@ sequenceDiagram
     else Fehlerhafte Netzliste
         System -->>- Benutzer: Fehlermeldung anzeigen
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -759,6 +815,10 @@ sequenceDiagram
     DB -->>- System: Speichern erfolgreich
     System ->> System: Versionsnummer erhöhen
     System -->>- Benutzer: Meldung „Schaltung gespeichert“
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -792,6 +852,10 @@ sequenceDiagram
     System ->>+ Canvas: Schaltung darstellen
     deactivate System
     Canvas -->>- Benutzer: Geladene Schaltung sichtbar
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -831,6 +895,10 @@ sequenceDiagram
     else E-Mail existiert
         System -->>- Benutzer: Fehlermeldung anzeigen
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -867,6 +935,10 @@ sequenceDiagram
         DB -->>- System: Fehler
         System -->>- Benutzer: Fehlermeldung anzeigen
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -893,6 +965,10 @@ sequenceDiagram
     System ->>+ Browser: Session-Cookies löschen
     deactivate Browser
     System -->>- Benutzer: Weiterleitung zur Startseite
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -926,6 +1002,10 @@ sequenceDiagram
     else Benutzer bricht ab
         System -->>- Benutzer: Aktion verworfen
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
 
 ```
 
@@ -965,6 +1045,11 @@ sequenceDiagram
     else Konto nicht gefunden
         System -->>- Benutzer: Fehlermeldung anzeigen
     end
+```
+- **Aktivitätsdiagramm:**
+```mermaid
+flowchart LR
+
 ```
 
 
