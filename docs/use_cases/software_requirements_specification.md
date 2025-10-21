@@ -1,4 +1,4 @@
-# Common Playground - Software Requirements Specification 
+# BitFlow - Software Requirements Specification 
 
 ## Table of contents
 - [Table of contents](#table-of-contents)
