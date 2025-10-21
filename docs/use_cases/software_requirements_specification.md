@@ -122,7 +122,6 @@ subgraph BitFlow["**Bit Flow – Gesamtsystem**"]
         UC11([Nutzer verwalten])
         UC12([Systemeinstellungen <br> bearbeiten])
     end
-<img width="2622" height="3451" alt="UseCaseDiagramm_BitFlow" src="https://github.com/user-attachments/assets/3a7630c3-7475-4ef8-b878-c291997cd4a9" />
 
     %% --- Subsystem: User Interaction ---
     subgraph UserInteraction["**Nutzerinteraktion**"]
