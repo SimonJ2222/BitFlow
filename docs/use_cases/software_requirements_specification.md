@@ -763,70 +763,14 @@ sequenceDiagram
 
 ```
 
-
-#### 3.1.16 UC-16 – Nutzer verwalten
-- **Akteure:** Administrator  
-- **Ziel:** Benutzerkonten prüfen, löschen oder bearbeiten.
--  
-- **Voraussetzungen:** Administrator ist eingeloggt.  
-- **Auslöser:** Menü „Administration → Nutzer verwalten“.  
-- **Hauptablauf:**
-	1. System zeigt Benutzerliste.
-	2. Admin bearbeitet Status, Rechte oder löscht Konten.
-	3. Änderungen werden gespeichert.  
-- **Nachbedingungen:** Nutzerdaten aktualisiert.  
-- **Akzeptanzkriterien:** Änderungen sofort wirksam.
-- **Sequenzdiagramm:**
-```mermaid
-sequenceDiagram
-    actor Administrator
-    participant System as Administrationsmodul
-    participant DB as Benutzerdatenbank
-
-    Administrator ->>+ System: Menü „Nutzer verwalten“ öffnen
-    System ->>+ DB: Benutzerliste abrufen
-    DB -->>- System: Liste zurückgeben
-    System -->> Administrator: Benutzerliste anzeigen
-    Administrator ->> System: Ändert Status/Rechte oder löscht Nutzer
-    System ->>+ DB: Änderungen speichern
-    DB -->>- System: Bestätigung
-    System -->>- Administrator: Meldung „Änderungen erfolgreich“
-
-```
-
-
-#### 3.1.17 UC-17 – Systemeinstellungen bearbeiten
-- **Akteure:** Administrator  
-- **Ziel:** Globale Systemeinstellungen anpassen.  
-- **Voraussetzungen:** Administratorzugriff.  
-- **Auslöser:** Menü „Systemeinstellungen“.  
-- **Hauptablauf:**
-	1. Admin öffnet Einstellungsmaske.
-	2. Nimmt Änderungen vor (z. B. Serverpfade, Simulationstakte).
-	3. System speichert und lädt neu.  
-- **Nachbedingungen:** Neue Einstellungen aktiv.  
-- **Akzeptanzkriterien:** Änderungen korrekt übernommen.
-- **Sequenzdiagramm:**
-```mermaid
-sequenceDiagram
-    actor Administrator
-    participant System as Systemeinstellungsmodul
-    participant DB as Systemdatenbank
-
-    Administrator ->>+ System: Menü „Systemeinstellungen“ öffnen
-    System ->>+ DB: Aktuelle Einstellungen abrufen
-    DB -->>- System: Daten anzeigen
-    Administrator ->> System: Ändert Werte (z. B. Serverpfad)
-    System ->>+ DB: Neue Einstellungen speichern
-    DB -->>- System: Bestätigung
-    System -->>- Administrator: Meldung „Änderungen aktiv“
-
-```
-
-
-#### 3.1.18 UC-18 – Registrieren
+#### 3.1.16 UC-18 – Registrieren
 - **Akteure:** Benutzer  
-- **Ziel:** Neues Konto anlegen.  
+- **Ziel:** Neues Konto anlegen.
+- **Mockup**
+![Registrieren Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Registrierung.png)
+![Registrieren Mockup Fehler 1](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Registrierung%20Fehler_1.png)
+![Registrieren Mockup Fehler 2](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Registrierung%20Fehler_2.png)
+![Registrieren Mockup Fehler 3](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Registrierung%20Fehler_3.png)
 - **Auslöser:** Klick auf „Registrieren“.  
 - **Hauptablauf:**
 	1. Benutzer gibt E-Mail, Passwort und Namen ein.
@@ -859,9 +803,13 @@ sequenceDiagram
 ```
 
 
-#### 3.1.19 UC-19 – Anmelden
+#### 3.1.17 UC-19 – Anmelden
 - **Akteure:** Benutzer  
-- **Ziel:** Zugriff auf persönliche Projekte.  
+- **Ziel:** Zugriff auf persönliche Projekte.
+- **Mockup**
+![Login Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Anmeldung.png)
+![Login Mockup Fehler 1](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Anmeldung%20Ung%C3%BCltige%20%26%20falsche%20Benutzereingaben.png)
+
 - **Auslöser:** Klick auf „Login“.  
 - **Hauptablauf:**
 	1. Benutzer gibt Zugangsdaten ein.
@@ -891,9 +839,11 @@ sequenceDiagram
 ```
 
 
-#### 3.1.20 UC-20 – Abmelden
+#### 3.1.18 UC-20 – Abmelden
 - **Akteure:** Benutzer  
-- **Ziel:** Sitzung sicher beenden.  
+- **Ziel:** Sitzung sicher beenden.
+- **Mockup**
+![Abmelden Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Abmelden.png)
 - **Auslöser:** Klick auf „Logout“.  
 - **Hauptablauf:**
 	1. System löscht Session-Cookies.
@@ -915,9 +865,11 @@ sequenceDiagram
 ```
 
 
-#### 3.1.21 UC-21 – Nutzeraccount löschen
+#### 3.1.19 UC-21 – Nutzeraccount löschen
 - **Akteure:** Administrator oder Benutzer (selbst).  
-- **Ziel:** Konto entfernen.  
+- **Ziel:** Konto entfernen.
+- **Mockup**
+![Profil löschen Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Profil%20bearbeiten%20und%20l%C3%B6schen.png)
 - **Voraussetzungen:** Authentifiziert.  
 - **Auslöser:** Klick auf „Account löschen“.  
 - **Hauptablauf:**
@@ -946,9 +898,11 @@ sequenceDiagram
 ```
 
 
-#### 3.1.22 UC-22 – Passwort zurücksetzen
+#### 3.1.20 UC-22 – Passwort zurücksetzen
 - **Akteure:** Benutzer  
-- **Ziel:** Passwort wiederherstellen.  
+- **Ziel:** Passwort wiederherstellen.
+- **Mockup**
+![Passwort zurücksetzen Mockup](https://github.com/SimonJ2222/BitFlow/blob/main/docs/mockups/Passwort%20vergessen.png)
 - **Auslöser:** Klick auf „Passwort vergessen“.  
 - **Hauptablauf:**
 	1. Benutzer gibt E-Mail-Adresse ein.
