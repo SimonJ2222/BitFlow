@@ -187,39 +187,6 @@ UC18 -.->|«include»| UC17
 UC21 -.->|«extend»| UC7
 UC20 -.->|«include»| UC9
 
-%% --- Farben und Rahmen ---
-style BitFlow fill:#f3f4f6,stroke:#000000,stroke-width:2px
-style Accounts fill:#dbeafe,stroke:#000000,stroke-width:2px
-style Administration fill:#dbeafe,stroke:#000000,stroke-width:2px
-style UserInteraction fill:#dbeafe,stroke:#000000,stroke-width:2px
-
-%% --- Akteure schwarz umranden ---
-style Benutzer stroke:#000000,stroke-width:2px
-style Admin stroke:#000000,stroke-width:2px
-
-%% --- Use Case Bausteine schwarz umranden ---
-style UC1 stroke:#000000,stroke-width:2px
-style UC2 stroke:#000000,stroke-width:2px
-style UC3 stroke:#000000,stroke-width:2px
-style UC4 stroke:#000000,stroke-width:2px
-style UC5 stroke:#000000,stroke-width:2px
-style UC6 stroke:#000000,stroke-width:2px
-style UC7 stroke:#000000,stroke-width:2px
-style UC8 stroke:#000000,stroke-width:2px
-style UC9 stroke:#000000,stroke-width:2px
-style UC10 stroke:#000000,stroke-width:2px
-style UC11 stroke:#000000,stroke-width:2px
-style UC12 stroke:#000000,stroke-width:2px
-style UC13 stroke:#000000,stroke-width:2px
-style UC14 stroke:#000000,stroke-width:2px
-style UC15 stroke:#000000,stroke-width:2px
-style UC16 stroke:#000000,stroke-width:2px
-style UC17 stroke:#000000,stroke-width:2px
-style UC18 stroke:#000000,stroke-width:2px
-style UC19 stroke:#000000,stroke-width:2px
-style UC20 stroke:#000000,stroke-width:2px
-style UC21 stroke:#000000,stroke-width:2px
-style UC22 stroke:#000000,stroke-width:2px
 ```
 
 ### 2.3 Technology Stack
