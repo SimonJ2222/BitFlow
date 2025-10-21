@@ -98,7 +98,7 @@ Studierende, Lehrkräfte und Technikinteressierte sollen Logikgatter, Schaltunge
 ### 2.2 Use Case Diagram
 
 ```mermaid
-%%{init: {"theme": "default", "flowchart": {"htmlLabels": true}}}%%
+%%{init: {"flowchart": {"htmlLabels": true}}}%%
 graph LR
 
 %% --- Akteure ---
