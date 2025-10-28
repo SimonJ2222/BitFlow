@@ -12,6 +12,7 @@ classDiagram
         +login(email, password): Session
         +logout(): void
         +deleteAccount(): void
+        +resetPassword(email: string): void
     }
 
     class Session {
@@ -28,7 +29,10 @@ classDiagram
         +addCircuit(c: Circuit): void
         +removeCircuit(c: Circuit): void
         +save(): void
+        +load(id: string): Circuit
+        +delete(): void
         +export(format: string): File
+        +import(file: File): void
     }
 
     class Circuit {
@@ -39,6 +43,11 @@ classDiagram
         +simulate(): void
         +clear(): void
         +visualizeSignals(): void
+        +groupAsComponent(name: string): CustomComponent
+        +deleteComponent(c: Component): void
+        +connectPins(source: Pin, target: Pin): Connection
+        +undo(): void
+        +redo(): void
     }
 
     class Component {
@@ -47,12 +56,14 @@ classDiagram
         -position: Position
         -pins: List<Pin>
         +evaluate(): void
+        +moveTo(pos: Position): void
     }
 
     class CustomComponent {
         -definition: string
         -compiledLogic: CompiledLogic
         +compile(): void
+        +fromCircuit(c: Circuit): CustomComponent
     }
 
     class Pin {
@@ -72,12 +83,14 @@ classDiagram
         +start(circuit: Circuit): void
         +stop(): void
         +updateSignals(): void
+        +visualizeSignals(): void
     }
 
     class Library {
         -components: List<Component>
         +add(c: Component): void
         +get(name: string): Component
+        +remove(name: string): void
     }
 
     class Compiler {
@@ -92,6 +105,7 @@ classDiagram
 
     class UndoManager {
         -history: Stack<CircuitState>
+        -redoStack: Stack<CircuitState>
         +saveState(state: CircuitState): void
         +undo(): CircuitState
         +redo(): CircuitState
@@ -102,13 +116,31 @@ classDiagram
         +loadProject(id: string): Project
         +deleteProject(id: string): void
         +import(file: File): Project
-        +export(p: Project): File
+        +export(p: Project, format: string): File
     }
 
     class UI {
         +displayDarkMode(enabled: boolean): void
         +renderCanvas(circuit: Circuit): void
         +showError(message: string): void
+        +promptConfirmation(message: string): bool
+        +openFileDialog(): File
+    }
+
+    class Settings {
+        -darkMode: boolean
+        +toggleDarkMode(): void
+        +savePreferences(): void
+    }
+
+    class SignalViewer {
+        +showWaveforms(signals: List<Signal>): void
+        +selectNode(nodeId: string): void
+    }
+
+    class AutosaveManager {
+        +startAutoSave(interval: int): void
+        +recoverLastSession(): Project
     }
 
 %% =====================
@@ -117,6 +149,8 @@ classDiagram
 
     User --> Session : creates
     User --> Project : owns
+    User --> Settings : personalizes
+    User --> Storage : uses
     Project --> Circuit : contains
     Circuit --> Component : contains
     Component <|-- CustomComponent
@@ -130,4 +164,8 @@ classDiagram
     Library --> Component : stores
     UI --> Circuit : displays
     UI --> Library : browses
+    UI --> SignalViewer : opens
+    UI --> Settings : configures
+    Storage --> AutosaveManager : uses for backup
+
 ```
