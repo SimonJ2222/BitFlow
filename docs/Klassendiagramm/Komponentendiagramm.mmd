@@ -1,0 +1,88 @@
+graph TB
+
+subgraph "BitFlow Frontend (React + TypeScript)"
+    App["App.tsx"] --> Router["Routing & Navigation"]
+    App --> LandingPage["LandingPage (Startseite)"]
+    App --> Auth["Auth Module"]
+    App --> ProjectManager["Projektverwaltung (nach Login)"]
+    App --> Editor["Schaltungseditor"]
+    App --> Settings["Benutzereinstellungen"]
+    App --> APIService["REST API Client"]
+
+    %% Landing Page
+    subgraph "LandingPage (Öffentlich)"
+        LoginButton["Login Button"]
+        AnzeigeSeite["LandingPage"]
+        RegisterButton["Register Button"]
+        LandingPage --> LoginButton
+        LandingPage --> RegisterButton
+    end
+
+    %% Auth
+    subgraph "Auth Module"
+        Login["LoginPage"]
+        Register["RegisterPage"]
+        Profile["ProfilePage"]
+        Auth --> Login
+        Auth --> Register
+        Auth --> Profile
+    end
+
+    %% Editor
+    subgraph "Editor (Arbeitsfläche)"
+        Canvas["Canvas / Schaltplananzeige"]
+        Toolbar["Toolbar / Controls"]
+        Library["Bausteinbibliothek"]
+        Inspector["Eigenschaften-Panel"]
+        Simulation["SimulationPanel"]
+        SignalViewer["Signalverlauf-Viewer"]
+        Canvas --> Toolbar
+        Canvas --> Library
+        Canvas --> SignalViewer
+        Editor --> Canvas
+        Editor --> Simulation
+        Editor --> Inspector
+    end
+
+    %% Project Manager
+    subgraph "Projektverwaltung (Privat)"
+        ProjectList["Projektübersicht"]
+        ProjectDetail["Projekt-Detailansicht"]
+        ImportExport["Import / Export Dialog"]
+        ProjectManager --> ProjectList
+        ProjectManager --> ProjectDetail
+        ProjectManager --> ImportExport
+    end
+
+    %% Settings
+    subgraph "Benutzereinstellungen"
+        Theme["DarkModeToggle"]
+        Preferences["UserPreferences"]
+        Settings --> Theme
+        Settings --> Preferences
+    end
+
+    %% Shared
+    Storage["LocalStorage / IndexedDB"]
+    APIService --> App
+    Storage --> App
+    Storage --> Editor
+    Storage --> Settings
+end
+
+subgraph "Backend API"
+    ASPNET["ASP.NET Core REST API"]
+end
+
+%% Beziehungen zur Landing Page & Auth
+Router --> LandingPage
+Router --> Auth
+Router --> ProjectManager
+Router --> Editor
+Router --> Settings
+
+LandingPage --> Auth
+Auth --> ProjectManager
+
+App --> ASPNET
+APIService --> ASPNET
