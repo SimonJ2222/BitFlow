@@ -1,0 +1,149 @@
+classDiagram
+direction TB
+
+%% ==========================
+%% API Layer (Controllers)
+%% ==========================
+class UserController {
+    +Register(dto: RegisterDto): IActionResult
+    +Login(dto: LoginDto): IActionResult
+    +Logout(): IActionResult
+    +DeleteAccount(): IActionResult
+    +ResetPassword(email: string): IActionResult
+}
+
+class ProjectController {
+    +CreateProject(dto: ProjectDto): IActionResult
+    +GetProjects(userId: string): List<Project>
+    +LoadProject(id: string): Project
+    +SaveProject(dto: ProjectDto): IActionResult
+    +DeleteProject(id: string): IActionResult
+    +ImportProject(file: IFormFile): IActionResult
+    +ExportProject(id: string): FileResult
+}
+
+class ComponentController {
+    +CreateFromCircuit(dto: CircuitDto): IActionResult
+    +CreateCustom(dto: TruthTableDto): IActionResult
+    +GetCustomComponents(userId: string): List<CustomComponent>
+    +DeleteCustomComponent(id: string): IActionResult
+}
+
+%% ==========================
+%% Service Layer
+%% ==========================
+class UserService {
+    +Register(email: string, password: string): User
+    +Authenticate(email: string, password: string): Session
+    +DeleteAccount(id: string): void
+    +ResetPassword(email: string): void
+}
+
+class ProjectService {
+    +CreateProject(userId: string, name: string): Project
+    +SaveProject(project: Project): void
+    +LoadProject(id: string): Project
+    +DeleteProject(id: string): void
+    +ImportProject(file: File): Project
+    +ExportProject(id: string, format: string): File
+}
+
+class ComponentService {
+    +CreateFromCircuit(circuit: Circuit): CustomComponent
+    +CompileTruthTable(table: TruthTable): CustomComponent
+    +GetAll(userId: string): List<CustomComponent>
+    +Delete(id: string): void
+}
+
+%% ==========================
+%% Domain Layer
+%% ==========================
+class User {
+    -Id: Guid
+    -Email: string
+    -PasswordHash: string
+    -Projects: List<Project>
+}
+
+class Project {
+    -Id: Guid
+    -UserId: Guid
+    -Name: string
+    -Circuits: List<Circuit>
+    -CreatedAt: DateTime
+    +Save(): void
+    +Export(): File
+}
+
+class Circuit {
+    -Id: Guid
+    -Name: string
+    -Components: List<Component>
+    -Connections: List<Connection>
+    +GroupAsComponent(name: string): CustomComponent
+}
+
+class Component {
+    -Id: Guid
+    -Name: string
+    -Pins: List<Pin>
+    -Position: Position
+}
+
+class CustomComponent {
+    -Id: Guid
+    -Definition: string
+    -CompiledLogic: CompiledLogic
+    +Compile(): void
+    +FromCircuit(c: Circuit): CustomComponent
+}
+
+class Pin {
+    -Label: string
+    -State: bool
+}
+
+class Connection {
+    -Source: Pin
+    -Target: Pin
+}
+
+%% ==========================
+%% Data Access Layer (Repositories)
+%% ==========================
+class UserRepository {
+    +Save(user: User): void
+    +FindByEmail(email: string): User
+    +Delete(id: Guid): void
+}
+
+class ProjectRepository {
+    +Save(project: Project): void
+    +FindById(id: Guid): Project
+    +Delete(id: Guid): void
+}
+
+class ComponentRepository {
+    +Save(component: CustomComponent): void
+    +FindById(id: Guid): CustomComponent
+    +FindAll(userId: Guid): List<CustomComponent>
+    +Delete(id: Guid): void
+}
+
+%% ==========================
+%% Relationships
+%% ==========================
+UserController --> UserService
+ProjectController --> ProjectService
+ComponentController --> ComponentService
+
+UserService --> UserRepository
+ProjectService --> ProjectRepository
+ComponentService --> ComponentRepository
+
+User --> Project : owns
+Project --> Circuit : contains
+Circuit --> Component : contains
+Component <|-- CustomComponent
+Component --> Pin : has
+Pin --> Connection : connects

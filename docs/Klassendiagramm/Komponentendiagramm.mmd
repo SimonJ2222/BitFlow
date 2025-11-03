@@ -1,0 +1,134 @@
+graph TB
+
+%% ==========================
+%% Main Structure
+%% ==========================
+subgraph "BitFlow Frontend (React + TypeScript)"
+    App["App (Main Entry Point)"] --> Router["Router / Navigation"]
+    App --> LandingPageModule["LandingPage"]
+    App --> AuthModule["Authentication"]
+    App --> ProjectManagerModule["ProjectManager"]
+    App --> EditorModule["Editor"]
+    App --> SettingsModule["Settings"]
+    App --> ApiService["API Service"]
+
+    %% ==========================
+    %% Landing Page (Public)
+    %% ==========================
+    subgraph "LandingPage (Public)"
+        Navbar["Navbar"]
+        LandingPageView["LandingPageView (Intro / Welcome Section)"]
+        LoginButton["LoginButton"]
+        RegisterButton["RegisterButton"]
+
+        LandingPageModule --> Navbar
+        LandingPageModule --> LandingPageView
+        LandingPageModule --> LoginButton
+        LandingPageModule --> RegisterButton
+    end
+
+    %% ==========================
+    %% Authentication
+    %% ==========================
+    subgraph "Authentication (Login / Registration / Profile)"
+        LoginPage["LoginPage"]
+        RegisterPage["RegisterPage"]
+        ResetPasswordPage["ResetPasswordPage"]
+        ProfilePage["ProfilePage"]
+
+        AuthModule --> LoginPage
+        AuthModule --> RegisterPage
+        AuthModule --> ResetPasswordPage
+        AuthModule --> ProfilePage
+    end
+
+    %% ==========================
+    %% Project Management
+    %% ==========================
+    subgraph "ProjectManager (Private)"
+        ProjectList["ProjectList"]
+        ProjectDetail["ProjectDetail"]
+        ImportExportDialog["ImportExportDialog"]
+
+        ProjectManagerModule --> ProjectList
+        ProjectManagerModule --> ProjectDetail
+        ProjectManagerModule --> ImportExportDialog
+    end
+
+    %% ==========================
+    %% Editor
+    %% ==========================
+    subgraph "Editor (Workspace / Simulation)"
+        Canvas["Canvas (Circuit Display)"]
+        Toolbar["Toolbar (Controls)"]
+        Library["Library (Logic Components)"]
+        Inspector["Inspector (Properties Panel)"]
+        SimulationPanel["SimulationPanel"]
+        SignalViewer["SignalViewer"]
+        UndoRedoManager["UndoRedoManager"]
+        GroupAsComponentDialog["GroupAsComponentDialog (Create Component from Circuit)"]
+        CustomComponentEditor["CustomComponentEditor (Define Logic / Truth Table)"]
+        SimulationCore["SimulationCore (Logic Engine / Signal Evaluation)"]
+
+        Canvas --> Toolbar
+        Canvas --> Library
+        Canvas --> SignalViewer
+        Toolbar --> UndoRedoManager
+        Toolbar --> GroupAsComponentDialog
+        Library --> CustomComponentEditor
+        SimulationPanel --> SimulationCore
+
+        EditorModule --> Canvas
+        EditorModule --> SimulationPanel
+        EditorModule --> Inspector
+        EditorModule --> UndoRedoManager
+        EditorModule --> GroupAsComponentDialog
+        EditorModule --> CustomComponentEditor
+        EditorModule --> SimulationCore
+    end
+
+    %% ==========================
+    %% Settings
+    %% ==========================
+    subgraph "Settings"
+        DarkModeToggle["DarkModeToggle"]
+        UserPreferences["UserPreferences"]
+
+        SettingsModule --> DarkModeToggle
+        SettingsModule --> UserPreferences
+    end
+
+    %% ==========================
+    %% Shared Services
+    %% ==========================
+    LocalStorage["LocalStorage / IndexedDB"]
+
+    ApiService --> App
+    LocalStorage --> App
+    LocalStorage --> EditorModule
+    LocalStorage --> SettingsModule
+end
+
+
+%% ==========================
+%% Backend API
+%% ==========================
+subgraph "Backend API"
+    AspNet["ASP.NET Core REST API"]
+end
+
+
+%% ==========================
+%% Routing & Relationships
+%% ==========================
+Router --> LandingPageModule
+Router --> AuthModule
+Router --> ProjectManagerModule
+Router --> EditorModule
+Router --> SettingsModule
+
+LandingPageModule --> AuthModule
+AuthModule --> ProjectManagerModule
+
+App --> AspNet
+ApiService --> AspNet
