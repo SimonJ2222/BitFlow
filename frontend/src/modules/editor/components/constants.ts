@@ -1,0 +1,15 @@
+
+
+// these constants are used for arranging the canvas location and computing the mouse position relative to the canvas
+
+const canvasLeft: number = 40;
+const canvasTop: number = 40;
+const canvasWidth: number = 1200;
+const canvasHeight: number = 600;
+
+export {
+  canvasLeft,
+  canvasTop,
+  canvasWidth,
+  canvasHeight,
+}
