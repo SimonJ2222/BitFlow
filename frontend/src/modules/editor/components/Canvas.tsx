@@ -10,8 +10,26 @@ function Canvas() {
   var gridSize: number = 20;
   var useDotPattern: boolean = false;
 
-  const [wires, setWires] = useState<Wire[]>([]);
-  const [gates, setGates] = useState<Gate[]>([]);
+  const [wires, setWires] = useState<Wire[]>([
+    newWire([
+      [2,3],
+      [2,5],
+    ], false),
+    newWire([
+      [3,3],
+      [3,5],
+      [5,5],
+    ], false),
+    newWire([
+      [7,3],
+      [10,3],
+    ], false),
+  ]);
+  const [gates, setGates] = useState<Gate[]>([
+    newGate(2,2),
+    newGate(6,2),
+    newGate(10,2),
+  ]);
 
   return(
     <svg id="svg_canvas" className="absolute" style={{left: canvasLeft, top: canvasTop}} width={canvasWidth} height={canvasHeight}>
