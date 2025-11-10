@@ -26,9 +26,12 @@ function Canvas() {
     ], false),
   ]);
   const [gates, setGates] = useState<Gate[]>([
-    newGate(2,2),
-    newGate(6,2),
-    newGate(10,2),
+    // 3 * 3 
+    newGate(2,2,3,3),
+    // 4 * 4
+    newGate(6,2,4,4),
+    // 5 * 2
+    newGate(10,2,5,2),
   ]);
 
   const [draggingId, setDraggingId] = useState<number | null>(null);
