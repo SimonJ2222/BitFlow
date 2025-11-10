@@ -31,8 +31,45 @@ function Canvas() {
     newGate(10,2),
   ]);
 
+  const [draggingId, setDraggingId] = useState<number | null>(null);
+  const[offset, setOffset] = useState({x: 0, y: 0})
+
+  const getGridCoords = (e: React.MouseEvent<SVGSVGElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = Math.floor((e.clientX - rect.left) / gridSize);
+    const y = Math.floor((e.clientY - rect.top) / gridSize);
+    return { x, y };
+  }
+
+  const handleMouseDownGate = (e: React.MouseEvent<SVGRectElement, MouseEvent>, id: number) => {
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDraggingId(id);
+
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top; 
+    setOffset({x: mouseX / gridSize, y: mouseY / gridSize});
+  }
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    if(draggingId === null) {
+      return;
+    }
+
+    const { x, y } = getGridCoords(e);
+    const newGates = gates.map((g, i) => (i === draggingId) ? {...g, x: Math.round(x - offset.x), y: Math.round(y - offset.y)} : g);
+    setGates(newGates);
+  }
+
+  const handleMouseUp = () => {
+    if (draggingId === null) {
+      return;
+    }
+    setDraggingId(null);
+  }
+
   return(
-    <svg id="svg_canvas" className="absolute" style={{left: canvasLeft, top: canvasTop}} width={canvasWidth} height={canvasHeight}>
+    <svg id="svg_canvas" className="absolute" style={{left: canvasLeft, top: canvasTop}} width={canvasWidth} height={canvasHeight} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       <defs>
         <pattern id="canvas_pattern" x="0" y="0" width={gridSize} height={gridSize} patternUnits="userSpaceOnUse">
           { useDotPattern
@@ -54,7 +91,7 @@ function Canvas() {
       </g>
       <g id="gate_group">
         {
-          gates.map((gate, i) => <GateComp gate={gate} gridSize={gridSize} key={i}/>)
+          gates.map((gate, i) => <GateComp gate={gate} gridSize={gridSize} key={i} onMouseDown={(e: any) => handleMouseDownGate(e, i)}/>)
         }
       </g>
       <g id="input_group">
