@@ -25,12 +25,9 @@ function Canvas() {
     ], false),
   ]);
   const [gates, setGates] = useState<Gate[]>([
-    // 3 * 3 
-    newGate(2,2,3,3),
-    // 4 * 4
-    newGate(6,2,4,4),
-    // 5 * 2
-    newGate(10,2,5,2),
+    newGate(2,2,3,3,[{x: 0, y: 0},{x: 0, y: 2}], [{x: 2, y: 1}]),
+    newGate(6,2,4,4,[{x: 0, y: 1},{x: 0, y: 2}]),
+    newGate(10,2,4,4),
   ]);
 
   const [draggingId, setDraggingId] = useState<number | null>(null);
@@ -116,7 +113,7 @@ function Canvas() {
       </g>
       <g id="gate_group">
         {
-          gates.map((gate, i) => <GateComp gate={gate} key={i} onMouseDown={(e: any) => handleMouseDownGate(e, i)} />)
+          gates.map((gate, i) => <GateComp gate={gate} key={i} onMouseDown={(e: any) => handleMouseDownGate(e, i)} inOutMouseDown={() => {}} />)
         }
       </g>
       <g id="input_group">
