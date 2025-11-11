@@ -72,7 +72,7 @@ function Canvas() {
   }
 
   const deleteWire = (id: number) => {
-    let newWires = wires.filter((wire: Wire, index: number) => (index !== id));
+    let newWires = wires.filter((_: Wire, index: number) => (index !== id));
     setWires(newWires);
   }
 

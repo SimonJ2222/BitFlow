@@ -1,7 +1,7 @@
 import { type Wire } from "../../types/Wire";
 import { gridSize } from "../constants";
 
-function WireComp({wire}: {wire: Wire}) {
+function WireComp({wire, remove}: {wire: Wire, remove: Function}) {
 
   let wire_svg_props = {
     strokeWidth: 4,
@@ -15,8 +15,14 @@ function WireComp({wire}: {wire: Wire}) {
     ))
   ))
 
+  const handleMouseDownWire = (e: React.MouseEvent<SVGPolylineElement, MouseEvent>) => {
+    if (e.button !== 0) return;
+    remove();
+    e.stopPropagation();
+  }
+
   return (
-    <polyline {...wire_svg_props} points={svg_points.toString()} />
+    <polyline {...wire_svg_props} points={svg_points.toString()} onMouseDown={handleMouseDownWire} />
   );
 }
 
