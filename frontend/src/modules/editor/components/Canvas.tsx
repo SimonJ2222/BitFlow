@@ -35,6 +35,7 @@ function Canvas() {
 
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const[offset, setOffset] = useState({x: 0, y: 0})
+  const [dragMode, setDragMode] = useState<"gate" | "wire" | "none">("none");
 
   const getGridCoords = (e: React.MouseEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
