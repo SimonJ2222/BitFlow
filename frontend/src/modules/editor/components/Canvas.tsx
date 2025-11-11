@@ -11,17 +11,16 @@ function Canvas() {
 
   const [wires, setWires] = useState<Wire[]>([
     newWire([
-      [2,3],
-      [2,5],
+      [20,5],
+      [20,10],
     ], false),
     newWire([
-      [3,3],
-      [3,5],
-      [5,5],
+      [22,5],
+      [22,10],
     ], false),
     newWire([
-      [7,3],
-      [10,3],
+      [24,5],
+      [24,10],
     ], false),
   ]);
   const [gates, setGates] = useState<Gate[]>([
@@ -91,7 +90,7 @@ function Canvas() {
 
 
   return(
-    <svg id="svg_canvas" className="absolute" style={{left: canvasLeft, top: canvasTop}} width={canvasWidth} height={canvasHeight} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+    <svg id="svg_canvas" className="absolute" style={{left: canvasLeft, top: canvasTop}} width={canvasWidth*gridSize} height={canvasHeight*gridSize} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       <defs>
         <pattern id="canvas_pattern" x="0" y="0" width={gridSize} height={gridSize} patternUnits="userSpaceOnUse">
           { useDotPattern
@@ -116,12 +115,12 @@ function Canvas() {
           gates.map((gate, i) => <GateComp gate={gate} key={i} onMouseDown={(e: any) => handleMouseDownGate(e, i)} inOutMouseDown={() => {}} />)
         }
       </g>
-      <g id="input_group">
+      {/* <g id="input_group">
 
       </g>
       <g id="output_group">
 
-      </g>
+      </g> */}
     </svg>
   );
 }
