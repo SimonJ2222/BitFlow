@@ -45,6 +45,7 @@ function Canvas() {
 
   const handleMouseDownGate = (e: React.MouseEvent<SVGRectElement, MouseEvent>, id: number) => {
     if (e.button !== 0) return;
+    setDragMode("gate");
 
     e.stopPropagation();
     const rect = e.currentTarget.getBoundingClientRect();
@@ -56,22 +57,36 @@ function Canvas() {
   }
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-    if (e.button !== 0) return;
-    if(draggingId === null) return;
-
-    const { x, y } = getGridCoords(e);
-    const newGates = gates.map((g, i) => (i === draggingId) ? {...g, x: Math.round(x - offset.x), y: Math.round(y - offset.y)} : g);
-    setGates(newGates);
+    if (dragMode === "gate") {
+      if (e.button !== 0) return;
+      if(draggingId === null) return;
+      
+      const { x, y } = getGridCoords(e);
+      const newGates = gates.map((g, i) => (i === draggingId) ? {...g, x: Math.round(x - offset.x), y: Math.round(y - offset.y)} : g);
+      setGates(newGates);
+      return;
+    }
+    if (dragMode === "wire") {
+      // what to do if a wire is being created
+      return;
+    }
   }
 
   const handleMouseUp = () => {
-    if (draggingId === null) {
+    if (dragMode === "gate") {
+      if (draggingId === null) {
+        return;
+      }
+      setDraggingId(null);
+      setDragMode("none");
       return;
     }
-    setDraggingId(null);
   }
 
-  const deleteWire = (id: number) => {
+  const handleMouseOverWire = (e: React.MouseEvent<SVGPolylineElement, MouseEvent>, id: number) => {
+    if (dragMode !== "none") return;
+    if (e.buttons % 2 === 0) return;
+    // delete the Wire
     let newWires = wires.filter((_: Wire, index: number) => (index !== id));
     setWires(newWires);
   }
