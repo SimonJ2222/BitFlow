@@ -110,7 +110,7 @@ function Canvas() {
       <rect width="100%" height="100%" x="0" y="0" stroke="black" strokeWidth="2" fill="url(#canvas_pattern)"/>
       <g id="wire_group">
         {
-          wires.map((wire, i) => <WireComp wire={wire} key={i} remove={() => deleteWire(i)}/>)
+          wires.map((wire, i) => <WireComp wire={wire} key={i} onMouseEnter={e => handleMouseOverWire(e, i)}/>)
         }
       </g>
       <g id="gate_group">
