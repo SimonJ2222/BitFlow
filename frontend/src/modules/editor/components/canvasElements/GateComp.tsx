@@ -1,6 +1,7 @@
 import { type Gate } from "../../types/Gate";
+import { gridSize } from "../constants";
 
-function GateComp({gate, gridSize, onMouseDown}: {gate: Gate, gridSize: number, onMouseDown?: React.MouseEventHandler<SVGRectElement>}) {
+function GateComp({gate, onMouseDown}: {gate: Gate, onMouseDown?: React.MouseEventHandler<SVGRectElement>}) {
 
   let gate_svg_props = {
     strokeWidth: 4,

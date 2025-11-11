@@ -3,11 +3,10 @@ import WireComp from "./canvasElements/WireComp";
 import GateComp from "./canvasElements/GateComp";
 import { newWire, type Wire } from "../types/Wire";
 import { newGate, type Gate } from "../types/Gate";
-import { canvasLeft, canvasTop, canvasWidth, canvasHeight } from "./constants";
+import { canvasLeft, canvasTop, canvasWidth, canvasHeight, gridSize } from "./constants";
 
 function Canvas() {
 
-  var gridSize: number = 20;
   var useDotPattern: boolean = false;
 
   const [wires, setWires] = useState<Wire[]>([
@@ -45,6 +44,8 @@ function Canvas() {
   }
 
   const handleMouseDownGate = (e: React.MouseEvent<SVGRectElement, MouseEvent>, id: number) => {
+    if (e.button !== 0) return;
+
     e.stopPropagation();
     const rect = e.currentTarget.getBoundingClientRect();
     setDraggingId(id);
@@ -55,9 +56,8 @@ function Canvas() {
   }
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-    if(draggingId === null) {
-      return;
-    }
+    if (e.button !== 0) return;
+    if(draggingId === null) return;
 
     const { x, y } = getGridCoords(e);
     const newGates = gates.map((g, i) => (i === draggingId) ? {...g, x: Math.round(x - offset.x), y: Math.round(y - offset.y)} : g);
@@ -70,6 +70,12 @@ function Canvas() {
     }
     setDraggingId(null);
   }
+
+  const deleteWire = (id: number) => {
+    let newWires = wires.filter((wire: Wire, index: number) => (index !== id));
+    setWires(newWires);
+  }
+
 
   return(
     <svg id="svg_canvas" className="absolute" style={{left: canvasLeft, top: canvasTop}} width={canvasWidth} height={canvasHeight} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
@@ -89,12 +95,12 @@ function Canvas() {
       <rect width="100%" height="100%" x="0" y="0" stroke="black" strokeWidth="2" fill="url(#canvas_pattern)"/>
       <g id="wire_group">
         {
-          wires.map((wire, i) => <WireComp wire={wire} gridSize={gridSize} key={i}/>)
+          wires.map((wire, i) => <WireComp wire={wire} key={i} remove={() => deleteWire(i)}/>)
         }
       </g>
       <g id="gate_group">
         {
-          gates.map((gate, i) => <GateComp gate={gate} gridSize={gridSize} key={i} onMouseDown={(e: any) => handleMouseDownGate(e, i)}/>)
+          gates.map((gate, i) => <GateComp gate={gate} key={i} onMouseDown={(e: any) => handleMouseDownGate(e, i)} />)
         }
       </g>
       <g id="input_group">

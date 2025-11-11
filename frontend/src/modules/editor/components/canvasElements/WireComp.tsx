@@ -1,6 +1,7 @@
 import { type Wire } from "../../types/Wire";
+import { gridSize } from "../constants";
 
-function WireComp({wire, gridSize}: {wire: Wire, gridSize: number}) {
+function WireComp({wire}: {wire: Wire}) {
 
   let wire_svg_props = {
     strokeWidth: 4,
