@@ -5,13 +5,13 @@ function WireComp({wire, remove}: {wire: Wire, remove: Function}) {
 
   let wire_svg_props = {
     strokeWidth: 4,
-    stroke: ( wire.isPreview ? "gray" : "black"),
+    stroke: (wire.isPreview ? "gray" : "black"),
     fill: "none",
   }
 
   let svg_points = wire.points.map((point: number[]) => (
     point.map((coord: number) => (
-      coord * gridSize + 0.5 * gridSize
+      coord * gridSize
     ))
   ))
 
@@ -22,7 +22,19 @@ function WireComp({wire, remove}: {wire: Wire, remove: Function}) {
   }
 
   return (
-    <polyline {...wire_svg_props} points={svg_points.toString()} onMouseDown={handleMouseDownWire} />
+    <>
+      <polyline {...wire_svg_props} points={svg_points.toString()} onMouseDown={handleMouseDownWire} />
+      {
+        wire.points.map((point: [number, number]) => (
+          <circle //TODO: Handle Mouse Down ?Node?
+            r="4" 
+            cx={point[0] * gridSize} 
+            cy={point[1] * gridSize} 
+            fill={(wire.isPreview ? "gray" : "black")}
+          />
+        ))
+      }
+    </>
   );
 }
 

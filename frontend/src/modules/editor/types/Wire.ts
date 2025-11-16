@@ -5,7 +5,7 @@ type Wire = {
   isPreview: boolean;
 }
 
-function newWire(points: [number,number][], is_preview: boolean = true): Wire {
+function createNewWire(points: [number,number][], is_preview: boolean = true): Wire {
   return {
     points: points,
     isPreview: is_preview,
@@ -14,5 +14,5 @@ function newWire(points: [number,number][], is_preview: boolean = true): Wire {
 
 export {
   type Wire,
-  newWire,
+  createNewWire,
 }
