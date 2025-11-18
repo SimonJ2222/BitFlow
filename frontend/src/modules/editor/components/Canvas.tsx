@@ -1,31 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WireComp from "./canvasElements/WireComp";
 import GateComp from "./canvasElements/GateComp";
 import { createNewWire, type Wire } from "../types/Wire";
 import { newGate, type Gate } from "../types/Gate";
 import { canvasLeft, canvasTop, canvasWidth, canvasHeight, gridSize } from "./constants";
-import type { Input } from "../types/Input";
+import { rotationNext, type Input } from "../types/Input";
+import { calculateWireGroups } from "./WireGroup";
+import type { WireGroup } from "../types/WireGroup";
 
 function Canvas() {
 
-  var useDotPattern: boolean = false;
-
+  const useDotPattern: boolean = false;
+  const [newWireId, setNewWireId] = useState<number>(0);
   const [wires, setWires] = useState<Wire[]>([]);
+  const [wireGroups, setWireGroups] = useState<WireGroup[]>([]);
   const [gates, setGates] = useState<Gate[]>([
     // 3 * 5 
-    newGate(2,2,3,5, [{gateId:1}, {gateId:1}, {gateId:1}, {gateId:1}]),
+    newGate(2,2,3,5, "AND", undefined, [{gateId:0}, {gateId:0}, {gateId:0}, {gateId:0}]),
     // 4 * 4
-    newGate(6,2,4,4, [{gateId:2}]),
+    newGate(6,2,4,4, "FlipFlop", undefined, [{gateId:1}]),
     // 3 * 3
-    newGate(10,2,3,3, [{gateId:3}, {gateId:3}]),
+    newGate(11,2,3,3, "OR", undefined, [{gateId:2}, {gateId:2}]),
     // 5 * 5 
-    newGate(2,2,5,5, [{gateId:4}, {gateId:4}, {gateId:4}]),
+    newGate(2,8,5,5, "XOR", undefined, [{gateId:3}, {gateId:3}, {gateId:3}]),
   ]);
 
-  const [gateDraggingId, setGateDraggingId] = useState<number | null>(null);
-  const [wireDraggingId, setWireDraggingId] = useState<number | null>(null);
+  const [gateDraggingId, setGateDraggingId] = useState<number[] | null>(null);
+  const [wireDraggingId, setWireDraggingId] = useState<number[] | null>(null);
+  const [wireDraggingStart, setWireDraggingStart] = useState<Map<number, { x: number; y: number }>>(new Map());
 
-  const[offset, setOffset] = useState({x: 0, y: 0})
+  useEffect(() => {
+    setWireGroups(calculateWireGroups(wires))
+  }, [wires])
+
+  function updateWireStart(newWireId: number, x: number, y: number) {
+    setWireDraggingStart(prev => {
+      if(prev.has(newWireId)) return prev
+
+      const next = new Map(prev);
+      next.set(newWireId, { x, y });
+      
+      return next;
+    });
+  }
+
+  const [offset, setOffset] = useState({x: 0, y: 0})
 
   const getGridCoords = (e: React.MouseEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -34,115 +53,288 @@ function Canvas() {
     return { x, y };
   }
 
+  const handleMouseDown = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    if (e.button !== 0) return;
+    e.stopPropagation();
+
+    const { x, y } = getGridCoords(e);
+    
+    // Neues Wire einfügen
+    const _newWireId = newWireId
+    setNewWireId(_newWireId + 1)
+
+    setWires(wires => [...wires, createNewWire(_newWireId, [[x, y]], true)])
+
+    setWireDraggingId(prev => [...(prev ?? []), _newWireId]);
+    updateWireStart(_newWireId, x, y)
+  }
+
   const handleMouseDownGate = (e: React.MouseEvent<SVGRectElement, MouseEvent>, id: number) => {
     if (e.button !== 0) return;
-
     e.stopPropagation();
+
     const rect = e.currentTarget.getBoundingClientRect();
-    setGateDraggingId(id);
+    setGateDraggingId(prev => [...(prev ?? []), id]);
 
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top; 
     setOffset({x: mouseX / gridSize, y: mouseY / gridSize});
+
+    // Wires des Gates verschieben
+    /*
+    const newGates = gates.map((gate: Gate, gateId: number) => {
+      if(gateId !== id) return gate
+
+      const newInputs = gate.inputs.map((input: Input) => {
+        if(!input.wiresId?.length) return input
+        // Neues Wire einfügen
+        let _newWireId = newWireId
+        let newWiresId: number[] = []
+        input.wiresId.forEach((wireId: number) => {
+          setWires(wires => [...wires, createNewWire(_newWireId, [[input.x!, input.y!]], true)])
+          setWireDraggingId(prev => {
+            if(prev?.includes(_newWireId)) return prev
+            return [...(prev ?? []), _newWireId]
+          });
+          console.log("88888888", _newWireId)
+          updateWireStart(_newWireId, input.x!, input.y!);
+          newWiresId = [...newWiresId, _newWireId]
+          console.log("99999", _newWireId, newWiresId)
+          _newWireId = _newWireId + 1
+        })
+        console.log("finished")
+        setNewWireId(_newWireId + 1)
+        console.log(newWiresId)
+        return {
+          ...input,
+          wiresId: [...input.wiresId, ...newWiresId]
+        }
+      })
+
+      return {
+        ...gate,
+        inputs: newInputs
+      }
+    })
+    setGates(newGates)
+    */
   }
 
   const handleMouseDownInput = (e: React.MouseEvent<SVGPolylineElement, MouseEvent>, gateId: number) => {
     if (e.button !== 0) return;
-
     e.stopPropagation();
+
     const polyline = e.currentTarget;
     const inputId = parseInt(polyline.getAttribute("input-id")!);
     const x = parseInt(polyline.getAttribute("pos-x")!);
     const y = parseInt(polyline.getAttribute("pos-y")!);
     
     // Neues Wire einfügen
-    setWires(wires => [...wires, createNewWire([[x, y]], true)])
-    const newWireId = wires.length
+    const _newWireId = newWireId
+    setNewWireId(_newWireId + 1)
 
-    setWireDraggingId(newWireId);
-    
-    setGates(gates => gates.map((gate: Gate, index: number) => {
-      if (index !== gateId) return gate
-      
+    setWires(wires => [...wires, createNewWire(_newWireId, [[x, y]], true)])
+
+    setWireDraggingId(prev => [...(prev ?? []), _newWireId]);
+    updateWireStart(_newWireId, x, y)
+
+    const newGates = gates.map((gate: Gate, gateIndex: number) => {
+      if (gateIndex !== gateId) return gate
+
       return {
         ...gate,
-        inputs: gate.inputs.map((input: Input, index: number) => {
-        if (index !== inputId) return input
-        
-        return {
-          ...input,
-          wiresId: [...input.wiresId ? input.wiresId : [], newWireId]
-        }
+        inputs: gate.inputs.map((input: Input, inputIndex: number) => {
+          if (inputIndex !== inputId) return input
+          return {
+            ...input,
+            wiresId: [...(input.wiresId ?? []), _newWireId]
+          }
         })
       }
-    }))
+    })
+    setGates(newGates)
+  }
+
+  const handleMouseDownNode = (e: React.MouseEvent<SVGCircleElement, MouseEvent>) => {
+    if (e.button !== 0) return;
+    e.stopPropagation();
+
+    const circle = e.currentTarget;
+    const x = parseInt(circle.getAttribute("pos-x")!);
+    const y = parseInt(circle.getAttribute("pos-y")!);
+    
+    // Neues Wire einfügen
+    const _newWireId = newWireId
+    setNewWireId(_newWireId + 1)
+
+    setWires(wires => [...wires, createNewWire(_newWireId, [[x, y]], true)])
+    
+    setWireDraggingId(prev => [...(prev ?? []), _newWireId]);
+    updateWireStart(_newWireId, x, y)
+
+    setNewWireId(_newWireId + 1)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<SVGSVGElement>) => {
+    console.log(e.code)
+    e.stopPropagation();
+    switch (e.code) {
+      case "KeyR":
+        if(!gateDraggingId) return;
+          setGates(gates => gates.map((gate: Gate, gateIndex: number) => {
+            if (!gateDraggingId.includes(gateIndex)) return gate
+            
+            return {
+              ...gate,
+              rotation: rotationNext[gate.rotation]
+            }
+          }))
+        break;
+    }
   }
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-    if (e.button !== 0) return;
+    e.stopPropagation();
 
     const { x, y } = getGridCoords(e);
     
     if(gateDraggingId !== null) {
-      const newGates = gates.map((g, i) => (i === gateDraggingId) ? {...g, x: Math.round(x - offset.x), y: Math.round(y - offset.y)} : g);
-      setGates(newGates);
-    } else if(wireDraggingId !== null) {
-      moveWire(x, y)
+      moveGate(x, y)
+    } else if(wireDraggingId) { // Neues Wire (allein)
+      dragNewWire(x, y)
     }
   }
 
   const handleMouseUp = () => {
     if (gateDraggingId !== null) {
       setGateDraggingId(null);
+    } 
+    if (wireDraggingId) {
+      const newWires = wires
+          .filter((wire: Wire) => (wire.points.length > 1))
+          .map((wire: Wire) => ({ ...wire, isPreview: false }));
+      setWires(newWires);
+      setWireDraggingId(null);
+      setWireDraggingStart(new Map())
     }
-    if (wireDraggingId !== null) {
-      const newWires = wires.map((wire: Wire, index: number) => {
-        if (index !== wireDraggingId) return wire;
+  }
+
+  const moveGate = (newX: number, newY: number) => {
+    // Gate verschieben
+    const newGates = gates.map((gate: Gate, index: number) => {
+      if(!gateDraggingId?.includes(index)) return gate
+      /*  
+      if(wireDraggingId) { // Vorhandene Wire (an Gate) verschieben
+        gate.inputs.forEach((input: Input) => {
+          if(!input.wiresId?.length) return
+
+          input.wiresId.forEach((wireId: number) => {
+            dragWire(wireId, input.x!, input.y!)
+          })
+        })
+      }
+      */
+
+      return {
+        ...gate, 
+        x: Math.round(newX - offset.x), 
+        y: Math.round(newY - offset.y)
+      }
+    });
+    setGates(newGates);
+  }
+
+  const dragWire = (wireId: number, targetX: number, targetY: number) => {
+    const newWires = wires
+      .filter((wire: Wire) => (wire.points.length !== 0))
+      .map((wire: Wire) => {
+        if (wire.id !== wireId) return wire;
+        
+        const [x0, y0] = [wireDraggingStart.get(wire.id)?.x, wireDraggingStart.get(wire.id)?.y];
+        const [x1, y1] = [targetX, targetY];
+        console.log("56565656", wire.id)
+        console.log("7676766767", [...wireDraggingStart.keys()]); 
+        if(x0 === undefined || y0 === undefined) return wire;
+
+        const newPoints: [number, number][] = [
+          [x0, y0],
+          [x1, y0],
+          [x1, y1] 
+        ];
 
         return {
           ...wire,
-          isPreview: false
+          points: newPoints
         };
       });
-      setWires(newWires);
-      setWireDraggingId(null);
-    }
+    setWires(newWires);
   }
 
-  const moveWire = (newX: number, newY: number) => {
-    if (wireDraggingId === null) return
+  const dragNewWire = (targetX: number, targetY: number) => {
+    const newWires = wires
+      .filter((wire: Wire) => (wire.points.length > 0))
+      .map((wire: Wire) => {
+        if (!wireDraggingId?.includes(wire.id)) return wire;
 
-    const newWires = wires.map((wire: Wire, index: number) => {
-      if (index !== wireDraggingId) return wire;
+        const [x0, y0] = [wireDraggingStart.get(wire.id)?.x, wireDraggingStart.get(wire.id)?.y];
+        const [x1, y1] = [targetX, targetY];
+        if(x0 === undefined || y0 === undefined) return wire;
 
-      if (wire.points.length === 0) return wire;
-      
-      const start = wire.points[0];
-      const [x0, y0] = start;
-      const [x1, y1] = [newX, newY];
+        let newPoints: [number, number][];
+        if((x0 === x1 && y0 === y1)) {
+          newPoints = [[x0, y0]]
+        } else {
+          if(Math.abs(x1 - x0) > Math.abs(y1 - y0)) {
+            newPoints = [
+              [x0, y0],
+              [x1, y0],
+              [x1, y1] 
+            ];
+          } else {
+            newPoints = [
+              [x0, y0],
+              [x0, y1],
+              [x1, y1] 
+            ];
+          }
+        }
 
-      // Erzeuge gezackte Linie: horizontal zuerst, dann vertikal
-      const newPoints: [number, number][] = [
-        start,
-        [x1, y0], // horizontal
-        [x1, y1]  // vertikal
-      ];
+        return {
+          ...wire,
+          points: newPoints
+        };
+      });
+    setWires(newWires);
+  }
+
+  const deleteWire = (wireId: number) => {
+    let newWires = wires.filter((wire: Wire) => (wire.id !== wireId));
+    setWires(newWires);
+    
+    // WireIDs der Inputs der Gates aktualisieren 
+    let newGates = gates.map((gate: Gate) => {
+      const newInputs = gate.inputs.map((input: Input) => {
+        return {
+          ...input,
+          wiresId: input.wiresId?.filter((wireId: number) => (wireId !== wireId))
+        }
+      })
 
       return {
-        ...wire,
-        points: newPoints
-      };
+        ...gate,
+        inputs: newInputs
+      }
     });
-    setWires(newWires);
-  }
-
-  const deleteWire = (id: number) => {
-    let newWires = wires.filter((_: Wire, index: number) => (index !== id));
-    setWires(newWires);
+    setGates(newGates);
   }
 
   return(
-    <svg id="svg_canvas" className="absolute" style={{left: canvasLeft, top: canvasTop}} width={canvasWidth} height={canvasHeight} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+    <svg id="svg_canvas" className="absolute" style={{left: canvasLeft, top: canvasTop}} width={canvasWidth} height={canvasHeight} 
+      onMouseMove={handleMouseMove} 
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onKeyDownCapture={handleKeyDown}
+    >
       <defs>
         <pattern id="canvas_pattern" x="0" y="0" width={gridSize} height={gridSize} patternUnits="userSpaceOnUse">
           { useDotPattern
@@ -159,7 +351,7 @@ function Canvas() {
       <rect width="100%" height="100%" x="0" y="0" stroke="black" strokeWidth="2" fill="url(#canvas_pattern)"/>
       <g id="wire_group">
         {
-          wires.map((wire, i) => <WireComp wire={wire} key={i} remove={() => deleteWire(i)}/>)
+          wires.map((wire: Wire) => <WireComp wire={wire} key={wire.id} remove={() => deleteWire(wire.id)} onMouseDownNode={(e) => handleMouseDownNode(e)}/>)
         }
       </g>
       <g id="gate_group">

@@ -6,9 +6,10 @@ type Input = {
   y?: number;
 }
 
-function newInput(gateId: number, x: number = 0, y: number = 0): Input {
+function newInput(gateId: number, wiresId: number[] = [], x: number = 0, y: number = 0): Input {
   return {
     gateId: gateId,
+    wiresId: wiresId,
     x: Math.floor(x),
     y: Math.floor(y),
   }
@@ -16,8 +17,16 @@ function newInput(gateId: number, x: number = 0, y: number = 0): Input {
 
 type Rotation = "North" | "East" | "South" | "West";
 
+const rotationNext: Record<Rotation, Rotation> = {
+  North: "East",
+  East: "South",
+  South: "West",
+  West: "North",
+};
+
 export {
   type Input,
   newInput,
-  type Rotation
+  type Rotation,
+  rotationNext
 }

@@ -47,13 +47,13 @@ function GateComp({gate, onMouseDownGate, onMouseDownInput}: {gate: Gate, onMous
     fill: "none",
   }
 
-  let input_pos = gate.inputs.map((_input: Input, i: number, inputs: Input[]) => {
+  let input_pos = gate.inputs.map((_input: Input, i: number) => {
     const distrib_offset = rot_distrib_offset[rotation]
     const start_offset = rot_start_offset[rotation]
     const end_offset = rot_end_offset[rotation]
 
     // Gleichmäßig verteilen
-    /* alt 
+    /* alt (auch zwischen Kästchen möglich)
     let distrib_offset_x = distrib_offset.x * (gate.width / inputs.length) * 0.5 
     let distrib_offset_y = distrib_offset.y * (gate.height / inputs.length) * 0.5
     */
@@ -61,8 +61,8 @@ function GateComp({gate, onMouseDownGate, onMouseDownInput}: {gate: Gate, onMous
     return {
       x: (gate.x + distrib_offset.x + (i * distrib_offset.x) + (start_offset.x * gate.width)),
       y: (gate.y + distrib_offset.y + (i * distrib_offset.y) + (start_offset.y * gate.height)),
-      x_offset: end_offset.x * 10,
-      y_offset: end_offset.y * 10
+      x_offset: end_offset.x * (gridSize * 0.5),
+      y_offset: end_offset.y * (gridSize * 0.5)
     }
   })
 
@@ -70,27 +70,37 @@ function GateComp({gate, onMouseDownGate, onMouseDownInput}: {gate: Gate, onMous
   gate.inputs = gate.inputs.map((input: Input, i: number) => {
     return {
       gateId: input.gateId,
+      wiresId: input.wiresId,
       x: input_pos[i].x,
       y: input_pos[i].y
     }
   })
   
   return (
-    <>
+    <g>
       <rect {...gate_svg_props} {...svg_pos} onMouseDown={onMouseDownGate} cursor="grab" />
-      {input_pos.map((input, i: number) => (
+      <text 
+        x={svg_pos.x + (gate.width * gridSize) / 2}
+        y={svg_pos.y + (gate.height * gridSize) / 2}
+        dominantBaseline="middle"
+        textAnchor="middle"
+        style={{ pointerEvents: "none", userSelect: "none" }}
+      >
+        {gate.label}
+      </text>
+      {input_pos.map((input, index: number) => (
         <polyline
-          key={i}
+          key={index}
           {...input_svg_props}
           points={`${input.x * gridSize},${input.y * gridSize} ${(input.x * gridSize) + input.x_offset},${(input.y * gridSize) + input.y_offset}`}
           cursor="pointer"
-          input-id={i}
+          input-id={index}
           pos-x={input.x}
           pos-y={input.y}
           onMouseDown={onMouseDownInput}
         />
       ))}
-    </>
+    </g>
   );
 }
 

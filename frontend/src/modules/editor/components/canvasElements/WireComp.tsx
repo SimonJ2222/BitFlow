@@ -1,7 +1,7 @@
 import { type Wire } from "../../types/Wire";
 import { gridSize } from "../constants";
 
-function WireComp({wire, remove}: {wire: Wire, remove: Function}) {
+function WireComp({wire, remove, onMouseDownNode, onMouseUpNode}: {wire: Wire, remove: Function, onMouseDownNode?: React.MouseEventHandler<SVGCircleElement>, onMouseUpNode?: React.MouseEventHandler<SVGCircleElement>}) {
 
   let wire_svg_props = {
     strokeWidth: 4,
@@ -17,20 +17,32 @@ function WireComp({wire, remove}: {wire: Wire, remove: Function}) {
 
   const handleMouseDownWire = (e: React.MouseEvent<SVGPolylineElement, MouseEvent>) => {
     if (e.button !== 0) return;
-    remove();
     e.stopPropagation();
+
+    remove();
   }
 
   return (
     <>
-      <polyline {...wire_svg_props} points={svg_points.toString()} onMouseDown={handleMouseDownWire} />
+      <polyline 
+        {...wire_svg_props} 
+        points={svg_points.toString()} 
+        onMouseDown={handleMouseDownWire} 
+      />
       {
-        wire.points.map((point: [number, number]) => (
-          <circle //TODO: Handle Mouse Down ?Node?
+        wire.points.map((point: [number, number], index: number) => (
+          <circle 
+            key={index}
             r="4" 
             cx={point[0] * gridSize} 
             cy={point[1] * gridSize} 
             fill={(wire.isPreview ? "gray" : "black")}
+            cursor={(wire.isPreview ? undefined : "grab")}
+            node-id={index}
+            pos-x= {point[0]}
+            pos-y= {point[1]}
+            onMouseDown={onMouseDownNode}
+            onMouseUp={onMouseUpNode}
           />
         ))
       }
