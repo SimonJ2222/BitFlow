@@ -4,7 +4,7 @@ import { gridSize } from "../constants";
 function WireComp({wire, remove, onMouseDownNode, onMouseUpNode}: {wire: Wire, remove: Function, onMouseDownNode?: React.MouseEventHandler<SVGCircleElement>, onMouseUpNode?: React.MouseEventHandler<SVGCircleElement>}) {
 
   let wire_svg_props = {
-    strokeWidth: 4,
+    strokeWidth: gridSize * 0.125,
     stroke: (wire.isPreview ? "gray" : "black"),
     fill: "none",
   }
@@ -33,7 +33,7 @@ function WireComp({wire, remove, onMouseDownNode, onMouseUpNode}: {wire: Wire, r
         wire.points.map((point: [number, number], index: number) => (
           <circle 
             key={index}
-            r="4" 
+            r={gridSize * 0.125} 
             cx={point[0] * gridSize} 
             cy={point[1] * gridSize} 
             fill={(wire.isPreview ? "gray" : "black")}

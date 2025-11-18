@@ -1,15 +1,16 @@
+import type { Gate } from "../types/Gate";
 import type { Wire } from "../types/Wire";
 import type { WireGroup } from "../types/WireGroup";
 
-function calculateWireGroups(wires: Wire[]): WireGroup[] {
+function calculateWireGroups(wires: Wire[], gates: Gate[]): WireGroup[] {
   const visited = new Set<number>();
-  const groups: WireGroup[] = [];
+  let groups: WireGroup[] = [];
   let groupId = 0;
 
   for (let i = 0; i < wires.length; i++) {
     if (visited.has(i)) continue;
 
-    // Neue Gruppe starten
+    // Neue Gruppe
     const queue = [i];
     const group: Wire[] = [];
     visited.add(i);
@@ -19,7 +20,6 @@ function calculateWireGroups(wires: Wire[]): WireGroup[] {
       const currentWire = wires[currentIndex];
       group.push(currentWire);
 
-      // Nachbar-Wires suchen
       for (let j = 0; j < wires.length; j++) {
         if (!visited.has(j) && wiresSharePoint(currentWire, wires[j])) {
           visited.add(j);
@@ -30,19 +30,74 @@ function calculateWireGroups(wires: Wire[]): WireGroup[] {
 
     groups.push({
       id: groupId++,
-      wires: group
+      wires: group,
+      inputs: [],
+      outputs: [],
+      error: false
     });
   }
-  console.log(groups)
+  console.log("Neue Gruppe:", groups)
+  groups = calculateWireGroupInputs(groups, gates)
+  groups = calculateWireGroupOutputs(groups, gates)
+  console.log("Bearbeitete Gruppe:", groups)
   return groups;
 }
-
 
 function wiresSharePoint(a: Wire, b: Wire): boolean {
   return a.points.some(ap =>
     b.points.some(bp => ap[0] === bp[0] && ap[1] === bp[1])
   );
 }
+
+function calculateWireGroupInputs(wireGroups: WireGroup[], gates: Gate[]) {
+  return wireGroups.map(group => {
+    const foundInputs: [number, number][] = [];
+
+    for (let wire of group.wires) {
+      for (let [px, py] of wire.points) {
+        gates.forEach((gate, gateId) => {
+          gate.inputs.forEach((input, inputId) => {
+            if (px === input.x && py === input.y) {
+              foundInputs.push([gateId, inputId]);
+            }
+          });
+        });
+      }
+    }
+
+    return {
+      ...group,
+      inputs: foundInputs
+    };
+  });
+}
+
+function calculateWireGroupOutputs(wireGroups: WireGroup[], gates: Gate[]) {
+  return wireGroups.map(group => {
+    const foundOutputs: [number, number][] = [];
+
+    for (let wire of group.wires) {
+      for (let [px, py] of wire.points) {
+        gates.forEach((gate, gateId) => {
+          if (!gate.outputs) return;
+
+          gate.outputs.forEach((output: any, outputId: number) => {
+            if (px === output.x && py === output.y) {
+              foundOutputs.push([gateId, outputId]);
+            }
+          });
+        });
+      }
+    }
+
+    return {
+      ...group,
+      outputs: foundOutputs,
+      error: ((foundOutputs.length > 1) ? "multiple_outputs" as const : false as const)
+    };
+  });
+}
+
 
 export {
   calculateWireGroups

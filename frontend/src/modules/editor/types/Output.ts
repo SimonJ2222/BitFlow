@@ -1,12 +1,14 @@
 
 
 type Output = {
-  x: number;
-  y: number;
+  gateId: number;
+  x?: number;
+  y?: number;
 }
 
-function newOutput(x: number = 0, y: number = 0): Output {
+function newOutput(gateId: number, x: number = 0, y: number = 0): Output {
   return {
+    gateId: gateId,
     x: Math.floor(x),
     y: Math.floor(y),
   }

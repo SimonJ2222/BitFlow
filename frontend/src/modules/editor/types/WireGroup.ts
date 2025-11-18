@@ -2,8 +2,10 @@ import type { Wire } from "./Wire";
 
 type WireGroup = {
   id: number;
-  error?: "multiple_outputs" | "wire_multiple_groups";
+  error: false | "multiple_outputs";
   wires: Wire[];
+  inputs: [gateId: number, inputId: number][]
+  outputs: [gateId: number, outputId: number][]
 }
 
 export {

@@ -2,27 +2,26 @@ import { useEffect, useState } from "react";
 import WireComp from "./canvasElements/WireComp";
 import GateComp from "./canvasElements/GateComp";
 import { createNewWire, type Wire } from "../types/Wire";
-import { newGate, type Gate } from "../types/Gate";
+import { newGate, rotationNext, type Gate } from "../types/Gate";
 import { canvasLeft, canvasTop, canvasWidth, canvasHeight, gridSize } from "./constants";
-import { rotationNext, type Input } from "../types/Input";
 import { calculateWireGroups } from "./WireGroup";
 import type { WireGroup } from "../types/WireGroup";
 
 function Canvas() {
-
   const useDotPattern: boolean = false;
   const [newWireId, setNewWireId] = useState<number>(0);
   const [wires, setWires] = useState<Wire[]>([]);
   const [wireGroups, setWireGroups] = useState<WireGroup[]>([]);
+  const [newGateId, setNewGateId] = useState<number>(3);
   const [gates, setGates] = useState<Gate[]>([
     // 3 * 5 
-    newGate(2,2,3,5, "AND", undefined, [{gateId:0}, {gateId:0}, {gateId:0}, {gateId:0}]),
+    newGate(0, 2,2,3,5, "AND", undefined, [{gateId:0}, {gateId:0}, {gateId:0}, {gateId:0}], [{gateId:0}]),
     // 4 * 4
-    newGate(6,2,4,4, "FlipFlop", undefined, [{gateId:1}]),
+    newGate(1, 6,2,4,4, "FlipFlop", undefined, [{gateId:1}], [{gateId:1}, {gateId:1}, {gateId:1}]),
     // 3 * 3
-    newGate(11,2,3,3, "OR", undefined, [{gateId:2}, {gateId:2}]),
+    newGate(2, 11,2,3,3, "OR", undefined, [{gateId:2}, {gateId:2}], [{gateId:2}]),
     // 5 * 5 
-    newGate(2,8,5,5, "XOR", undefined, [{gateId:3}, {gateId:3}, {gateId:3}]),
+    newGate(3, 2,8,5,5, "XOR", undefined, [{gateId:3}, {gateId:3}, {gateId:3}], [{gateId:3}]),
   ]);
 
   const [gateDraggingId, setGateDraggingId] = useState<number[] | null>(null);
@@ -30,7 +29,7 @@ function Canvas() {
   const [wireDraggingStart, setWireDraggingStart] = useState<Map<number, { x: number; y: number }>>(new Map());
 
   useEffect(() => {
-    setWireGroups(calculateWireGroups(wires))
+    setWireGroups(calculateWireGroups(wires, gates))
   }, [wires])
 
   function updateWireStart(newWireId: number, x: number, y: number) {
@@ -59,7 +58,7 @@ function Canvas() {
 
     const { x, y } = getGridCoords(e);
     
-    // Neues Wire einfügen
+    // Neues Kabel einfügen
     const _newWireId = newWireId
     setNewWireId(_newWireId + 1)
 
@@ -120,12 +119,11 @@ function Canvas() {
     */
   }
 
-  const handleMouseDownInput = (e: React.MouseEvent<SVGPolylineElement, MouseEvent>, gateId: number) => {
+  const handleMouseDownInput = (e: React.MouseEvent<SVGPolylineElement, MouseEvent>) => {
     if (e.button !== 0) return;
     e.stopPropagation();
 
     const polyline = e.currentTarget;
-    const inputId = parseInt(polyline.getAttribute("input-id")!);
     const x = parseInt(polyline.getAttribute("pos-x")!);
     const y = parseInt(polyline.getAttribute("pos-y")!);
     
@@ -137,22 +135,6 @@ function Canvas() {
 
     setWireDraggingId(prev => [...(prev ?? []), _newWireId]);
     updateWireStart(_newWireId, x, y)
-
-    const newGates = gates.map((gate: Gate, gateIndex: number) => {
-      if (gateIndex !== gateId) return gate
-
-      return {
-        ...gate,
-        inputs: gate.inputs.map((input: Input, inputIndex: number) => {
-          if (inputIndex !== inputId) return input
-          return {
-            ...input,
-            wiresId: [...(input.wiresId ?? []), _newWireId]
-          }
-        })
-      }
-    })
-    setGates(newGates)
   }
 
   const handleMouseDownNode = (e: React.MouseEvent<SVGCircleElement, MouseEvent>) => {
@@ -243,7 +225,7 @@ function Canvas() {
     });
     setGates(newGates);
   }
-
+  /*
   const dragWire = (wireId: number, targetX: number, targetY: number) => {
     const newWires = wires
       .filter((wire: Wire) => (wire.points.length !== 0))
@@ -269,7 +251,7 @@ function Canvas() {
       });
     setWires(newWires);
   }
-
+  */
   const dragNewWire = (targetX: number, targetY: number) => {
     const newWires = wires
       .filter((wire: Wire) => (wire.points.length > 0))
@@ -310,22 +292,6 @@ function Canvas() {
   const deleteWire = (wireId: number) => {
     let newWires = wires.filter((wire: Wire) => (wire.id !== wireId));
     setWires(newWires);
-    
-    // WireIDs der Inputs der Gates aktualisieren 
-    let newGates = gates.map((gate: Gate) => {
-      const newInputs = gate.inputs.map((input: Input) => {
-        return {
-          ...input,
-          wiresId: input.wiresId?.filter((wireId: number) => (wireId !== wireId))
-        }
-      })
-
-      return {
-        ...gate,
-        inputs: newInputs
-      }
-    });
-    setGates(newGates);
   }
 
   return(
@@ -361,7 +327,7 @@ function Canvas() {
               gate={gate} 
               key={i} 
               onMouseDownGate={(e: any) => handleMouseDownGate(e, i)} 
-              onMouseDownInput={(e: any) => handleMouseDownInput(e, i)} 
+              onMouseDownInput={(e: any) => handleMouseDownInput(e)} 
             />
           )
         }
