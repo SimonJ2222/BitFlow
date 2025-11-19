@@ -20,7 +20,7 @@ function WireComp({wire, remove, onMouseDownNode, onMouseUpNode}: {wire: Wire, r
 
     remove();
   }
-  console.log(wire.state)
+  
   const fillColor =
     wire.state === "error"   ? "red" :
     wire.state === "preview" ? "gray" :

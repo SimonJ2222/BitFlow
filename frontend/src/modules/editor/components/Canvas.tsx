@@ -279,6 +279,11 @@ function Canvas() {
         let newPoints: [number, number][];
         if((x0 === x1 && y0 === y1)) {
           newPoints = [[x0, y0]]
+        } else if(x0 === x1 || y0 === y1) {
+          newPoints = [
+            [x0, y0],
+            [x1, y1] 
+          ];
         } else {
           if(Math.abs(x1 - x0) > Math.abs(y1 - y0)) {
             newPoints = [

@@ -37,17 +37,9 @@ function calculateWireGroups(wires: Wire[], gates: Gate[]): WireGroup[] {
     });
   }
 
-  console.log("Neue Gruppen:", groups)
   groups = calculateWireGroupInputs(groups, gates)
   groups = calculateWireGroupOutputs(groups, gates)
   console.log("Bearbeitete Gruppen:", groups)
-
-  // WireGroup State auf Wire übertragen
-  groups.forEach(group => {
-    group.wires.forEach(wire => {
-      wire
-    });
-  });
 
   return groups;
 }
@@ -65,9 +57,11 @@ function calculateWireGroupInputs(wireGroups: WireGroup[], gates: Gate[]) {
     for (let wire of group.wires) {
       for (let [px, py] of wire.points) {
         gates.forEach((gate, gateId) => {
+          if (!gate.inputs) return;
+
           gate.inputs.forEach((input, inputId) => {
             if (px === input.x && py === input.y) {
-              foundInputs.push([gateId, inputId]);
+              if(!foundInputs.some(([gId, iId]: [number, number]) => (gId === gateId && iId === inputId))) foundInputs.push([gateId, inputId]);
             }
           });
         });
@@ -92,7 +86,7 @@ function calculateWireGroupOutputs(wireGroups: WireGroup[], gates: Gate[]) {
 
           gate.outputs.forEach((output: any, outputId: number) => {
             if (px === output.x && py === output.y) {
-              foundOutputs.push([gateId, outputId]);
+              if(!foundOutputs.some(([gId, oId]: [number, number]) => (gId === gateId && oId === outputId))) foundOutputs.push([gateId, outputId]);
             }
           });
         });
