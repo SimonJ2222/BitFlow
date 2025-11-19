@@ -1,13 +1,16 @@
 import type { Wire } from "./Wire";
 
+type WireGroupState = "error" | "high" | "low"
+
 type WireGroup = {
   id: number;
-  error: false | "multiple_outputs";
+  state: WireGroupState;
   wires: Wire[];
   inputs: [gateId: number, inputId: number][]
   outputs: [gateId: number, outputId: number][]
 }
 
 export {
-  type WireGroup
+  type WireGroup,
+  type WireGroupState
 }

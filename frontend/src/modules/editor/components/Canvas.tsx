@@ -10,6 +10,7 @@ import type { WireGroup } from "../types/WireGroup";
 function Canvas() {
   const useDotPattern: boolean = false;
   const [newWireId, setNewWireId] = useState<number>(0);
+  const [cacheWires, setCacheWires] = useState<Wire[]>([]);
   const [wires, setWires] = useState<Wire[]>([]);
   const [wireGroups, setWireGroups] = useState<WireGroup[]>([]);
   const [newGateId, setNewGateId] = useState<number>(3);
@@ -29,8 +30,21 @@ function Canvas() {
   const [wireDraggingStart, setWireDraggingStart] = useState<Map<number, { x: number; y: number }>>(new Map());
 
   useEffect(() => {
-    setWireGroups(calculateWireGroups(wires, gates))
-  }, [wires])
+    const newGroups = calculateWireGroups(cacheWires, gates)
+    setWireGroups(newGroups)
+
+    const newWires = cacheWires.map((wire: Wire) => {
+      const group = newGroups.find((wireGroup: WireGroup) => (wireGroup.wires.find((wireInGroup: Wire) => (wireInGroup.id === wire.id))))
+        if(!group) return wire
+        if(group.state === wire.state) return wire
+
+        return {
+          ...wire,
+          state: wire.state ?? group.state
+        }
+    })
+    setWires(newWires)
+  }, [cacheWires, gates])
 
   function updateWireStart(newWireId: number, x: number, y: number) {
     setWireDraggingStart(prev => {
@@ -62,7 +76,7 @@ function Canvas() {
     const _newWireId = newWireId
     setNewWireId(_newWireId + 1)
 
-    setWires(wires => [...wires, createNewWire(_newWireId, [[x, y]], true)])
+    setCacheWires(wires => [...wires, createNewWire(_newWireId, [[x, y]])])
 
     setWireDraggingId(prev => [...(prev ?? []), _newWireId]);
     updateWireStart(_newWireId, x, y)
@@ -90,7 +104,7 @@ function Canvas() {
         let _newWireId = newWireId
         let newWiresId: number[] = []
         input.wiresId.forEach((wireId: number) => {
-          setWires(wires => [...wires, createNewWire(_newWireId, [[input.x!, input.y!]], true)])
+          setCacheWires(wires => [...wires, createNewWire(_newWireId, [[input.x!, input.y!]], true)])
           setWireDraggingId(prev => {
             if(prev?.includes(_newWireId)) return prev
             return [...(prev ?? []), _newWireId]
@@ -131,7 +145,7 @@ function Canvas() {
     const _newWireId = newWireId
     setNewWireId(_newWireId + 1)
 
-    setWires(wires => [...wires, createNewWire(_newWireId, [[x, y]], true)])
+    setCacheWires(wires => [...wires, createNewWire(_newWireId, [[x, y]])])
 
     setWireDraggingId(prev => [...(prev ?? []), _newWireId]);
     updateWireStart(_newWireId, x, y)
@@ -149,7 +163,7 @@ function Canvas() {
     const _newWireId = newWireId
     setNewWireId(_newWireId + 1)
 
-    setWires(wires => [...wires, createNewWire(_newWireId, [[x, y]], true)])
+    setCacheWires(wires => [...wires, createNewWire(_newWireId, [[x, y]])])
     
     setWireDraggingId(prev => [...(prev ?? []), _newWireId]);
     updateWireStart(_newWireId, x, y)
@@ -192,10 +206,10 @@ function Canvas() {
       setGateDraggingId(null);
     } 
     if (wireDraggingId) {
-      const newWires = wires
+      const newCacheWires = cacheWires
           .filter((wire: Wire) => (wire.points.length > 1))
-          .map((wire: Wire) => ({ ...wire, isPreview: false }));
-      setWires(newWires);
+          .map((wire: Wire) => ((wireDraggingId.includes(wire.id)) ? { ...wire, state: undefined } : wire));
+      setCacheWires(newCacheWires);
       setWireDraggingId(null);
       setWireDraggingStart(new Map())
     }
@@ -253,7 +267,7 @@ function Canvas() {
   }
   */
   const dragNewWire = (targetX: number, targetY: number) => {
-    const newWires = wires
+    const newCacheWires = cacheWires
       .filter((wire: Wire) => (wire.points.length > 0))
       .map((wire: Wire) => {
         if (!wireDraggingId?.includes(wire.id)) return wire;
@@ -286,12 +300,12 @@ function Canvas() {
           points: newPoints
         };
       });
-    setWires(newWires);
+    setCacheWires(newCacheWires);
   }
 
   const deleteWire = (wireId: number) => {
-    let newWires = wires.filter((wire: Wire) => (wire.id !== wireId));
-    setWires(newWires);
+    let newCacheWires = cacheWires.filter((wire: Wire) => (wire.id !== wireId));
+    setCacheWires(newCacheWires);
   }
 
   return(

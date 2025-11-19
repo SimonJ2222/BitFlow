@@ -1,14 +1,17 @@
+import type { WireGroupState } from "./WireGroup";
+
 type Wire = {
   id: number;
+  groupId?: number;
   points: [number,number][];
-  isPreview: boolean;
+  state?: "preview" | WireGroupState;
 }
 
-function createNewWire(id: number, points: [number,number][], is_preview: boolean = true): Wire {
+function createNewWire(id: number, points: [number,number][]): Wire {
   return {
     id: id,
     points: points,
-    isPreview: is_preview,
+    state: "preview",
   }
 }
 

@@ -30,16 +30,25 @@ function calculateWireGroups(wires: Wire[], gates: Gate[]): WireGroup[] {
 
     groups.push({
       id: groupId++,
+      state: "low",
       wires: group,
       inputs: [],
       outputs: [],
-      error: false
     });
   }
-  console.log("Neue Gruppe:", groups)
+
+  console.log("Neue Gruppen:", groups)
   groups = calculateWireGroupInputs(groups, gates)
   groups = calculateWireGroupOutputs(groups, gates)
-  console.log("Bearbeitete Gruppe:", groups)
+  console.log("Bearbeitete Gruppen:", groups)
+
+  // WireGroup State auf Wire übertragen
+  groups.forEach(group => {
+    group.wires.forEach(wire => {
+      wire
+    });
+  });
+
   return groups;
 }
 
@@ -93,7 +102,7 @@ function calculateWireGroupOutputs(wireGroups: WireGroup[], gates: Gate[]) {
     return {
       ...group,
       outputs: foundOutputs,
-      error: ((foundOutputs.length > 1) ? "multiple_outputs" as const : false as const)
+      state: ((foundOutputs.length > 1) ? "error" as const : group.state)
     };
   });
 }

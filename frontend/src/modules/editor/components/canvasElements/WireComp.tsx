@@ -5,7 +5,6 @@ function WireComp({wire, remove, onMouseDownNode, onMouseUpNode}: {wire: Wire, r
 
   let wire_svg_props = {
     strokeWidth: gridSize * 0.125,
-    stroke: (wire.isPreview ? "gray" : "black"),
     fill: "none",
   }
 
@@ -21,11 +20,18 @@ function WireComp({wire, remove, onMouseDownNode, onMouseUpNode}: {wire: Wire, r
 
     remove();
   }
+  console.log(wire.state)
+  const fillColor =
+    wire.state === "error"   ? "red" :
+    wire.state === "preview" ? "gray" :
+    wire.state === "high"    ? "green" :
+    "black";
 
   return (
     <>
       <polyline 
         {...wire_svg_props} 
+        stroke={fillColor}
         points={svg_points.toString()} 
         onMouseDown={handleMouseDownWire} 
       />
@@ -36,8 +42,8 @@ function WireComp({wire, remove, onMouseDownNode, onMouseUpNode}: {wire: Wire, r
             r={gridSize * 0.125} 
             cx={point[0] * gridSize} 
             cy={point[1] * gridSize} 
-            fill={(wire.isPreview ? "gray" : "black")}
-            cursor={(wire.isPreview ? undefined : "grab")}
+            fill={fillColor}
+            cursor={((wire.state === "preview") ? undefined : "grab")}
             node-id={index}
             pos-x= {point[0]}
             pos-y= {point[1]}
