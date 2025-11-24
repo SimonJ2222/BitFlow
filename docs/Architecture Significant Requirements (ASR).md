@@ -1,15 +1,104 @@
-# Architecture Significant Requirements (ASR)
+### Architecture Significant Requirements (ASR)
 
-# Utility Tree
+### Architekturentscheidungen & Entwurfsmuster
 
-# Architekturentscheidungen & Entwurfsmuster
+## **Schritt 1 - Klärung & Formulierung der Qualitätsattribute (6-Part-Form)**
 
-## 1. Überblick  
-Die Architektur von BitFlow orientiert sich an den architektonisch signifikanten Anforderungen (ASR), die sich aus den wichtigsten Geschäfts- und Qualitätszielen ergeben:  
-**Modifiability**, **Usability**, **Performance**, **Testability** und **Reliability**.  
-BitFlow soll eine flexible, erweiterbare und robuste Umgebung bieten, in der Benutzer digitale Schaltungen erstellen, simulieren und benutzerdefinierte Bausteine definieren können.
+### **1. Performance - Echtzeitsimulation**
 
-## 2. Taktiken, die BitFlow anwendet
+#### **Szenario P1 (Echtzeit-Reaktion im Editor - 6-Part Form)**
+
+1. **Stimulusquelle:** Benutzer
+2. **Stimulus:** Startet eine Simulation oder ändert Inputs
+3. **Artefakt:** Simulations-Engine
+4. **Umgebung:** Normalbetrieb, Schaltung ≤ 100 Bauteile
+5. **Reaktion:** System berechnet Logikzustände und aktualisiert UI
+6. **Messung:** UI-Aktualisierung 
+
+**Business Value: Hoch, Technical Risk: Mittel**
+
+---
+
+### **2. Usability - Drag & Drop & Interaktion**
+
+#### **Szenario U1 (Flüssiges Platzieren von Bausteinen)**
+
+1. **Stimulusquelle:** Benutzer
+2. **Stimulus:** Drag & Drop Baustein auf Canvas
+3. **Artefakt:** Editor-Canvas
+4. **Umgebung:** Nutzung im Browser, Editor enthält bereits 50 Elemente
+5. **Reaktion:** Baustein folgt Mausbewegung ohne Verzögerung
+6. **Messung:** Latenz
+
+**Business Value: Hoch, Technical Risk: Niedrig**
+
+---
+
+### **3. Reliability - Autosave, Undo/Redo**
+
+#### **Szenario R1 (Undo/Redo Stabilität)**
+
+1. **Stimulus:** Benutzer führt Aktionen aus und drückt Undo
+2. **Artefakt:** Undo/Redo-Verlauf
+3. **Umgebung:** Normalbetrieb
+4. **Reaktion:** System stellt Zustand ohne Fehler wieder her
+5. **Messung:** Wiederherstellung 
+
+#### **Szenario R2 (Autosave bei Browser-Absturz)**
+
+1. **Stimulus:** Browser schließt unerwartet
+2. **Reaktion:** Beim Neustart wird letzter Autosave angezeigt
+3. **Messung:** Datenverlust ≤ 10 Sekunden
+
+**Business Value: Mittel-hoch, Technical Risk: Mittel**
+
+---
+
+### **4. Modifiability - Erweiterbarkeit für neue Bausteine**
+
+#### **Szenario M1 (Eigenen Baustein definieren & laden)**
+
+1. **Stimulus:** Entwickler/Benutzer fügt neuen Baustein hinzu
+2. **Artefakt:** Komponentenbibliothek
+3. **Umgebung:** Design-Time
+4. **Reaktion:** Baustein wird kompiliert, validiert und zur Bibliothek hinzugefügt
+5. **Messung:** Einbindung Entwicklungsaufwand
+
+**Business Value: Hoch, Technical Risk: Mittel**
+
+---
+
+### **5. Security - Account & Project Data**
+
+#### **Szenario S1 (Login & Zugangsschutz)**
+
+1. **Stimulus:** Benutzer meldet sich mit E-Mail/Passwort an
+2. **Umgebung:** Normalbetrieb
+3. **Reaktion:** System prüft Authentifizierung, erstellt Session-Token
+4. **Messung:** Erfolgreicher Login
+
+#### **Szenario S2 (Unberechtigter Zugriff auf Projekte)**
+
+1. **Stimulus:** Ein nicht authentifizierter Benutzer versucht, Projekt zu laden
+2. **Reaktion:** Zugriff wird verweigert
+3. **Messung:** 100% der Zugriffsversuche werden blockiert
+
+**Business Value: Hoch, Technical Risk: Niedrig**
+
+---
+
+### **6. Availability - System „im Browser jederzeit nutzbar“**
+
+#### **Szenario A1 (Simulationsfehler isoliert)**
+
+1. **Stimulus:** Simulations-Thread wirft Fehler
+2. **Artefakt:** WebWorker
+3. **Reaktion:** Worker wird neu gestartet, UI bleibt responsiv
+4. **Messung:** UI bleibt verfügbar; Neustart ≤ 500 ms
+
+---
+
+## Schritt 2 - Taktiken, die BitFlow anwendet
 
 ### 2.1 Modifiability-Taktiken
 - **Separation of Concerns:** Strikte Trennung von UI, Simulation, Storage und Logik.  
@@ -39,7 +128,7 @@ BitFlow soll eine flexible, erweiterbare und robuste Umgebung bieten, in der Ben
 - **Fehlerbehandlung:** Ungültige Bausteine blockieren nicht die App.    
 - **Simulation getrennt vom UI:** UI bleibt stabil, selbst wenn Logikfehler auftreten.  
 
-## 3. Architekturentscheidungen
+## Schritt 3. Architekturentscheidungen
 
 ### 3.1 Trennung der Kernbereiche
 BitFlow folgt einem vierteiligen Architekturmodell:
