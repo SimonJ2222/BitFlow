@@ -9,94 +9,107 @@ Die Architektur von BitFlow orientiert sich an den architektonisch signifikanten
 **Modifiability**, **Usability**, **Performance**, **Testability** und **Reliability**.  
 BitFlow soll eine flexible, erweiterbare und robuste Umgebung bieten, in der Benutzer digitale Schaltungen erstellen, simulieren und benutzerdefinierte Bausteine definieren können.
 
-## 2. Taktiken, die BitFlow anwendet
+## 2. Utility-Tree
 
-### 2.1 Modifiability-Taktiken
+| **Qualy attribute** | **Refinement**                  | **Quality attribute scenarios (ASRs)**                                                                      | **Business value** | **Technical risk** |
+| ------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------ | ------------------ |
+| **Performance**     | Simulation-Latenz               | Änderungen in Netzwerken bis 200 Gattern werden in ≤ 50 ms propagiert.                                      | H                  | M                  |
+|                     | Rendering                       | UI bleibt bei Interaktionen ≥ 30 FPS, auch bei großen Schaltplänen.                                         | H                  | M                  |
+| **Usability**       | Drag & Drop                     | Platzieren von Gattern erfolgt ohne Verzögerung (< 0. s).                                                   | H                  | L                  |
+|                     | Debugging/Fehleranalyse         | Visuelle Warnungen bei offenen Eingängen, Schleifen oder Kurzschlüssen innerhalb von 100 ms.                | M                  | M                  |
+| **Reliability**     | Absturzsicherheit               | Fehlerhafte Konfigurationen (Loops, Invalid States) führen nicht zu Abstürzen, sondern Warnungen/Hinweisen. | H                  | M                  |
+|                     | Autosave                        | Projekt wird alle 30 Sekunden automatisch gespeichert; Wiederherstellung möglich.                           | M                  | L                  |
+| **Portability**     | Browserkompatibilität           | Läuft ohne Plugins auf Chrome, Firefox, Safari, Edge.                                                       | L                  | L                  |
+
+
+## 3. Taktiken, die BitFlow anwendet
+
+### 3.1 Modifiability-Taktiken
 - **Separation of Concerns:** Strikte Trennung von UI, Simulation, Storage und Logik.  
 - **Abstrakte Interfaces:** Simulation und Storage sind austauschbar.  
 - **Erweiterbare Bausteinbibliothek:** Benutzerdefinierte Bausteine sind erstellbar.  
 - **Information Hiding:** Interne Logikdetails sind gekapselt.  
 
-### 2.2 Performance-Taktiken  
+### 3.2 Performance-Taktiken  
 - **Batch-Updates:** UI aktualisiert sich gesammelt statt nach jedem Event.  
 - **Event-getriebene Simulation:** Nur signifikante Signaländerungen triggern Updates.  
 - **Asynchronität:** Simulation läuft getrennt vom UI.  
 
-### 2.3 Usability-Taktiken
+### 3.3 Usability-Taktiken
 - **Sofortiges Feedback:** Drag & Drop, Echtzeitsimulation, farbliche Leitungszustände.  
 - **Undo/Redo:** Eigener UndoManager mit Snapshot-Strategie.  
 - **Eindeutige Fehlermeldungen:** Fehlermeldungen bei der Validierung von unzulässigen Schaltungen (z.B. zwei Outputs führen zur gleichen Leitung).  
 - **Personalisierbare Oberfläche:** Dark-/Light-Mode.
  
-### 2.4 Testability-Taktiken
+### 3.4 Testability-Taktiken
 - **Modulare Architektur:** Jede Klasse hat klaren Zweck (Single Responsibility Principle (SRP) aus SOLID).  
 - **Mocking über Interfaces:** Speicherung und Simulation können simuliert werden.  
 - **Deterministische Simulation:** Gleiche Inputs führen zu gleichen Outputs.  
 - **Interne API-Schichten:** Klare Begrenzung zwischen UI-Schicht und Logikschicht.  
 
-### 2.5 Reliability-Taktiken
+### 3.5 Reliability-Taktiken
 - **Validierung aller Eingaben:** Schaltungsprüfung vor Simulation.  
 - **Fehlerbehandlung:** Ungültige Bausteine blockieren nicht die App.    
 - **Simulation getrennt vom UI:** UI bleibt stabil, selbst wenn Logikfehler auftreten.  
 
-## 3. Architekturentscheidungen
+## 4. Architekturentscheidungen
 
-### 3.1 Trennung der Kernbereiche
+### 4.1 Trennung der Kernbereiche
 BitFlow folgt einem vierteiligen Architekturmodell:
 - **Core:** Schaltung, Bausteine, Simulation.  
 - **UI:** React-Frontend, Canvas, Signalviewer.  
 - **Storage:** DB/LocalStorage/Import/Export.  
 - **Library:** Sammlung vordefinierter und benutzerdefinierter Bausteine.  
 
-### 3.2 Nutzung klarer Abstraktionen
+### 4.2 Nutzung klarer Abstraktionen
 - Component → Basisklasse aller Bausteine  
 - CustomComponent → Benutzerdefinierte Bausteine  
 - Circuit → Container für Komponenten und Verbindungen  
 - Simulaton → Austauschbare Strategie für Echtzeitsimulation  
 - Storage → Einheitliche Schnittstelle für Speichern & Laden  
 
-### 3.3 Compiler als eigenständiges Modul
+### 4.3 Compiler als eigenständiges Modul
 Verantwortlich für:  
 - Validierung von Definitionsdateien  
 - Erzeugung ausführbarer Logik (CompiledLogic)  
 - Fehlermeldungen  
 
-### 3.4 Undo/Redo als separater Service
+### 4.4 Undo/Redo als separater Service
 Verwendet **Zustandssnapshots**, nicht Operations-Listen:  
 → stabil, unabhängig von der Länge von Bearbeitungen.
 
-### 3.5 Library als zentrale Registry
+### 4.5 Library als zentrale Registry
 Hält Standardbausteine und benutzerdefinierte Bausteine vor.  
 Erweitert die Anwendung ohne Änderungen an bestehenden Modulen.
 
 
-## 4. Entwurfsmuster
+## 5. Entwurfsmuster
 
-### 4.1 Factory Pattern  
+### 5.1 Factory Pattern  
 Erzeugt Bausteine aus Bibliothek oder benutzerdefinierten Definitionen.  
 → Ermöglicht Austausch von Bausteintypen.
 
-### 4.2 Strategy Pattern  
+### 5.2 Strategy Pattern  
 Für Simulationen oder Validierungsprozesse.  
 → z. B. Echtzeit-Simulation, Schritt-Simulation, statische Analyse.
 
-### 4.3 Composite Pattern  
+### 5.3 Composite Pattern  
 Benutzerdefinierte Bausteine bestehen aus eigenen Sub-Schaltungen.  
 → Ermöglicht strukturelle Wiederverwendung.
 
-### 4.4 Observer Pattern  
+### 5.4 Observer Pattern  
 UI aktualisiert sich, wenn:
 - Schaltung sich ändert  
 - Simulator neue Werte liefert  
 
-### 4.5 Repository Pattern  
+### 5.5 Repository Pattern  
 Kapselt:
 - Laden & Speichern  
 - Versionierung  
 - Import/Export  
 
 
-## 5. Zusammenfassung
+## 6. Zusammenfassung
 Die Architektur von BitFlow kombiniert klare Module, starke Abstraktionen und bewährte Entwurfsmuster.  
 Die wichtigsten nichtfunktionalen Anforderungen, **Modifiability, Usability, Performance, Testability, Reliability**, werden durch konkrete Taktiken adressiert.
 BitFlow bleibt damit **erweiterbar**, **stabil** und **für Nutzer leicht verständlich**, während Entwickler flexibel neue Features einbauen können.
