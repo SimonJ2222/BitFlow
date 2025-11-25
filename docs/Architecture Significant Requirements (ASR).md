@@ -96,7 +96,7 @@
 3. **Reaktion:** Worker wird neu gestartet, UI bleibt responsiv
 4. **Messung:** UI bleibt verfügbar; Neustart ≤ 500 ms
 
-## Schritt 3 - Utility-Tree
+## Utility-Tree
 
 | **Qualy attribute** | **Refinement**                  | **Quality attribute scenarios (ASRs)**                                                                      | **Business value** | **Technical risk** |
 | ------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------ | ------------------ |
@@ -111,85 +111,85 @@
 
 ## Schritt 2 - Taktiken, die BitFlow anwendet
 
-### 3.1 Modifiability-Taktiken
+### 2.1 Modifiability-Taktiken
 - **Separation of Concerns:** Strikte Trennung von UI, Simulation, Storage und Logik.  
 - **Abstrakte Interfaces:** Simulation und Storage sind austauschbar.  
 - **Erweiterbare Bausteinbibliothek:** Benutzerdefinierte Bausteine sind erstellbar.  
 - **Information Hiding:** Interne Logikdetails sind gekapselt.  
 
-### 3.2 Performance-Taktiken  
+### 2.2 Performance-Taktiken  
 - **Batch-Updates:** UI aktualisiert sich gesammelt statt nach jedem Event.  
 - **Event-getriebene Simulation:** Nur signifikante Signaländerungen triggern Updates.  
 - **Asynchronität:** Simulation läuft getrennt vom UI.  
 
-### 3.3 Usability-Taktiken
+### 2.3 Usability-Taktiken
 - **Sofortiges Feedback:** Drag & Drop, Echtzeitsimulation, farbliche Leitungszustände.  
 - **Undo/Redo:** Eigener UndoManager mit Snapshot-Strategie.  
 - **Eindeutige Fehlermeldungen:** Fehlermeldungen bei der Validierung von unzulässigen Schaltungen (z.B. zwei Outputs führen zur gleichen Leitung).  
 - **Personalisierbare Oberfläche:** Dark-/Light-Mode.
  
-### 3.4 Testability-Taktiken
+### 2.4 Testability-Taktiken
 - **Modulare Architektur:** Jede Klasse hat klaren Zweck (Single Responsibility Principle (SRP) aus SOLID).  
 - **Mocking über Interfaces:** Speicherung und Simulation können simuliert werden.  
 - **Deterministische Simulation:** Gleiche Inputs führen zu gleichen Outputs.  
 - **Interne API-Schichten:** Klare Begrenzung zwischen UI-Schicht und Logikschicht.  
 
-### 3.5 Reliability-Taktiken
+### 2.5 Reliability-Taktiken
 - **Validierung aller Eingaben:** Schaltungsprüfung vor Simulation.  
 - **Fehlerbehandlung:** Ungültige Bausteine blockieren nicht die App.    
 - **Simulation getrennt vom UI:** UI bleibt stabil, selbst wenn Logikfehler auftreten.  
 
-## 3. Architekturentscheidungen
+## Schritt 3 - Architekturentscheidungen
 
-### 4.1 Trennung der Kernbereiche
+### 3.1 Trennung der Kernbereiche
 BitFlow folgt einem vierteiligen Architekturmodell:
 - **Core:** Schaltung, Bausteine, Simulation.  
 - **UI:** React-Frontend, Canvas, Signalviewer.  
 - **Storage:** DB/LocalStorage/Import/Export.  
 - **Library:** Sammlung vordefinierter und benutzerdefinierter Bausteine.  
 
-### 4.2 Nutzung klarer Abstraktionen
+### 3.2 Nutzung klarer Abstraktionen
 - Component → Basisklasse aller Bausteine  
 - CustomComponent → Benutzerdefinierte Bausteine  
 - Circuit → Container für Komponenten und Verbindungen  
 - Simulaton → Austauschbare Strategie für Echtzeitsimulation  
 - Storage → Einheitliche Schnittstelle für Speichern & Laden  
 
-### 4.3 Compiler als eigenständiges Modul
+### 3.3 Compiler als eigenständiges Modul
 Verantwortlich für:  
 - Validierung von Definitionsdateien  
 - Erzeugung ausführbarer Logik (CompiledLogic)  
 - Fehlermeldungen  
 
-### 4.4 Undo/Redo als separater Service
+### 3.4 Undo/Redo als separater Service
 Verwendet **Zustandssnapshots**, nicht Operations-Listen:  
 → stabil, unabhängig von der Länge von Bearbeitungen.
 
-### 4.5 Library als zentrale Registry
+### 3.5 Library als zentrale Registry
 Hält Standardbausteine und benutzerdefinierte Bausteine vor.  
 Erweitert die Anwendung ohne Änderungen an bestehenden Modulen.
 
 
-## 5. Entwurfsmuster
+## 4. Entwurfsmuster
 
-### 5.1 Factory Pattern  
+### 4.1 Factory Pattern  
 Erzeugt Bausteine aus Bibliothek oder benutzerdefinierten Definitionen.  
 → Ermöglicht Austausch von Bausteintypen.
 
-### 5.2 Strategy Pattern  
+### 4.2 Strategy Pattern  
 Für Simulationen oder Validierungsprozesse.  
 → z. B. Echtzeit-Simulation, Schritt-Simulation, statische Analyse.
 
-### 5.3 Composite Pattern  
+### 4.3 Composite Pattern  
 Benutzerdefinierte Bausteine bestehen aus eigenen Sub-Schaltungen.  
 → Ermöglicht strukturelle Wiederverwendung.
 
-### 5.4 Observer Pattern  
+### 4.4 Observer Pattern  
 UI aktualisiert sich, wenn:
 - Schaltung sich ändert  
 - Simulator neue Werte liefert  
 
-### 5.5 Repository Pattern  
+### 4.5 Repository Pattern  
 Kapselt:
 - Laden & Speichern  
 - Versionierung  
