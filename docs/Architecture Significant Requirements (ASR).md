@@ -96,7 +96,7 @@
 3. **Reaktion:** Worker wird neu gestartet, UI bleibt responsiv
 4. **Messung:** UI bleibt verfügbar; Neustart ≤ 500 ms
 
-## Schritt 2 - Utility-Tree
+## Schritt 3 - Utility-Tree
 
 | **Qualy attribute** | **Refinement**                  | **Quality attribute scenarios (ASRs)**                                                                      | **Business value** | **Technical risk** |
 | ------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------ | ------------------ |
