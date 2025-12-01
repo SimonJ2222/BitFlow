@@ -3,10 +3,6 @@
 
 Version 1.0
 
-[Note: The following template is provided for use with the Rational Unified Process. Text enclosed in square
-brackets and displayed in blue italics (style=InfoBlue) is included to provide guidance to the author and should be
-deleted before publishing the document. A paragraph entered following this style will automatically be set to normal
-(style=Body Text).]
 
 ---
 
@@ -215,6 +211,26 @@ Der UI-Thread darf nie blockiert werden, daher laufen schwere Berechnungen woand
 - Stoppt nicht bei Fehlern, sondern sendet Rückmeldung an UI
 - Neustart erfolgt automatisch bei Abstürzen (Availability-Taktik)
 Vorteil: UI bleibt responsiv, Simulation skaliert besser.
+
+```mermaid
+sequenceDiagram
+    participant UI as UI / Editor
+    participant App as Application Service
+    participant Domain as Domain Model (Circuit)
+    participant Sim as Simulation Engine (WebWorker)
+    
+    UI ->> App: StartSimulation()
+    App ->> Domain: ValidateCircuit()
+    Domain -->> App: ValidationResult
+    
+    alt valid
+        App ->> Sim: Initialize(circuitData)
+        Sim -->> App: Ready
+        App -->> UI: SimulationStarted
+    else invalid
+        App -->> UI: Error("Invalid circuit")
+    end
+```
 
 3. Autosave-Prozess (Timer-basiert, asynchron)
 - Speichert alle 30 Sekunden
