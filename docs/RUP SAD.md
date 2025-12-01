@@ -107,11 +107,56 @@ and for each view, explains what types of model elements it contains.]
 
 ## 3. Architectural Goals and Constraints
 
-[This section describes the software requirements and objectives that have some significant impact on the
-architecture, for example, safety, security, privacy, use of an off-the-shelf product, portability, distribution, and reuse.
-It also captures the special constraints that may apply: design and implementation strategy, development tools, team
-structure, schedule, legacy code, and so on.]
+Die Architektur von BitFlow wird durch mehrere qualitätsrelevante Anforderungen geprägt, die maßgeblich beeinflussen, wie das System strukturiert und entwickelt wird. Diese Architecture Significant Requirements (ASR) bestimmen insbesondere die Wahl der Module, Abhängigkeiten und Entwurfsmuster.
 
+### 3.1 Wichtige Qualitätsziele (ASRs)
+
+**Performance**  
+- Änderungen in Schaltungen bis ca. 200 Bausteinen müssen innerhalb von ≤ 50 ms verarbeitet werden.  
+- UI soll jederzeit flüssig bleiben (≥ 30 FPS), selbst während Simulation und Interaktionen.
+
+**Usability**  
+- Drag & Drop und visuelle Interaktionen müssen ohne wahrnehmbare Verzögerungen funktionieren.  
+- Leitungszustände, Fehlermeldungen und Simulationsergebnisse sollen sofort angezeigt werden.
+
+**Reliability**  
+- Undo/Redo muss stabil funktionieren und Systemzustände zuverlässig wiederherstellen.  
+- Autosave verhindert Datenverlust (≤ 10 Sekunden).  
+- Fehler in Simulation oder Bausteinen dürfen die UI nicht blockieren.
+
+**Modifiability**  
+- Neue Bausteine (benutzerdefiniert oder systemseitig) sollen einfach integrierbar sein.  
+- Simulation, Speichermechanismen und Validierungsstrategien müssen austauschbar sein.  
+- Module sollen klar gekapselt und unabhängig voneinander testbar sein.
+
+**Security**  
+- Nur authentifizierte Nutzer dürfen Projekte anzeigen oder bearbeiten.  
+- Projekte müssen eindeutig einem Benutzer zugeordnet werden.
+
+**Availability**  
+- UI muss verfügbar bleiben, selbst wenn die Simulation Fehler wirft.  
+- Der Simulationsprozess soll isoliert laufen und bei Bedarf automatisch neu starten.
+
+---
+
+### 3.2 Zentrale Architekturentscheidungen
+
+- Strikte Trennung der Kernbereiche: **UI**, **Application Services**, **Domain**, **Simulation**, **Storage**, **Library**.  
+- Simulation läuft in einem separaten Ausführungsprozess (z. B. WebWorker), um UI-Blockaden zu vermeiden.  
+- Alle Bausteintypen basieren auf einheitlichen abstrakten Interfaces.  
+- Undo/Redo wird über Zustandssnapshots realisiert, nicht über Kommandohistorien.  
+- Benutzerdefinierte Bausteine werden über einen separaten Compiler validiert.  
+- UI kommuniziert ausschließlich über Services und nicht direkt mit der Domain.
+
+---
+
+### 3.3 Technische Randbedingungen
+
+- Anwendung muss vollständig im Browser lauffähig sein (React + TypeScript).  
+- Keine Plugins oder native Komponenten; nur Web-Standards.  
+- Persistenz erfolgt flexibel über LocalStorage oder Backend-APIs.  
+- Zielplattformen: Chrome, Firefox, Safari, Edge.  
+- Simulation muss deterministisch sein, um Debugging und Testbarkeit sicherzustellen.
 ---
 
 ## 4. Use-Case View
