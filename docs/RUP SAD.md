@@ -151,10 +151,40 @@ and explains how the various design model elements contribute to their functiona
 
 ## 6. Process View
 
-[This section describes the system's decomposition into lightweight processes (single threads of control) and
-heavyweight processes (groupings of lightweight processes). Organize the section by groups of processes that
-communicate or interact. Describe the main modes of communication between processes, such as message passing,
-interrupts, and rendezvous.]
+Die Process View beschreibt die Laufzeitarchitektur von BitFlow, insbesondere Threads, asynchrone Abläufe und Interaktionen zwischen UI und Simulation.
+
+### 6.1 Hauptprozesse
+
+1. UI-Thread (Browser Hauptthread)
+- Rendern des Editors und der Bauteine
+- Drag & Drop
+- Leitungsvisualisierung
+- Undo/Redo
+- Kommunikation mit Simulation und Storage
+- Fehleranzeigen und Nutzerinteraktion
+Der UI-Thread darf nie blockiert werden, daher laufen schwere Berechnungen woanders.
+
+2. Simulationsprozess (WebWorker / eigener Thread)
+- Berechnet Signalflüsse
+- Verarbeitet Ereignisse (Event-Driven Simulation)
+- Stoppt nicht bei Fehlern, sondern sendet Rückmeldung an UI
+- Neustart erfolgt automatisch bei Abstürzen (Availability-Taktik)
+Vorteil: UI bleibt responsiv, Simulation skaliert besser.
+
+3. Autosave-Prozess (Timer-basiert, asynchron)
+- Speichert alle 30 Sekunden
+Kann sowohl lokal als auch über API laufen
+
+4. Compiler-Prozess für benutzerdefinierte Bausteine
+- Validiert neue Bausteindefinitionen
+- Erzeugt „Compiled Logic“
+- Gibt im Fehlerfall Meldungen zurück
+
+### 6.2 Kommunikationsmodell
+
+- Message Passing zwischen UI und Simulation (JSON-Events).
+- Observer/Subscriber-Pattern im UI für Zustandsänderungen.
+- Asynchrone Aufrufe an Storage-Services.
 
 ---
 
