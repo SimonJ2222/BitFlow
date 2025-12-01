@@ -169,20 +169,58 @@ Also include a mapping of the processes of the Process View onto the physical no
 
 ## 8. Implementation View
 
-[This section describes the overall structure of the implementation model, the decomposition of the software into
-layers and subsystems in the implementation model, and any architecturally significant implementation elements.]
-
 ### 8.1 Overview
 
-[This subsection names and defines the various layers and their contents, the rules that govern the inclusion to a
-given layer, and the boundaries between layers. Include a component diagram that shows the relations between
-layers.]
+Die Implementierung ist in klar getrennte Schichten gegliedert, die Änderungen erleichtern, Testbarkeit erhöhen und die Simulation isolieren:
+- UI Layer (React/TypeScript)
+- Application/Service Layer
+- Domain Layer (Simulation, Schaltung, Bausteine)
+- Library Layer (Standard- & Custom-Bausteine)
+- Storage Layer
+- Diese Layer kommunizieren nur über definierte Schnittstellen.
 
 ### 8.2 Layers
 
-[For each layer, include a subsection with its name, an enumeration of the subsystems located in the layer, and a
-component diagram.]
+1. UI Layer
+- Beinhaltet:
+- Editor-Canvas
+- Bauteil-Panel
+- Inspector
+- Fehlermeldungen
+- Undo/Redo UI
 
+2. Application/Service Layer
+
+- CircuitService
+- SimulationService
+- StorageService
+- LibraryService
+- EventBus
+
+Koordiniert Abläufe zwischen UI und Domain.
+
+3. Domain Layer
+
+- Component
+- Wire
+- Circuit
+- Simulator
+- Compiler
+- Validation
+
+Umfasst die eigentliche Logik.
+
+4. Library Layer
+
+- Vordefinierte Gatter (AND, OR, NOT etc.)
+- Benutzerdefinierte Bausteine
+- Factory Pattern zur Erzeugung
+
+5. Storage Layer
+
+- Lokale Speicherung
+- Backend-APIs
+- Repository Pattern
 ---
 
 ## 9. Data View (optional)
@@ -201,7 +239,37 @@ target performance constraints.]
 
 ## 11. Quality
 
-[A description of how the software architecture contributes to all capabilities (other than functionality) of the system:
-extensibility, reliability, portability, and so on. If these characteristics have special significance, for example safety,
-security or privacy implications, they should be clearly delineated.]
+Hier werden die wichtigsten Architekturtaktiken zusammengefasst, die BitFlow nutzt, um die Anforderungen aus den ASRs zu erfüllen.
+
+1. Modifiability
+
+- Klare Trennung von UI, Domain, Storage, Simulation.
+- Bausteine als austauschbare Komponenten mit einheitlicher Schnittstelle.
+- Compiler erlaubt neue benutzerdefinierte Bausteine.
+- Information Hiding schützt interne Details.
+
+2. Performance
+
+- Event-Driven Simulation (nur relevante Signaländerungen).
+- Batch-Updates im UI statt Einzelupdates.
+- Asynchrone Simulation in separatem Prozess.
+
+3. Usability
+
+- Sofortiges visuelles Feedback bei Interaktionen.
+- Farbliche Darstellung von Signalzuständen.
+- Undo/Redo mit Snapshot-Technik.
+
+4. Testability
+
+- Modulare Architektur (SRP).
+- Simulation, Storage und Compiler über Interfaces mockbar.
+- Deterministische Simulation erlaubt reproduzierbare Tests.
+- Klare API-Grenze zwischen UI und Domain.
+
+5. Reliability
+
+- Validierung vor Simulation.
+- Fehlerbehandlung ohne UI-Stillstand.
+- Automatisches Recovering und Autosave.
 
