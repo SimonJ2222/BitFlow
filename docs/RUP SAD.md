@@ -192,7 +192,7 @@ and explains how the various design model elements contribute to their functiona
 
 ## 6. Process View
 
-Die Process View beschreibt die Laufzeitarchitektur von BitFlow, insbesondere Threads, asynchrone Abläufe und Interaktionen zwischen UI und Simulation.
+Die Process View beschreibt die Laufzeitarchitektur von BitFlow, insbesondere Threads, asynchrone Abläufe und Interaktionen zwischen UI und Simulation. Sequenzdiagramme sind in den einzelnen [Use-Cases](https://github.com/SimonJ2222/BitFlow/blob/main/docs/use_cases/software_requirements_specification.md#3-specific-requirements) zu finden.
 
 ### 6.1 Hauptprozesse
 
@@ -211,26 +211,6 @@ Der UI-Thread darf nie blockiert werden, daher laufen schwere Berechnungen woand
 - Stoppt nicht bei Fehlern, sondern sendet Rückmeldung an UI
 - Neustart erfolgt automatisch bei Abstürzen (Availability-Taktik)
 Vorteil: UI bleibt responsiv, Simulation skaliert besser.
-
-```mermaid
-sequenceDiagram
-    participant UI as UI / Editor
-    participant App as Application Service
-    participant Domain as Domain Model (Circuit)
-    participant Sim as Simulation Engine (WebWorker)
-    
-    UI ->> App: StartSimulation()
-    App ->> Domain: ValidateCircuit()
-    Domain -->> App: ValidationResult
-    
-    alt valid
-        App ->> Sim: Initialize(circuitData)
-        Sim -->> App: Ready
-        App -->> UI: SimulationStarted
-    else invalid
-        App -->> UI: Error("Invalid circuit")
-    end
-```
 
 3. Autosave-Prozess (Timer-basiert, asynchron)
 - Speichert alle 30 Sekunden
@@ -313,6 +293,20 @@ Umfasst die eigentliche Logik.
 - Backend-APIs
 - Repository Pattern
 ---
+
+### 8.3 Layer Kommunikation
+```mermaid
+flowchart LR
+
+Frontend["React-Frontend"]
+Controller["REST-Controller\n(ASP.NET Core)"]
+Service["Service-Layer"]
+Repository["Repository-Layer"]
+Database["SQLite Database"]
+
+Frontend --> Controller --> Service --> Repository --> Database
+```
+
 
 ## 9. Data View (optional)
 
