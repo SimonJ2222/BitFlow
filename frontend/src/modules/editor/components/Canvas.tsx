@@ -66,6 +66,25 @@ function Canvas() {
     return { x, y };
   }
 
+  const handleDrop = (e: React.DragEvent<SVGSVGElement>) => {
+  e.preventDefault();
+  const { x, y } = getGridCoords(e);
+
+  const type = e.dataTransfer.getData("gateType");
+  const width = parseInt(e.dataTransfer.getData("gateWidth"));
+  const height = parseInt(e.dataTransfer.getData("gateHeight"));
+
+  if (type) {
+    const newId = gates.length;
+    const newGateObj = newGate(newId, x, y, width, height, type);
+    setGates((prev) => [...prev, newGateObj]);
+  }
+  };
+
+  const handleDragOver = (e: React.DragEvent<SVGSVGElement>) => {
+  e.preventDefault();
+  };
+
   const handleMouseDown = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     if (e.button !== 0) return;
     e.stopPropagation();
@@ -315,6 +334,8 @@ function Canvas() {
 
   return(
     <svg id="svg_canvas" className="absolute" style={{left: canvasLeft, top: canvasTop}} width={canvasWidth} height={canvasHeight} 
+      onDrop={handleDrop}         
+      onDragOver={handleDragOver}  
       onMouseMove={handleMouseMove} 
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
