@@ -28,6 +28,13 @@ function Canvas() {
   const [gateDraggingId, setGateDraggingId] = useState<number[] | null>(null);
   const [wireDraggingId, setWireDraggingId] = useState<number[] | null>(null);
   const [wireDraggingStart, setWireDraggingStart] = useState<Map<number, { x: number; y: number }>>(new Map());
+  
+  const gatePinConfig: Record<string, { inputs: number; outputs: number }> = {
+  AND: { inputs: 4, outputs: 1 },
+  OR: { inputs: 2, outputs: 1 },
+  XOR: { inputs: 3, outputs: 1 },
+  FlipFlop: { inputs: 1, outputs: 3 },
+  };
 
   useEffect(() => {
     const newGroups = calculateWireGroups(cacheWires, gates)
@@ -76,7 +83,15 @@ function Canvas() {
 
   if (type) {
     const newId = gates.length;
-    const newGateObj = newGate(newId, x, y, width, height, type);
+
+    // Pins aus Mapping-Tabelle holen
+    const config = gatePinConfig[type] || { inputs: 0, outputs: 0 };
+
+    const inputs = Array.from({ length: config.inputs }, () => ({ gateId: newId }));
+    const outputs = Array.from({ length: config.outputs }, () => ({ gateId: newId }));
+
+    // Neues Gate mit Pins erzeugen
+    const newGateObj = newGate(newId, x, y, width, height, type, "East", inputs, outputs);
     setGates((prev) => [...prev, newGateObj]);
   }
   };
