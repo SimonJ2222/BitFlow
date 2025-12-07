@@ -14,16 +14,7 @@ function Canvas() {
   const [wires, setWires] = useState<Wire[]>([]);
   const [wireGroups, setWireGroups] = useState<WireGroup[]>([]);
   const [newGateId, setNewGateId] = useState<number>(3);
-  const [gates, setGates] = useState<Gate[]>([
-    // 3 * 5 
-    newGate(0, 2,2,3,5, "AND", undefined, [{gateId:0}, {gateId:0}, {gateId:0}, {gateId:0}], [{gateId:0}]),
-    // 4 * 4
-    newGate(1, 6,2,4,4, "FlipFlop", undefined, [{gateId:1}], [{gateId:1}, {gateId:1}, {gateId:1}]),
-    // 3 * 3
-    newGate(2, 11,2,3,3, "OR", undefined, [{gateId:2}, {gateId:2}], [{gateId:2}]),
-    // 5 * 5 
-    newGate(3, 2,8,5,5, "XOR", undefined, [{gateId:3}, {gateId:3}, {gateId:3}], [{gateId:3}]),
-  ]);
+  const [gates, setGates] = useState<Gate[]>([]);
 
   const [gateDraggingId, setGateDraggingId] = useState<number[] | null>(null);
   const [wireDraggingId, setWireDraggingId] = useState<number[] | null>(null);
