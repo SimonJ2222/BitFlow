@@ -18,11 +18,11 @@ function Canvas() {
   const [newGateId, setNewGateId] = useState<number>(0);
   const [gates, setGates] = useState<Gate[]>([]);
   const [offset, setOffset] = useState({x: 0, y: 0})
+  const [oldMousePosition, setOldMousePosition] = useState({x: -1, y: -1})
 
   const [gateDraggingId, setGateDraggingId] = useState<number[] | null>(null);
   const [wireDraggingId, setWireDraggingId] = useState<{wireId: number, type?: "input" | "output", nodeId?: number}[] | null>(null);
   const [wireDraggingStart, setWireDraggingStart] = useState<Map<number, { x: number; y: number }>>(new Map());
-  const [wireDraggingTarget, setWireDraggingTarget] = useState<Map<number, { x: number; y: number }>>(new Map());
   
   const gatePinConfig: Record<string, { inputs: number; outputs: number }> = {
     AND: { inputs: 4, outputs: 1 },
@@ -60,19 +60,9 @@ function Canvas() {
     });
   }
 
-  function updateWireTarget(wireId: number, x: number, y: number) {
-    setWireDraggingTarget(prev => {
-      const next = new Map(prev);
-      next.set(wireId, { x, y });
-      
-      return next;
-    });
-  }
-
   function resetWireDragging() {
     setWireDraggingId(null);
     setWireDraggingStart(new Map())
-    setWireDraggingTarget(new Map())
   }
 
   const getGridCoords = (e: React.MouseEvent<SVGSVGElement>) => {
@@ -140,10 +130,11 @@ function Canvas() {
     let _newWireId = newWireId
 
     // Inputs
-    const inputs = gates.find((gate: Gate) => (gate.id === gateId))!.inputs
-    handleNewWiresInput(inputs, _newWireId)
+    const gate = gates.find((gate: Gate) => (gate.id === gateId))
+    if(!gate) return
+    handleNewWiresInput(gate, _newWireId)
     // Anzahl an Inputs addieren
-    _newWireId += inputs.filter((input: Input, inputId: number) => {
+    _newWireId += gate.inputs.filter((input: Input, inputId: number) => {
       return wireGroups.some((wireGroup: WireGroup) => 
         wireGroup.inputs.some(inputArr =>
           inputArr[0] === input.gateId &&
@@ -153,10 +144,9 @@ function Canvas() {
     }).length
 
     // Outputs
-    const outputs = gates.find((gate: Gate) => (gate.id === gateId))!.outputs
-    handleNewWiresOutput(outputs, _newWireId)
+    handleNewWiresOutput(gate, _newWireId)
     // Anzahl an Outputs addieren
-    _newWireId += outputs.filter((output: Output, outputId: number) => {
+    _newWireId += gate.outputs.filter((output: Output, outputId: number) => {
       return wireGroups.some((wireGroup: WireGroup) => 
         wireGroup.outputs.some(outputArr =>
           outputArr[0] === output.gateId &&
@@ -168,9 +158,9 @@ function Canvas() {
     setNewWireId(_newWireId)
   }
 
-  const handleNewWiresInput = (inputs: Input[], _newWireId: number) => {
+  const handleNewWiresInput = (gate: Gate, _newWireId: number) => {
     // Neue Kabel zum Gate-Input erstellen
-    inputs.forEach((input: Input, inputId: number) => {
+    gate.inputs.forEach((input: Input, inputId: number) => {
       // Wenn keine Kabel am Input sind, abbrechen
       if(!wireGroups.some((wireGroup: WireGroup) => 
         wireGroup.inputs.some(inputArr =>
@@ -180,18 +170,20 @@ function Canvas() {
       )) return
       
       const _tempWireId = _newWireId + inputId
+      const _tempWireX = gate.x + input.xOffset!
+      const _tempWireY = gate.y + input.yOffset!
 
       if(wires.some((wire: Wire) => (wire.id === _tempWireId))) return 
 
-      setCacheWires(wires => [...wires, createNewWire(_tempWireId, [[input.x!, input.y!]])])
+      setCacheWires(wires => [...wires, createNewWire(_tempWireId, [[_tempWireX, _tempWireY]])])
       setWireDraggingId(prev => [...(prev ?? []), {wireId: _tempWireId, type: "input", nodeId: inputId}]);
-      updateWireStart(_tempWireId, input.x!, input.y!)      
+      updateWireStart(_tempWireId, _tempWireX, _tempWireY)
     })
   }
 
-  const handleNewWiresOutput = (outputs: Output[], _newWireId: number) => {
+  const handleNewWiresOutput = (gate: Gate, _newWireId: number) => {
     // Neue Kabel zum Gate-Output erstellen
-    outputs.forEach((output: Output, outputId: number) => {
+    gate.outputs.forEach((output: Output, outputId: number) => {
       // Wenn keine Kabel am Output sind, abbrechen
       if(!wireGroups.some((wireGroup: WireGroup) => 
         wireGroup.outputs.some(outputArr =>
@@ -201,13 +193,15 @@ function Canvas() {
       )) return
       
       const _tempWireId = _newWireId + outputId
+      const _tempWireX = gate.x + output.xOffset!
+      const _tempWireY = gate.y + output.yOffset!
 
       if(wires.some((wire: Wire) => (wire.id === _tempWireId))) return 
 
-      setCacheWires(wires => [...wires, createNewWire(_tempWireId, [[output.x!, output.y!]])])
+      setCacheWires(wires => [...wires, createNewWire(_tempWireId, [[_tempWireX, _tempWireY]])])
 
       setWireDraggingId(prev => [...(prev ?? []), {wireId: _tempWireId, type: "output", nodeId: outputId}]);
-      updateWireStart(_tempWireId, output.x!, output.y!)      
+      updateWireStart(_tempWireId, _tempWireX, _tempWireY)
     })
   }
 
@@ -277,17 +271,19 @@ function Canvas() {
         break;
     }
   }
-
+  
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     e.stopPropagation();
 
     const { x, y } = getGridCoords(e);
     
+    if(oldMousePosition.x == x && oldMousePosition.y == y) return
+    setOldMousePosition({x: x, y: y})
+    
     if(gateDraggingId !== null) {
       moveGate(x, y)
-    }
-    if(wireDraggingId) { // einzelnes Kabel
-      dragWire(x, y)
+    } else if(wireDraggingId) {
+      dragWire(wireDraggingId[wireDraggingId.length - 1].wireId, x, y)
     }
   }
 
@@ -310,22 +306,25 @@ function Canvas() {
     const newGates = gates.map((gate: Gate) => {
       if(!gateDraggingId?.includes(gate.id)) return gate
 
+      const newGateX = Math.round(newX - offset.x)
+      const newGateY = Math.round(newY - offset.y)
+      
       // Kabel des Gatters verschieben
       wireDraggingId?.forEach((value: {wireId: number, type?: "input" | "output", nodeId?: number}) => {
         if(!value.type || value.nodeId === undefined) return
-
+        
         switch(value.type) {
           case "input":
             const input = gate.inputs[value.nodeId]
-            if(!input.x || !input.y) return
+            if(input.xOffset === undefined || input.yOffset === undefined) return
             
-            updateWireTarget(value.wireId, input.x, input.y)
+            dragWire(value.wireId, newGateX + input.xOffset, newGateY + input.yOffset)
             break;
           case "output":
             const output = gate.outputs[value.nodeId]
+            if(output.xOffset === undefined || output.yOffset === undefined) return
             
-            if(!output.x || !output.y) return
-            updateWireTarget(value.wireId, output.x, output.y)
+            dragWire(value.wireId, newGateX + output.xOffset, newGateY + output.yOffset)
             break;
           default:
             break;
@@ -334,22 +333,23 @@ function Canvas() {
       
       return {
         ...gate, 
-        x: Math.round(newX - offset.x), 
-        y: Math.round(newY - offset.y)
+        x: newGateX, 
+        y: newGateY
       }
     });
+    
     setGates(newGates);
   }
 
-  const dragWire = (targetX: number, targetY: number) => {
-    const newCacheWires = cacheWires
+  const dragWire = (wireId: number, targetX: number, targetY: number) => {
+    setCacheWires((cacheWires) => cacheWires
       .filter((wire: Wire) => (wire.points.length > 0))
       .map((wire: Wire) => {
-        if (!wireDraggingId?.some(value => (value.wireId === wire.id))) return wire;
+        if (wire.id !== wireId) return wire
         if (!wireDraggingStart.has(wire.id)) return wire;
         
         const [x0, y0] = [wireDraggingStart.get(wire.id)!.x, wireDraggingStart.get(wire.id)!.y];
-        const [x1, y1] = [wireDraggingTarget.get(wire.id)?.x ?? targetX, wireDraggingTarget.get(wire.id)?.y ?? targetY];
+        const [x1, y1] = [targetX, targetY];
         if(x0 === undefined || y0 === undefined) return wire;
 
         let newPoints: [number, number][];
@@ -375,13 +375,13 @@ function Canvas() {
             ];
           }
         }
-
+        
         return {
           ...wire,
           points: newPoints
         };
-      });
-    setCacheWires(newCacheWires);
+      })
+    )
   }
 
   const deleteWire = (wireId: number) => {

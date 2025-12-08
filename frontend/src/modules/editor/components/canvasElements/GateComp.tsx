@@ -89,8 +89,8 @@ function GateComp({gate, onMouseDownGate, onMouseDownInput}: {gate: Gate, onMous
   gate.inputs = gate.inputs.map((input: Input, i: number) => {
     return {
       gateId: input.gateId,
-      x: input_pos[i].x,
-      y: input_pos[i].y
+      xOffset: input_pos[i].x - gate.x,
+      yOffset: input_pos[i].y - gate.y
     }
   })
 
@@ -119,8 +119,8 @@ function GateComp({gate, onMouseDownGate, onMouseDownInput}: {gate: Gate, onMous
   gate.outputs = gate.outputs.map((input: Input, i: number) => {
     return {
       gateId: input.gateId,
-      x: output_pos[i].x,
-      y: output_pos[i].y
+      xOffset: output_pos[i].x - gate.x,
+      yOffset: output_pos[i].y - gate.y
     }
   })
   

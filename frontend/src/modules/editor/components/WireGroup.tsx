@@ -1,4 +1,6 @@
 import type { Gate } from "../types/Gate";
+import type { Input } from "../types/Input";
+import type { Output } from "../types/Output";
 import type { Wire } from "../types/Wire";
 import type { WireGroup } from "../types/WireGroup";
 
@@ -50,16 +52,16 @@ function wiresSharePoint(a: Wire, b: Wire): boolean {
 }
 
 function calculateWireGroupInputs(wireGroups: WireGroup[], gates: Gate[]) {
-  return wireGroups.map(group => {
+  return wireGroups.map((group: WireGroup) => {
     const foundInputs: [number, number][] = [];
 
     for (let wire of group.wires) {
       for (let [px, py] of wire.points) {
-        gates.forEach((gate, gateId) => {
+        gates.forEach((gate: Gate, gateId: number) => {
           if (!gate.inputs) return;
 
-          gate.inputs.forEach((input, inputId) => {
-            if (px === input.x && py === input.y) {
+          gate.inputs.forEach((input: Input, inputId: number) => {
+            if (px === (gate.x + input.xOffset!) && py === (gate.y + input.yOffset!)) {
               if(!foundInputs.some(([gId, iId]: [number, number]) => (gId === gateId && iId === inputId))) foundInputs.push([gateId, inputId]);
             }
           });
@@ -75,16 +77,17 @@ function calculateWireGroupInputs(wireGroups: WireGroup[], gates: Gate[]) {
 }
 
 function calculateWireGroupOutputs(wireGroups: WireGroup[], gates: Gate[]) {
-  return wireGroups.map(group => {
+  return wireGroups.map((group: WireGroup) => {
     const foundOutputs: [number, number][] = [];
 
     for (let wire of group.wires) {
       for (let [px, py] of wire.points) {
-        gates.forEach((gate, gateId) => {
+        gates.forEach((gate: Gate, gateId: number) => {
           if (!gate.outputs) return;
 
-          gate.outputs.forEach((output: any, outputId: number) => {
-            if (px === output.x && py === output.y) {
+          gate.outputs.forEach((output: Output, outputId: number) => {
+            if (px === (gate.x + output.xOffset!) && py === (gate.y + output.yOffset!)) {
+              
               if(!foundOutputs.some(([gId, oId]: [number, number]) => (gId === gateId && oId === outputId))) foundOutputs.push([gateId, outputId]);
             }
           });

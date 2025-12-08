@@ -1,17 +1,15 @@
-
-
 type Output = {
   gateId: number;
-  x?: number;
-  y?: number;
+  xOffset?: number;
+  yOffset?: number;
   logicFunction?: Function
 }
 
-function newOutput(gateId: number, x: number = 0, y: number = 0, logicFunction: Function = (() => "low" as const)): Output {
+function newOutput(gateId: number, xOffset: number = 0, yOffset: number = 0, logicFunction: Function = (() => "low" as const)): Output {
   return {
     gateId: gateId,
-    x: Math.round(x),
-    y: Math.round(y),
+    xOffset: Math.round(xOffset),
+    yOffset: Math.round(yOffset),
     logicFunction: logicFunction,
   }
 }
