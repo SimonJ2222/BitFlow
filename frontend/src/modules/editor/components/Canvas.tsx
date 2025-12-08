@@ -69,8 +69,6 @@ function Canvas() {
   const { x, y } = getGridCoords(e);
 
   const type = e.dataTransfer.getData("gateType");
-  const width = parseInt(e.dataTransfer.getData("gateWidth"));
-  const height = parseInt(e.dataTransfer.getData("gateHeight"));
 
   if (type) {
     const newId = gates.length;
@@ -81,6 +79,9 @@ function Canvas() {
     const inputs = Array.from({ length: config.inputs }, () => ({ gateId: newId }));
     const outputs = Array.from({ length: config.outputs }, () => ({ gateId: newId }));
 
+    const width = 3;
+    const height = Math.max(2, inputs.length + 1, outputs.length + 1);
+    
     // Neues Gate mit Pins erzeugen
     const newGateObj = newGate(newId, x, y, width, height, type, "East", inputs, outputs);
     setGates((prev) => [...prev, newGateObj]);

@@ -1,8 +1,8 @@
 const gates = [
-  { type: "AND", width: 3, height: 5 },
-  { type: "OR", width: 3, height: 3 },
-  { type: "XOR", width: 5, height: 5 },
-  { type: "FlipFlop", width: 4, height: 4 },
+  { type: "AND" },
+  { type: "OR" },
+  { type: "XOR" },
+  { type: "FlipFlop" },
 ];
 
 function SidePanel() {
@@ -17,8 +17,6 @@ function SidePanel() {
           onDragStart={(e) => {
             
             e.dataTransfer.setData("gateType", gate.type);
-            e.dataTransfer.setData("gateWidth", gate.width.toString());
-            e.dataTransfer.setData("gateHeight", gate.height.toString());
           }}
         >
           {gate.type}
