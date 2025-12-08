@@ -28,12 +28,12 @@ function WireComp({wire, remove, onMouseDownNode, onMouseUpNode}: {wire: Wire, r
     "black";
 
   return (
-    <>
+    <g id={`wire_${wire.id}`}>
       <polyline 
         {...wire_svg_props} 
         stroke={fillColor}
         points={svg_points.toString()} 
-        onMouseDown={handleMouseDownWire} 
+        onMouseDown={handleMouseDownWire}
       />
       {
         wire.points.map((point: [number, number], index: number) => (
@@ -52,7 +52,7 @@ function WireComp({wire, remove, onMouseDownNode, onMouseUpNode}: {wire: Wire, r
           />
         ))
       }
-    </>
+    </g>
   );
 }
 

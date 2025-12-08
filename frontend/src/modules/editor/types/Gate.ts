@@ -14,7 +14,17 @@ type Gate = {
   outputs: Output[];
 }
 
-function newGate(id: number, x: number = 0, y: number = 0, width: number = 2, height: number = 2, label: string = "", rotation: Rotation = "East", inputs: Input[] = [], outputs: Output[] = []): Gate {
+function newGate(
+    id: number, 
+    x: number = 0, 
+    y: number = 0, 
+    width: number = 2, 
+    height: number = 2, 
+    label: string = "", 
+    rotation: Rotation = "East", 
+    inputs: Input[] = [], 
+    outputs: Output[] = [],
+  ): Gate {
   return {
     id: id,
     x: Math.floor(x),

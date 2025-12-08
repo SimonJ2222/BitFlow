@@ -39,7 +39,7 @@ function calculateWireGroups(wires: Wire[], gates: Gate[]): WireGroup[] {
 
   groups = calculateWireGroupInputs(groups, gates)
   groups = calculateWireGroupOutputs(groups, gates)
-  console.log("Bearbeitete Gruppen:", groups)
+  //console.log("Bearbeitete Gruppen:", groups)
 
   return groups;
 }
