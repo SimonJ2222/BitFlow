@@ -244,7 +244,6 @@ Also include a mapping of the processes of the Process View onto the physical no
 
 Die Implementierung ist in klar getrennte Schichten gegliedert, die Änderungen erleichtern, Testbarkeit erhöhen und die Simulation isolieren:
 - UI Layer (React/TypeScript)
-- Application/Service Layer
 - Domain Layer (Simulation, Schaltung, Bausteine)
 - Library Layer (Standard- & Custom-Bausteine)
 - Storage Layer
@@ -260,17 +259,7 @@ Die Implementierung ist in klar getrennte Schichten gegliedert, die Änderungen 
 - Fehlermeldungen
 - Undo/Redo UI
 
-2. Application/Service Layer
-
-- CircuitService
-- SimulationService
-- StorageService
-- LibraryService
-- EventBus
-
-Koordiniert Abläufe zwischen UI und Domain.
-
-3. Domain Layer
+2. Domain Layer
 
 - Component
 - Wire
@@ -281,13 +270,13 @@ Koordiniert Abläufe zwischen UI und Domain.
 
 Umfasst die eigentliche Logik.
 
-4. Library Layer
+3. Library Layer
 
 - Vordefinierte Gatter (AND, OR, NOT etc.)
 - Benutzerdefinierte Bausteine
 - Factory Pattern zur Erzeugung
 
-5. Storage Layer
+4. Storage Layer
 
 - Lokale Speicherung
 - Backend-APIs
