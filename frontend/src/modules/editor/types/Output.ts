@@ -4,13 +4,15 @@ type Output = {
   gateId: number;
   x?: number;
   y?: number;
+  logicFunction?: Function
 }
 
-function newOutput(gateId: number, x: number = 0, y: number = 0): Output {
+function newOutput(gateId: number, x: number = 0, y: number = 0, logicFunction: Function = (() => "low" as const)): Output {
   return {
     gateId: gateId,
-    x: Math.floor(x),
-    y: Math.floor(y),
+    x: Math.round(x),
+    y: Math.round(y),
+    logicFunction: logicFunction,
   }
 }
 
