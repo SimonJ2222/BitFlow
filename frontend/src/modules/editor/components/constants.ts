@@ -5,7 +5,7 @@
 const canvasLeft: number = 40;
 const canvasTop: number = 40;
 const canvasWidth: number = 1200;
-const canvasHeight: number = 1200;
+const canvasHeight: number = 660;
 
 const gridSize: number = 30;
 

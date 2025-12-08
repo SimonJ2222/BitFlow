@@ -13,7 +13,7 @@ function Canvas() {
   const [cacheWires, setCacheWires] = useState<Wire[]>([]);
   const [wires, setWires] = useState<Wire[]>([]);
   const [wireGroups, setWireGroups] = useState<WireGroup[]>([]);
-  const [newGateId, setNewGateId] = useState<number>(3);
+  const [newGateId, setNewGateId] = useState<number>(0);
   const [gates, setGates] = useState<Gate[]>([]);
 
   const [gateDraggingId, setGateDraggingId] = useState<number[] | null>(null);
@@ -21,10 +21,11 @@ function Canvas() {
   const [wireDraggingStart, setWireDraggingStart] = useState<Map<number, { x: number; y: number }>>(new Map());
   
   const gatePinConfig: Record<string, { inputs: number; outputs: number }> = {
-  AND: { inputs: 4, outputs: 1 },
-  OR: { inputs: 2, outputs: 1 },
-  XOR: { inputs: 3, outputs: 1 },
-  FlipFlop: { inputs: 1, outputs: 3 },
+    AND: { inputs: 4, outputs: 1 },
+    OR: { inputs: 2, outputs: 1 },
+    XOR: { inputs: 3, outputs: 1 },
+    FlipFlop: { inputs: 1, outputs: 1 },
+    Add: { inputs: 3, outputs: 2 },
   };
 
   useEffect(() => {
@@ -69,27 +70,27 @@ function Canvas() {
   const { x, y } = getGridCoords(e);
 
   const type = e.dataTransfer.getData("gateType");
+  if (!type) return;
 
-  if (type) {
-    const newId = gates.length;
+  const newId = gates.length;
 
-    // Pins aus Mapping-Tabelle holen
-    const config = gatePinConfig[type] || { inputs: 0, outputs: 0 };
+  // Pins aus Mapping-Tabelle holen
+  const config = gatePinConfig[type] || { inputs: 0, outputs: 0 };
 
-    const inputs = Array.from({ length: config.inputs }, () => ({ gateId: newId }));
-    const outputs = Array.from({ length: config.outputs }, () => ({ gateId: newId }));
+  const inputs = Array.from({ length: config.inputs }, () => ({ gateId: newId }));
+  const outputs = Array.from({ length: config.outputs }, () => ({ gateId: newId }));
 
-    const width = 3;
-    const height = Math.max(2, inputs.length + 1, outputs.length + 1);
-    
-    // Neues Gate mit Pins erzeugen
-    const newGateObj = newGate(newId, x, y, width, height, type, "East", inputs, outputs);
-    setGates((prev) => [...prev, newGateObj]);
-  }
+  const width = 3;
+  const height = Math.max(2, inputs.length + 1, outputs.length + 1);
+  
+  // Neues Gate mit Pins erzeugen
+  const newGateObj = newGate(newId, x, y, width, height, type, undefined, inputs, outputs);
+  setGates((prev) => [...prev, newGateObj]);
+  
   };
 
   const handleDragOver = (e: React.DragEvent<SVGSVGElement>) => {
-  e.preventDefault();
+    e.preventDefault();
   };
 
   const handleMouseDown = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {

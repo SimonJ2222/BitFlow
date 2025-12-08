@@ -3,6 +3,7 @@ const gates = [
   { type: "OR" },
   { type: "XOR" },
   { type: "FlipFlop" },
+  { type: "Add" },
 ];
 
 function SidePanel() {
