@@ -15,24 +15,22 @@ function Canvas() {
   const [cacheWires, setCacheWires] = useState<Wire[]>([]);
   const [wires, setWires] = useState<Wire[]>([]);
   const [wireGroups, setWireGroups] = useState<WireGroup[]>([]);
-  const [newGateId, setNewGateId] = useState<number>(3);
-  const [gates, setGates] = useState<Gate[]>([
-    // 3 * 5 
-    newGate(0, 2,2,3,5, "AND", undefined, [{gateId:0}, {gateId:0}, {gateId:0}, {gateId:0}], [{gateId:0}]),
-    // 4 * 4
-    newGate(1, 6,2,4,4, "FlipFlop", undefined, [{gateId:1}], [{gateId:1}, {gateId:1}, {gateId:1}]),
-    // 3 * 3
-    newGate(2, 11,2,3,3, "OR", undefined, [{gateId:2}, {gateId:2}], [{gateId:2}]),
-    // 5 * 5 
-    newGate(3, 2,8,5,5, "XOR", undefined, [{gateId:3}, {gateId:3}, {gateId:3}], [{gateId:3}]),
-    newGate(4, 2,10,2,2, "HIGH", undefined, [], [{gateId:4}])
-  ]);
+  const [newGateId, setNewGateId] = useState<number>(0);
+  const [gates, setGates] = useState<Gate[]>([]);
 
   const [gateDraggingId, setGateDraggingId] = useState<number[] | null>(null);
   const [wireDraggingId, setWireDraggingId] = useState<{wireId: number, type?: "input" | "output", nodeId?: number}[] | null>(null);
   const [wireDraggingStart, setWireDraggingStart] = useState<Map<number, { x: number; y: number }>>(new Map());
   const [wireDraggingTarget, setWireDraggingTarget] = useState<Map<number, { x: number; y: number }>>(new Map());
   
+  const gatePinConfig: Record<string, { inputs: number; outputs: number }> = {
+    AND: { inputs: 4, outputs: 1 },
+    OR: { inputs: 2, outputs: 1 },
+    XOR: { inputs: 3, outputs: 1 },
+    FlipFlop: { inputs: 1, outputs: 1 },
+    Add: { inputs: 3, outputs: 2 },
+  };
+
   useEffect(() => {
     const newGroups = calculateWireGroups(cacheWires, gates)
     setWireGroups(newGroups)
@@ -78,6 +76,34 @@ function Canvas() {
     const y = Math.round((e.clientY - rect.top) / gridSize);
     return { x, y };
   }
+
+  const handleDrop = (e: React.DragEvent<SVGSVGElement>) => {
+  e.preventDefault();
+  const { x, y } = getGridCoords(e);
+
+  const type = e.dataTransfer.getData("gateType");
+  if (!type) return;
+
+  const newId = gates.length;
+
+  // Pins aus Mapping-Tabelle holen
+  const config = gatePinConfig[type] || { inputs: 0, outputs: 0 };
+
+  const inputs = Array.from({ length: config.inputs }, () => ({ gateId: newId }));
+  const outputs = Array.from({ length: config.outputs }, () => ({ gateId: newId }));
+
+  const width = 3;
+  const height = Math.max(2, inputs.length + 1, outputs.length + 1);
+  
+  // Neues Gate mit Pins erzeugen
+  const newGateObj = newGate(newId, x, y, width, height, type, undefined, inputs, outputs);
+  setGates((prev) => [...prev, newGateObj]);
+  
+  };
+
+  const handleDragOver = (e: React.DragEvent<SVGSVGElement>) => {
+    e.preventDefault();
+  };
 
   const handleMouseDown = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     if (e.button !== 0) return;
@@ -352,6 +378,8 @@ function Canvas() {
   return(
     <svg id="svg_canvas" className="absolute" style={{left: canvasLeft, top: canvasTop}} width={canvasWidth} height={canvasHeight} 
       tabIndex={0}
+      onDrop={handleDrop}         
+      onDragOver={handleDragOver}  
       onMouseMove={handleMouseMove} 
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
