@@ -95,9 +95,18 @@ Neben funktionalen Aspekten werden insbesondere Qualitätsanforderungen, Laufzei
 
 ## 2. Architectural Representation
 
-[This section describes what software architecture is for the current system, and how it is represented. Of the
-Use-Case, Logical, Process, Deployment, and Implementation Views, it enumerates the views that are necessary,
-and for each view, explains what types of model elements it contains.]
+Die Software-Architektur von BitFlow wird anhand des **4+1-Sichtenmodells nach Kruchten** beschrieben. Dieses Modell ermöglicht es, die Architektur aus verschiedenen Perspektiven darzustellen und sowohl funktionale als auch nicht-funktionale Anforderungen angemessen zu berücksichtigen.
+
+Für BitFlow werden die folgenden Sichten verwendet:
+
+- **Use-Case View:** Beschreibt die funktionalen Anforderungen des Systems aus Sicht der Benutzer und zeigt, welche Anwendungsfälle architektonisch relevant sind.
+- **Logical View:** Stellt die statische Struktur des Systems dar, insbesondere Klassen, Pakete und deren Beziehungen.
+- **Process View:** Beschreibt das Laufzeitverhalten, die Nebenläufigkeit sowie die Kommunikation zwischen den zentralen Komponenten.
+- **Deployment View:** Zeigt die physische Verteilung der Software auf Hardware- und Laufzeitumgebungen.
+- **Implementation View:** Beschreibt die Aufteilung des Systems in Komponenten, Module und Schichten.
+
+Diese Sichten ergänzen sich gegenseitig und bilden gemeinsam eine konsistente Beschreibung der Gesamtarchitektur von BitFlow.
+
 
 ---
 
