@@ -166,9 +166,24 @@ Die Architektur von BitFlow wird durch mehrere qualitätsrelevante Anforderungen
 
 ## 4. Use-Case View
 
-[This section lists use cases or scenarios from the use-case model if they represent some significant, central
-functionality of the final system, or if they have a large architectural coverage - they exercise many architectural
-elements, or if they stress or illustrate a specific, delicate point of the architecture.]
+Der Use-Case View beschreibt die funktionalen Anforderungen von BitFlow aus Sicht der Benutzer und zeigt, welche Anwendungsfälle architektonisch besonders relevant sind. Die folgenden Use Cases decken die Kernfunktionalität des Systems ab und beeinflussen mehrere Architekturkomponenten gleichzeitig.
+
+### Architektonisch signifikante Use Cases
+
+- **Schaltung erstellen und bearbeiten**  
+  Benutzer platzieren Bausteine per Drag & Drop, verbinden diese über Leitungen und konfigurieren Eingänge. Dieser Use Case betrifft UI, Domain-Modell und Validierungslogik.
+
+- **Simulation starten und ausführen**  
+  Die erstellte Schaltung wird in Echtzeit simuliert. Dieser Use Case ist zentral für Performance- und Availability-Anforderungen und erfordert eine klare Trennung zwischen UI und Simulation.
+
+- **Benutzerdefinierte Bausteine erstellen**  
+  Benutzer fassen bestehende Schaltungen zu neuen Bausteinen zusammen. Dieser Use Case beeinflusst die Bausteinbibliothek, den Compiler sowie die Modifiability der Architektur.
+
+- **Undo / Redo von Aktionen**  
+  Benutzer können Bearbeitungsschritte rückgängig machen oder wiederherstellen. Dieser Use Case ist architektonisch relevant für Reliability und Konsistenz des Systemzustands.
+
+- **Projekt speichern und laden**  
+  Schaltungen werden persistent gespeichert und wiederhergestellt. Dieser Use Case betrifft Storage, Datenmodell und Schnittstellen zwischen Frontend und Persistenz.
 
 ---
 
