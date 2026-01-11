@@ -189,28 +189,69 @@ Der Use-Case View beschreibt die funktionalen Anforderungen von BitFlow aus Sich
 
 ## 5. Logical View
 
-[This section describes the architecturally significant parts of the design model, such as its decomposition into
-subsystems and packages. And for each significant package, its decomposition into classes and class utilities. You
-should introduce architecturally significant classes and describe their responsibilities, as well as a few very important
-relationships, operations, and attributes.]
+Der Logical View beschreibt die statische Struktur des Systems und zeigt, wie die Software in logisch zusammenhängende Pakete und Klassen zerlegt ist. Der Fokus liegt auf den architektonisch signifikanten Teilen des Designmodells und deren Verantwortlichkeiten.
 
 ### 5.1 Overview
 
-[This subsection describes the overall decomposition of the design model in terms of its package hierarchy and
-layers.]
+Das logische Modell von BitFlow ist in mehrere klar abgegrenzte Bereiche unterteilt, die den zentralen Verantwortlichkeiten des Systems entsprechen. Die Architektur folgt dem Prinzip der **Separation of Concerns** und orientiert sich an einer schichtenähnlichen Struktur.
+
+Die wichtigsten logischen Bereiche sind:
+- **UI-nahe Komponenten** für Benutzerinteraktion,
+- **Application Services** zur Orchestrierung von Use Cases,
+- **Domain-Modelle** zur Abbildung von Schaltungen und Bausteinen,
+- **Simulation** zur Berechnung von Signalzuständen,
+- **Persistenz- und Bibliothekskomponenten** für Speicherung und Wiederverwendung.
+
+Abhängigkeiten verlaufen dabei ausschließlich von höher- zu niedrigerliegenden Abstraktionsebenen.
+
+---
 
 ### 5.2 Architecturally Significant Design Packages
 
-[For each significant package, include a subsection with its name, its brief description, and a diagram with all
-significant classes and packages contained within the package.
+#### UI Package
+- **Beschreibung:** Enthält alle Klassen zur Darstellung und Interaktion mit dem Benutzer.
+- **Beispiele:** `EditorView`, `Canvas`, `Toolbar`
+- **Verantwortlichkeiten:** Darstellung, Benutzerinteraktion, Weiterleitung von Aktionen an Application Services.
 
-For each significant class in the package, include its name, brief description, and, optionally a description of some of
-its major responsibilities, operations and attributes.]
+#### Application Package
+- **Beschreibung:** Vermittelt zwischen UI und Domain.
+- **Beispiele:** `EditorService`, `SimulationService`, `UndoRedoService`
+- **Verantwortlichkeiten:** Use-Case-Steuerung, Validierung, Koordination von Abläufen.
+
+#### Domain Package
+- **Beschreibung:** Zentrales Fachmodell von BitFlow.
+- **Beispiele:** `Circuit`, `Component`, `CustomComponent`, `Wire`, `Pin`
+- **Verantwortlichkeiten:** Repräsentation der Schaltung, Struktur, Konsistenzregeln.
+
+#### Simulation Package
+- **Beschreibung:** Kapselt die Simulationslogik.
+- **Beispiele:** `SimulationEngine`, `SimulationStrategy`
+- **Verantwortlichkeiten:** Berechnung von Signalzuständen, Zustandsänderungen.
+
+#### Library Package
+- **Beschreibung:** Zentrale Registry für verfügbare Bausteine.
+- **Beispiele:** `ComponentLibrary`, `ComponentFactory`
+- **Verantwortlichkeiten:** Verwaltung und Erzeugung von Standard- und benutzerdefinierten Bausteinen.
+
+#### Storage Package
+- **Beschreibung:** Abstraktion der Persistenzmechanismen.
+- **Beispiele:** `StorageRepository`, `ProjectSerializer`
+- **Verantwortlichkeiten:** Speichern, Laden, Import/Export von Projekten.
+
+---
 
 ### 5.3 Use-Case Realizations
 
-[This section illustrates how the software actually works by giving a few selected use-case (or scenario) realizations,
-and explains how the various design model elements contribute to their functionality.]
+Die Realisierung der Use Cases erfolgt über Application Services, die als zentrale Einstiegspunkte dienen.  
+Beispielsweise wird der Use Case *„Simulation starten“* wie folgt umgesetzt:
+
+1. UI löst Aktion über einen Application Service aus.  
+2. Service validiert den aktuellen Schaltungszustand.  
+3. Simulation Engine wird initialisiert und gestartet.  
+4. Zustandsänderungen werden über Observer an die UI zurückgemeldet.
+
+Dieses Vorgehen stellt sicher, dass UI, Domain und Simulation lose gekoppelt bleiben und unabhängig weiterentwickelt werden können.
+
 
 ---
 
