@@ -296,10 +296,34 @@ Kann sowohl lokal als auch über API laufen
 
 ## 7. Deployment View
 
-[This section describes one or more physical network (hardware) configurations on which the software is deployed
-and run. It is a view of the Deployment Model. At a minimum for each configuration it should indicate the physical
-nodes (computers, CPUs) that execute the software, and their interconnections (bus, LAN, point-to-point, and so on.)
-Also include a mapping of the processes of the Process View onto the physical nodes.]
+Der Deployment View beschreibt die physische Verteilung der Softwarekomponenten von BitFlow auf die beteiligten Laufzeitumgebungen sowie deren Kommunikation untereinander. BitFlow ist als browserbasierte Webanwendung konzipiert und benötigt keine lokale Installation.
+
+### 7.1 Deployment Diagram
+
+```mermaid
+graph TD
+    Browser["Client Browser"]
+    UI["Frontend Single-Page-Application"]
+    Sim["Simulation"]
+    API["Backend API"]
+    DB[(Database)]
+
+    Browser --> UI
+    UI --> Sim
+    UI <--> API
+    API --> DB
+
+```
+
+### 7.2 Beschreibung
+
+- Die Benutzeroberfläche wird als Single Page Application im Browser ausgeführt.
+- Die Simulationslogik läuft in einem separaten Simulationsdienst bzw. Ausführungskontext, um die Benutzeroberfläche responsiv zu halten.
+- Ein optionales Backend stellt Funktionen für Authentifizierung, Benutzerverwaltung und persistente Speicherung bereit.
+- Die Datenbank speichert Benutzerkonten und Projektinformationen.
+- Die Kommunikation zwischen Frontend und Backend erfolgt über HTTP-basierte Schnittstellen.
+
+Diese Deployment-Struktur unterstützt insbesondere die Anforderungen an **Performance**, **Availability** und **Portability**.
 
 ---
 
