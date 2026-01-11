@@ -428,8 +428,28 @@ Dieses Datenmodell unterstützt die Anforderungen an **Reliability** und **Modif
 
 ## 10. Size and Performance
 
-[A description of the major dimensioning characteristics of the software that impact the architecture, as well as the
-target performance constraints.]
+Die Architektur von BitFlow ist darauf ausgelegt, auch bei steigender Komplexität der Schaltungen eine gute Performance und Benutzererfahrung sicherzustellen.
+
+### Größenannahmen
+
+- Typische Schaltungen bestehen aus bis zu 50 Bausteinen.
+- Ein Projekt kann mehrere Schaltungen enthalten.
+- Die Bausteinbibliothek kann durch benutzerdefinierte Bausteine erweitert werden.
+
+### Performance-Aspekte
+
+- Die Simulation wird ereignisgesteuert ausgeführt, sodass nur relevante Signaländerungen neu berechnet werden.
+- UI-Aktualisierungen erfolgen gebündelt, um unnötige Re-Renders zu vermeiden.
+- Rechenintensive Aufgaben sind von der Benutzeroberfläche getrennt.
+- Die Architektur erlaubt eine schrittweise Optimierung der Simulation ohne Änderungen am UI.
+
+### Einfluss auf Architekturentscheidungen
+
+- Trennung von Simulation und UI zur Vermeidung von Blockaden.
+- Verwendung klarer Schnittstellen zur besseren Austauschbarkeit von Komponenten.
+- Begrenzung direkter Abhängigkeiten zur Sicherstellung der Skalierbarkeit.
+
+Diese Maßnahmen unterstützen die definierten Performance-Ziele und tragen zu einer stabilen Systemgröße bei.
 
 ---
 
