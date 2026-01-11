@@ -384,12 +384,45 @@ Database["SQLite Database"]
 
 Frontend --> Controller --> Service --> Repository --> Database
 ```
+---
 
+## 9. Data View
 
-## 9. Data View (optional)
+BitFlow verwendet persistente Speicherung zur Ablage von Benutzerprojekten und zugehörigen Metadaten. Die Datenhaltung ist bewusst einfach gehalten und folgt der logischen Struktur der Domänenobjekte.
 
-[A description of the persistent data storage perspective of the system. This section is optional if there is little or no
-persistent data, or the translation between the Design Model and the Data Model is trivial.]
+### 9.1 Persistente Daten
+
+- **User**
+  - user_id
+  - email
+  - password_hash
+
+- **Project**
+  - project_id
+  - user_id
+  - name
+  - last_modified
+
+- **Circuit**
+  - circuit_id
+  - project_id
+  - serialized_structure
+
+- **ComponentDefinition**
+  - component_id
+  - name
+  - type (standard / custom)
+  - definition_data
+
+### 9.2 Beschreibung
+
+- Projekte und Schaltungen werden strukturiert serialisiert gespeichert.
+- Benutzerdefinierte Bausteine werden als eigene Definitionen persistiert.
+- Die Persistenz kann lokal (z. B. Browser Storage) oder serverseitig erfolgen.
+- Das Datenmodell unterstützt Versionierung und Wiederherstellung (Autosave).
+
+Dieses Datenmodell unterstützt die Anforderungen an **Reliability** und **Modifiability**.
+
 
 ---
 
