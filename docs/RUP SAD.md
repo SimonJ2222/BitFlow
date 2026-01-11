@@ -1,7 +1,7 @@
 # BitFlow
 # Software Architecture Document
 
-Version 1.0
+Version 1.1
 
 
 ---
@@ -10,7 +10,8 @@ Version 1.0
 
 Date | Version | Description | Author
 ---- | ------- | ----------- | ------
-<dd/mmm/yy> | <x.x> | <details> | <name>
+<08/12/25> | <1.0> | Erstellung des Dokuments und erste Einträge | BitFlow-Team
+<22/12/25> | <1.1> | Vollständige Ausfüllung | BitFlow-Team
 
 ---
 
@@ -54,42 +55,41 @@ Date | Version | Description | Author
 
 ## 1. Introduction
 
-[The introduction of the Software Architecture Document should provide an overview of the entire Software 
-Architecture Document. It should include the purpose, scope, definitions, acronyms, abbreviations, references, and
-overview of the Software Architecture Document.]
+Dieses Dokument beschreibt die Software-Architektur von **BitFlow**, einem browserbasierten Logikschaltungs-Editor und -Simulator.  
+Die Architektur wird anhand des **4+1-Sichtenmodells nach Kruchten** dargestellt und fasst die wesentlichen Architekturentscheidungen, Qualitätsziele und Strukturen des Systems zusammen.
 
 ### 1.1 Purpose
 
-This document provides a comprehensive architectural overview of the system, using a number of different architectural views
-to depict different aspects of the system. It is intended to capture and convey the significant architectural decisions which have
-been made on the system.
-
-[This section defines the purpose of the Software Architecture Document, in the overall project documentation, and
-briefly describes the structure of the document. The specific audiences for the document should be identified, with an
-indication of how they are expected to use the document.]
+Ziel dieses Dokuments ist es, die wesentlichen architektonischen Entscheidungen von BitFlow nachvollziehbar zu dokumentieren.  
+Es dient als gemeinsame Grundlage für Entwicklung, Bewertung und Weiterentwicklung des Systems und richtet sich an Entwickler, Projektbeteiligte und Lehrende.
 
 ### 1.2 Scope
 
-[A brief description of what the Software Architecture Document applies to; what is affected or influenced by this
-document.]
+Das Software Architecture Document gilt für das gesamte BitFlow-System, einschließlich:
+- grafischem Editor für Logikschaltungen,
+- Simulationslogik,
+- Bausteinbibliothek (inkl. benutzerdefinierter Bausteine),
+- Persistenzmechanismen sowie
+- optionalem Backend für Benutzer- und Projektdaten.
 
 ### 1.3 Definitions, Acronyms and Abbreviations
 
-[This subsection should provide the definitions of all terms, acronyms, and abbreviations required to properly
-interpret the Software Architecture Document. This information may be provided by reference to the project
-Glossary.]
+- **ASR**: Architecture Significant Requirement  
+- **UI**: User Interface  
+- **SPA**: Single Page Application  
+- **SRP**: Single Responsibility Principle  
 
 ### 1.4 References
 
-[This subsection should provide a complete list of all documents referenced elsewhere in the Software Architecture 
-Document. Each document should be identified by title, report number (if applicable), date, and publishing
-organization. Specify the sources from which the references can be obtained. This information may be provided by
-reference to an appendix or to another document.]
+- [Software Requirements Specification (SRS)](https://github.com/SimonJ2222/BitFlow/blob/main/docs/use_cases/software_requirements_specification.md)
+- [Architecture Significant Requirements (ASR)](https://github.com/SimonJ2222/BitFlow/blob/main/docs/Architecture%20Significant%20Requirements%20(ASR).md)
+- [Vorlesungsunterlagen „Software Engineering“](https://moodle.dhbw.de/course/view.php?id=12128) 
 
 ### 1.5 Overview
 
-[This subsection should describe what the rest of the Software Architecture Document contains and explain how the 
-Software Architecture Document is organized.]
+Das Dokument ist entsprechend dem Software Architecture Document aufgebaut und gliedert die Architektur von BitFlow in mehrere Sichten.  
+Neben funktionalen Aspekten werden insbesondere Qualitätsanforderungen, Laufzeitverhalten, Deployment sowie zentrale Entwurfsentscheidungen beschrieben.
+
 
 ---
 
